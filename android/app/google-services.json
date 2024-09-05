@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "972816679519",
+    "project_id": "sudarshan-creations-c8748",
+    "storage_bucket": "sudarshan-creations-c8748.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972816679519:android:a585e14ceef3c8de6d11ea",
+        "android_client_info": {
+          "package_name": "com.example.sudarshan_creations"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOw5uSqXpG5ODqMant-Ka5O5wylaCdPRk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
