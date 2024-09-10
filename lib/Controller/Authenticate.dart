@@ -12,11 +12,11 @@ class AuthenticateController extends GetxController  {
   var phoneNumber = "";
 
   
-  Future userSignup(UserModel user) async{
+  Future userSignup(String phone) async{
     try{
 
       await auth.verifyPhoneNumber(
-        phoneNumber: user.phone,
+        phoneNumber: phone,
         verificationCompleted: (PhoneAuthCredential credential) async {
           await auth.signInWithCredential(credential);
         },
