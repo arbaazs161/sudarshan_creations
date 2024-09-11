@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:sudarshan_creations/Model/UserModel.dart';
 
@@ -22,14 +25,14 @@ class AuthenticateController extends GetxController  {
         },
         verificationFailed: (FirebaseAuthException e) {
           if (e.code == 'invalid-phone-number') {
-            print('The provided phone number is not valid.');
+            debugPrint('The provided phone number is not valid.');
           }
         },
         codeSent: (String verificationId, int? resendToken) async {
         this.verificationId.value = verificationId;
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          this.verificationId.value = verificationId;
+          debugPrint("Auto Retrieval Time Out");
         },
       );
       //Web sign in method when using phone numbers
