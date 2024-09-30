@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sudarshan_creations/Controller/authenticate.dart';
 
-class auth extends StatefulWidget {
-  const auth({super.key});
+import '../../controller/auth_controller.dart';
+
+class Auth extends StatefulWidget {
+  const Auth({super.key});
 
   @override
-  State<auth> createState() => _authState();
+  State<Auth> createState() => _AuthState();
 }
 
-class _authState extends State<auth> {
+class _AuthState extends State<Auth> {
   final _phoneController = TextEditingController();
   final _otpController = TextEditingController();
   bool _isOtpVisible = false;
@@ -18,7 +19,7 @@ class _authState extends State<auth> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Phone Authentication'),
+        title: const Text('Phone Authentication'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -28,42 +29,42 @@ class _authState extends State<auth> {
             TextField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Enter Phone Number',
                 hintText: 'e.g. +1234567890',
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 String phoneNumber = _phoneController.text.trim();
                 // Call the authenticate method from AuthController
                 await _authController.userSignup(phoneNumber);
-                
+
                 // Show the OTP input field after the phone number is authenticated
                 setState(() {
                   _isOtpVisible = true;
                 });
               },
-              child: Text('Submit Phone Number'),
+              child: const Text('Submit Phone Number'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             if (_isOtpVisible) ...[
               TextField(
                 controller: _otpController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Enter OTP',
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   String otp = _otpController.text.trim();
                   // Call a method in AuthController to verify OTP
                   _authController.verifyCode(otp);
                 },
-                child: Text('Submit OTP'),
+                child: const Text('Submit OTP'),
               ),
             ],
           ],
@@ -72,4 +73,3 @@ class _authState extends State<auth> {
     );
   }
 }
-
