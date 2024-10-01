@@ -5,9 +5,9 @@ import '../sudarshan_account.dart';
 import '../sudarshan_favourites.dart';
 import '../sudarshan_homepage.dart';
 
-class TopAppBarDesktop extends StatelessWidget {
-  const TopAppBarDesktop({super.key});
-
+class TopAppBar extends StatelessWidget {
+  const TopAppBar({super.key, required this.mobile});
+  final bool mobile;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -42,36 +42,38 @@ class TopAppBarDesktop extends StatelessWidget {
         const Spacer(),
         Row(
           children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return const SudarshanAccountPage();
-                  },
-                ));
-              },
-              child: const Icon(
-                CupertinoIcons.profile_circled,
-                color: Color(0xff95170D),
-                size: 25,
+            if (!mobile)
+              InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const SudarshanAccountPage();
+                    },
+                  ));
+                },
+                child: const Icon(
+                  CupertinoIcons.profile_circled,
+                  color: Color(0xff95170D),
+                  size: 25,
+                ),
               ),
-            ),
-            const SizedBox(width: 15),
-            InkWell(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return const SudarshanDisplayFavourites();
-                  },
-                ));
-              },
-              child: const Icon(
-                CupertinoIcons.heart,
-                color: Color(0xff95170D),
-                size: 25,
+            if (!mobile) const SizedBox(width: 15),
+            if (!mobile)
+              InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const SudarshanDisplayFavourites();
+                    },
+                  ));
+                },
+                child: const Icon(
+                  CupertinoIcons.heart,
+                  color: Color(0xff95170D),
+                  size: 25,
+                ),
               ),
-            ),
-            const SizedBox(width: 15),
+            if (!mobile) const SizedBox(width: 15),
             const Icon(
               CupertinoIcons.search,
               color: Color(0xff95170D),
@@ -89,7 +91,7 @@ class TopAppBarDesktop extends StatelessWidget {
     );
   }
 }
-
+/* 
 class TopAppBarMobile extends StatelessWidget {
   const TopAppBarMobile({super.key});
 
@@ -125,7 +127,7 @@ class TopAppBarMobile extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Row(
+        const Row(
           children: [
             /*  InkWell(
               onTap: () {
@@ -157,13 +159,13 @@ class TopAppBarMobile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 15), */
-            const Icon(
+            Icon(
               CupertinoIcons.search,
               color: Color(0xff95170D),
               size: 25,
             ),
-            const SizedBox(width: 15),
-            const Icon(
+            SizedBox(width: 15),
+            Icon(
               CupertinoIcons.shopping_cart,
               color: Color(0xff95170D),
               size: 25,
@@ -174,3 +176,4 @@ class TopAppBarMobile extends StatelessWidget {
     );
   }
 }
+ */

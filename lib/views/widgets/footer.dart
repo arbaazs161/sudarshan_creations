@@ -12,10 +12,12 @@ class SudarshanFooterSection extends StatelessWidget {
     return ResponsiveWid(
       mobile: Container(
         height: 200,
-        padding: const EdgeInsets.symmetric(vertical: 30),
+        // padding: const EdgeInsets.symmetric(vertical: 30),
         color: const Color(0xffFEF2D0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // SizedBox(width: 30),
             IntrinsicHeight(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -60,7 +62,7 @@ class SudarshanFooterSection extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             Text(
               "All rights reserved.",
               style: GoogleFonts.brawler(
@@ -69,7 +71,6 @@ class SudarshanFooterSection extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            const SizedBox(height: 10),
           ],
         ),
       ),

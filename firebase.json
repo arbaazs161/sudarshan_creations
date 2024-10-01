@@ -1,1 +1,53 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"sudarshan-creations-c8748","appId":"1:972816679519:android:a585e14ceef3c8de6d11ea","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"sudarshan-creations-c8748","appId":"1:972816679519:ios:dd20461e56baef4f6d11ea","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"sudarshan-creations-c8748","appId":"1:972816679519:ios:dd20461e56baef4f6d11ea","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"sudarshan-creations-c8748","configurations":{"android":"1:972816679519:android:a585e14ceef3c8de6d11ea","ios":"1:972816679519:ios:dd20461e56baef4f6d11ea","macos":"1:972816679519:ios:dd20461e56baef4f6d11ea","web":"1:972816679519:web:fb2102c58b575f886d11ea","windows":"1:972816679519:web:2772339fa71f5a3e6d11ea"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "sudarshan-creations-c8748",
+          "appId": "1:972816679519:android:a585e14ceef3c8de6d11ea",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "sudarshan-creations-c8748",
+          "appId": "1:972816679519:ios:dd20461e56baef4f6d11ea",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "sudarshan-creations-c8748",
+          "appId": "1:972816679519:ios:dd20461e56baef4f6d11ea",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "sudarshan-creations-c8748",
+          "configurations": {
+            "ios": "1:972816679519:ios:dd20461e56baef4f6d11ea",
+            "web": "1:972816679519:web:fb2102c58b575f886d11ea"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "storage": {
+    "rules": "storage.rules"
+  }
+}

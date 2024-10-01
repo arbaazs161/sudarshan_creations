@@ -49,7 +49,7 @@ class _SudarshanDisplayAllSubCategoriesState
                               ? 'assets/money_envol_image.png'
                               : 'assets/gift_sets_image.png';
                           final text =
-                              index % 2 == 0 ? "GFT SETS" : "MONEY ENVELOPES";
+                              index % 2 == 0 ? "GIFT SETS" : "MONEY ENVELOPES";
                           return InkWell(
                               highlightColor: Colors.transparent,
                               hoverColor: Colors.transparent,
@@ -104,7 +104,7 @@ class _SudarshanDisplayAllSubCategoriesState
                               ? 'assets/money_envol_image.png'
                               : 'assets/gift_sets_image.png';
                           final text =
-                              index % 2 == 0 ? "GFT SETS" : "MONEY ENVELOPES";
+                              index % 2 == 0 ? "GIFT SETS" : "MONEY ENVELOPES";
                           return InkWell(
                               highlightColor: Colors.transparent,
                               hoverColor: Colors.transparent,

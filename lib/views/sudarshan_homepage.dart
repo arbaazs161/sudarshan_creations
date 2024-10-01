@@ -35,34 +35,32 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
           child: Column(
             children: [
               // HERO SECTION
-              Stack(
-                children: [
-                  SizedBox(
-                    height: 800,
-                    width: double.maxFinite,
-                    child: Image.asset(
-                      'assets/Hero_section_bg.png',
-                      fit: BoxFit.cover,
+              SizedBox(
+                height: 800,
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: Image.asset(
+                        'assets/hero_section_mobile.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  // Container(
-                  //   height: 800,
-                  //   width: double.maxFinite,
-                  //   color: Colors.white60,
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 25.0, horizontal: 25),
-                    child: Column(
+                    Column(
+                      // mainAxisSize: MainAxisSize.min,
                       children: [
-                        const SizedBox(height: 35),
-                        const TopAppBarMobile(),
+                        const SizedBox(height: 20),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: TopAppBar(mobile: true),
+                        ),
                         const SizedBox(height: 15),
                         const Divider(height: 0, color: Color(0xffB58543)),
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           physics: const ClampingScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 22),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -71,7 +69,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                 (index) {
                                   return Padding(
                                     padding: index != 0
-                                        ? const EdgeInsets.only(left: 15.0)
+                                        ? const EdgeInsets.only(left: 20.0)
                                         : const EdgeInsets.only(left: 0.0),
                                     child: Text(
                                       tabBarCatList[index],
@@ -89,11 +87,80 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                         const Divider(height: 0, color: Color(0xffB58543)),
                         const SizedBox(height: 15),
                         SizedBox(
+                          height: 280,
+                          child: Row(
+                            children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Image.asset(
+                                    height: 220,
+                                    width: 180,
+                                    'assets/hero_left_tilt_img.png'),
+                              ),
+                              const Spacer(),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Image.asset(
+                                    height: 220,
+                                    width: 180,
+                                    'assets/hero_right_tilt_image.png'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          height: 300,
+                          child: Column(
+                            // mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SizedBox(height: 70),
+                              Text("Luxurious Gifting",
+                                  style: GoogleFonts.brawler(
+                                    color: const Color(0xff95170D),
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.w700,
+                                  )),
+                              const SizedBox(height: 10),
+                              Text(
+                                "Elevate Gifts with Personalised Envelopes",
+                                style: GoogleFonts.poppins(
+                                  color: const Color(0xff303030),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Spacer(),
+                              const SizedBox(height: 15),
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      fixedSize:
+                                          const Size(double.maxFinite, 50),
+                                      backgroundColor: const Color(0xffFBD554),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8))),
+                                  onPressed: () {},
+                                  child: Text(
+                                    "Shop Now",
+                                    style: GoogleFonts.brawler(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+
+                        /* 
+                        const SizedBox(
                           // color: Colors.black12,
                           height: 600,
                           child: SizedBox(
                               // width: 1024,
-                              /* 
+                          
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -159,17 +226,19 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                 ),
                               ],
                             ),
-                          */
+                          
                               ),
                         ),
+                        */
+                        const SizedBox(height: 15)
                         // Positioned(
                         //     child: Row(
                         //   children: [],
                         // )),
                       ],
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
 
               // HERO SECTION COMPLETED
@@ -600,7 +669,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                         vertical: 25.0, horizontal: 25),
                     child: Column(
                       children: [
-                        const TopAppBarDesktop(),
+                        const TopAppBar(mobile: false),
                         const SizedBox(height: 15),
                         const Divider(height: 0, color: Color(0xffB58543)),
                         Padding(

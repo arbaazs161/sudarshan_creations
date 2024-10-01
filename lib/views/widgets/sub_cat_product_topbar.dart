@@ -13,28 +13,30 @@ class SubCatProductTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveWid(
-      mobile: SizedBox(
-        height: 350,
+      mobile: Container(
+        color: const Color.fromARGB(255, 254, 243, 232),
+        height: 300,
         child: Stack(
           children: [
             SizedBox(
-              height: 350,
+              height: 400,
               width: double.maxFinite,
               child: Image.asset(
                 'assets/top_bg_img.png',
                 fit: BoxFit.cover,
               ),
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25),
-              child: Column(
-                children: [
-                  const SizedBox(height: 35),
-                  const TopAppBarMobile(),
-                  const Divider(color: Color(0xffB58543)),
-                  const Spacer(),
-                  ConstrainedBox(
+            Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                  child: TopAppBar(mobile: true),
+                ),
+                const Divider(color: Color(0xffB58543)),
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 1200),
                     child: Row(
                       children: [
@@ -63,9 +65,9 @@ class SubCatProductTopBar extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Spacer(),
-                ],
-              ),
+                ),
+                const Spacer(),
+              ],
             ),
           ],
         ),
@@ -87,7 +89,7 @@ class SubCatProductTopBar extends StatelessWidget {
                   const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25),
               child: Column(
                 children: [
-                  const TopAppBarDesktop(),
+                  const TopAppBar(mobile: false),
                   const Divider(color: Color(0xffB58543)),
                   const Spacer(),
                   ConstrainedBox(
@@ -135,45 +137,93 @@ class PageHeaderTopBar extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 350,
-      child: Stack(
-        children: [
-          SizedBox(
-            // height: 400,
-            width: double.maxFinite,
-            child: Image.asset(
-              'assets/top_bg_img.png',
-              fit: BoxFit.cover,
+    return ResponsiveWid(
+      mobile: Container(
+        color: const Color.fromARGB(255, 254, 243, 232),
+        height: 300,
+        child: Stack(
+          children: [
+            SizedBox(
+              // height: 350,
+              width: double.maxFinite,
+              height: double.maxFinite,
+              child: Image.asset(
+                'assets/top_bg_img.png',
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25),
-            child: Column(
-              children: [
-                const TopAppBarDesktop(),
-                const Divider(color: Color(0xffB58543)),
-                const Spacer(),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
-                  child: Row(
-                    children: [
-                      Text(
-                        title,
-                        style: GoogleFonts.brawler(
-                          color: const Color(0xff95170D),
-                          fontSize: 45,
-                          fontWeight: FontWeight.w700,
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
+              child: Column(
+                children: [
+                  // const SizedBox(height: 35),
+                  const TopAppBar(mobile: true),
+                  const Divider(color: Color(0xffB58543)),
+                  const Spacer(),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1200),
+                    child: Row(
+                      children: [
+                        Text(
+                          title,
+                          style: GoogleFonts.brawler(
+                            color: const Color(0xff95170D),
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const Spacer(),
-              ],
+                  const Spacer(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+      desktop: SizedBox(
+        height: 350,
+        child: Stack(
+          children: [
+            SizedBox(
+              // height: 400,
+              width: double.maxFinite,
+              child: Image.asset(
+                'assets/top_bg_img.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25),
+              child: Column(
+                children: [
+                  const TopAppBar(mobile: false),
+                  const Divider(color: Color(0xffB58543)),
+                  const Spacer(),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 1200),
+                    child: Row(
+                      children: [
+                        Text(
+                          title,
+                          style: GoogleFonts.brawler(
+                            color: const Color(0xff95170D),
+                            fontSize: 45,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,3 +1,15 @@
+import 'dart:math';
+
+import 'package:sudarshan_creations/shared/firebase.dart';
+
+bool isLoggedIn() => FBAuth.auth.currentUser != null;
+const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+Random _rnd = Random();
+
+String getRandomId(int length) => String.fromCharCodes(Iterable.generate(
+    length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
+    
 /* import 'dart:math';
 
 import 'package:firebase_storage/firebase_storage.dart';

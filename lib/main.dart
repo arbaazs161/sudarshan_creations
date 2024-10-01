@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sudarshan_creations/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sudarshan_creations/views/sudarshan_account.dart';
+import 'package:sudarshan_creations/views/sudarshan_allproducts.dart';
 import 'package:sudarshan_creations/views/sudarshan_homepage.dart';
 
 void main() async {
