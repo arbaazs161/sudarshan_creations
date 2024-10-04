@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import '../shared/router.dart';
 import 'sudarshan_product_details.dart';
 import 'sudarshan_subcategories.dart';
 import 'widgets/footer.dart';
@@ -80,7 +82,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                     ),
                                   );
                                 },
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -283,11 +285,14 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                     hoverColor: Colors.transparent,
                                     splashColor: Colors.transparent,
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return const SudarshanDisplayAllSubCategories();
-                                        },
-                                      ));
+                                      context.go("${Routes.category}/id");
+                                      // Navigator.push(context, MaterialPageRoute(
+                                      //   builder: (context) {
+                                      //     return const SudarshanDisplayAllSubCategories(
+                                      //       categoryId: "",
+                                      //     );
+                                      //   },
+                                      // ));
                                     },
                                     child: SubCatCardWid(
                                         image: image, text: text));
@@ -346,12 +351,14 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                         highlightColor: Colors.transparent,
                                         hoverColor: Colors.transparent,
                                         onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return const SudarshanProductDetails();
-                                            },
-                                          ));
+                                          context.go("${Routes.product}/id");
+
+                                          // Navigator.push(context,
+                                          //     MaterialPageRoute(
+                                          //   builder: (context) {
+                                          //     return const SudarshanProductDetails();
+                                          //   },
+                                          // ));
                                         },
                                         child:
                                             const ProductBagWid(forHome: true)),
@@ -550,7 +557,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                   )),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 20),
+                                horizontal: 28.0, vertical: 20),
                             width: 330,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -817,11 +824,14 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                     hoverColor: Colors.transparent,
                                     splashColor: Colors.transparent,
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return const SudarshanDisplayAllSubCategories();
-                                        },
-                                      ));
+                                      context.go("${Routes.category}/id");
+
+                                      // Navigator.push(context, MaterialPageRoute(
+                                      //   builder: (context) {
+                                      //     return const SudarshanDisplayAllSubCategories(
+                                      //         categoryId: "");
+                                      //   },
+                                      // ));
                                     },
                                     child: SubCatCardWid(
                                         image: image, text: text));
@@ -879,12 +889,14 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                         highlightColor: Colors.transparent,
                                         hoverColor: Colors.transparent,
                                         onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return const SudarshanProductDetails();
-                                            },
-                                          ));
+                                          context.go("${Routes.product}/id");
+
+                                          // Navigator.push(context,
+                                          //     MaterialPageRoute(
+                                          //   builder: (context) {
+                                          //     return const SudarshanProductDetails();
+                                          //   },
+                                          // ));
                                         },
                                         child:
                                             const ProductBagWid(forHome: true)),

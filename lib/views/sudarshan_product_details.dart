@@ -3,9 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 
+import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/top_appbar.dart';
@@ -642,11 +644,13 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     hoverColor: Colors.transparent,
                                     splashColor: Colors.transparent,
                                     onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return const SudarshanProductDetails();
-                                        },
-                                      ));
+                                      context.go("${Routes.product}/id");
+
+                                      // Navigator.push(context, MaterialPageRoute(
+                                      //   builder: (context) {
+                                      //     return const SudarshanProductDetails();
+                                      //   },
+                                      // ));
                                     },
                                     child: const ProductBagWid()),
                               );
@@ -672,7 +676,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                 hoverColor: Colors.transparent,
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(
+                                 // Navigator.push(context, MaterialPageRoute(
                                     builder: (context) {
                                       return const SudarshanProductDetails();
                                     },
@@ -1291,11 +1295,13 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                 hoverColor: Colors.transparent,
                                 splashColor: Colors.transparent,
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(
-                                    builder: (context) {
-                                      return const SudarshanProductDetails();
-                                    },
-                                  ));
+                                  context.go("${Routes.product}/id");
+
+                                  // Navigator.push(context, MaterialPageRoute(
+                                  //   builder: (context) {
+                                  //     return const SudarshanProductDetails();
+                                  //   },
+                                  // ));
                                 },
                                 child: const ProductBagWid());
                           },

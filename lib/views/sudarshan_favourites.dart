@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import '../shared/router.dart';
 import 'sudarshan_product_details.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
@@ -346,11 +348,13 @@ class _SudarshanDisplayFavouritesState
                                   hoverColor: Colors.transparent,
                                   splashColor: Colors.transparent,
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return const SudarshanProductDetails();
-                                      },
-                                    ));
+                                    context.go("${Routes.product}/id");
+
+                                    // Navigator.push(context, MaterialPageRoute(
+                                    //   builder: (context) {
+                                    //     return const SudarshanProductDetails();
+                                    //   },
+                                    // ));
                                   },
                                   child: const ProductBagWid(forHome: false));
                             },
@@ -701,11 +705,13 @@ class _SudarshanDisplayFavouritesState
                                   hoverColor: Colors.transparent,
                                   splashColor: Colors.transparent,
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return const SudarshanProductDetails();
-                                      },
-                                    ));
+                                    context.go("${Routes.product}/id");
+
+                                    // Navigator.push(context, MaterialPageRoute(
+                                    //   builder: (context) {
+                                    //     return const SudarshanProductDetails();
+                                    //   },
+                                    // ));
                                   },
                                   child: const ProductBagWid(forHome: false));
                             },

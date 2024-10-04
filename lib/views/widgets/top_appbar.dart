@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../sudarshan_account.dart';
-import '../sudarshan_favourites.dart';
-import '../sudarshan_homepage.dart';
+import '../../shared/router.dart';
 
 class TopAppBar extends StatelessWidget {
   const TopAppBar({super.key, required this.mobile});
@@ -23,11 +22,13 @@ class TopAppBar extends StatelessWidget {
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (context) {
-                return const SudarshanHomePage();
-              },
-            ));
+            context.go(Routes.home);
+
+            // Navigator.push(context, MaterialPageRoute(
+            //   builder: (context) {
+            //     return const SudarshanHomePage();
+            //   },
+            // ));
           },
           child: SizedBox(
             height: 70,
@@ -45,11 +46,13 @@ class TopAppBar extends StatelessWidget {
             if (!mobile)
               InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const SudarshanAccountPage();
-                    },
-                  ));
+                  context.go(Routes.auth);
+
+                  // Navigator.push(context, MaterialPageRoute(
+                  //   builder: (context) {
+                  //     return const SudarshanAccountPage();
+                  //   },
+                  // ));
                 },
                 child: const Icon(
                   CupertinoIcons.profile_circled,
@@ -61,11 +64,13 @@ class TopAppBar extends StatelessWidget {
             if (!mobile)
               InkWell(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const SudarshanDisplayFavourites();
-                    },
-                  ));
+                  context.go(Routes.favourites);
+
+                  // Navigator.push(context, MaterialPageRoute(
+                  //   builder: (context) {
+                  //     return const SudarshanDisplayFavourites();
+                  //   },
+                  // ));
                 },
                 child: const Icon(
                   CupertinoIcons.heart,
@@ -110,7 +115,7 @@ class TopAppBarMobile extends StatelessWidget {
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(
+           // Navigator.push(context, MaterialPageRoute(
               builder: (context) {
                 return const SudarshanHomePage();
               },
@@ -131,7 +136,7 @@ class TopAppBarMobile extends StatelessWidget {
           children: [
             /*  InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
+               // Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
                     return const SudarshanAccountPage();
                   },
@@ -146,7 +151,7 @@ class TopAppBarMobile extends StatelessWidget {
             const SizedBox(width: 15),
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
+               // Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
                     return const SudarshanDisplayFavourites();
                   },

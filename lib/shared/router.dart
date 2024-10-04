@@ -2,8 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sudarshan_creations/views/sudarshan_account.dart';
+import 'package:sudarshan_creations/views/sudarshan_allproducts.dart';
 import 'package:sudarshan_creations/views/sudarshan_homepage.dart';
 import 'package:sudarshan_creations/views/sudarshan_product_details.dart';
+import 'package:sudarshan_creations/views/sudarshan_subcategories.dart';
+import '../views/sudarshan_cart_page.dart';
+import '../views/sudarshan_favourites.dart';
 import 'error_page.dart';
 import 'methods.dart';
 
@@ -16,13 +20,14 @@ final GoRouter appRouter = GoRouter(
   redirect: redirector,
   errorBuilder: (context, state) => const ErrorPage(),
 );
+
 FutureOr<String?> redirector(BuildContext context, GoRouterState state) {
-  routeHistory.add(state.uri.path);
-  if (isLoggedIn() && state.fullPath == Routes.auth) {
-    return routeHistory.reversed.elementAt(1);
-    // return Routes.home;
-  }
-  return null;
+  // routeHistory.add(state.uri.path);
+  // if (isLoggedIn() && state.fullPath == Routes.auth) {
+  //   return routeHistory.reversed.elementAt(1);
+  //   // return Routes.home;
+  // }
+  // return null;
 }
 
 List<RouteBase> get _routes {
@@ -30,7 +35,6 @@ List<RouteBase> get _routes {
     GoRoute(
       path: Routes.home,
       pageBuilder: (BuildContext context, GoRouterState state) =>
-          // const NoTransitionPage(child: NewHomePage()),
           const NoTransitionPage(child: SudarshanHomePage()),
     ),
     GoRoute(
@@ -38,11 +42,16 @@ List<RouteBase> get _routes {
       pageBuilder: (BuildContext context, GoRouterState state) =>
           const NoTransitionPage(child: SudarshanAccountPage()),
     ),
-    // GoRoute(
-    //   path: Routes.cart,
-    //   pageBuilder: (BuildContext context, GoRouterState state) =>
-    //       const NoTransitionPage(child: CartPage()),
-    // ),
+    GoRoute(
+      path: Routes.cart,
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          const NoTransitionPage(child: SudarshanCartPage()),
+    ),
+    GoRoute(
+      path: Routes.favourites,
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          const NoTransitionPage(child: SudarshanDisplayFavourites()),
+    ),
     GoRoute(
       path: '${Routes.product}/:id',
       pageBuilder: (BuildContext context, GoRouterState state) =>
@@ -51,18 +60,24 @@ List<RouteBase> get _routes {
         productId: state.pathParameters['id'] ?? "",
       )),
     ),
+    GoRoute(
+      path: '${Routes.subcategory}/:id',
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          NoTransitionPage(
+              child: SudarshanDisplayAllProducts(
+                  subCatId: state.pathParameters['id'] ?? "")),
+    ),
+    GoRoute(
+      path: '${Routes.category}/:id',
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          NoTransitionPage(
+              child: SudarshanDisplayAllSubCategories(
+                  categoryId: state.pathParameters['id'] ?? "")),
+    ),
     // GoRoute(
     //   path: Routes.checkout,
     //   pageBuilder: (BuildContext context, GoRouterState state) =>
     //       const NoTransitionPage(child: CheckoutPage()),
-    // ),
-    // GoRoute(
-    //   path: '${Routes.category}/:name',
-    //   pageBuilder: (BuildContext context, GoRouterState state) =>
-    //       NoTransitionPage(
-    //           child: CategoryWid(
-    //     catId: state.pathParameters['name'] ?? "",
-    //   )),
     // ),
     // GoRoute(
     //   path: Routes.overview,
@@ -156,7 +171,9 @@ class Routes {
   static const category = "/category";
   static const auth = "/auth";
   static const overview = "/overview";
+  static const favourites = "/favourites";
   static const cart = "/cart";
+  static const subcategory = "/sub-category";
   static const product = "/product";
   static const checkout = "/checkout";
   static const orders = "/orders";

@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
-import 'sudarshan_product_details.dart';
+import 'package:sudarshan_creations/shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/sub_cat_product_topbar.dart';
 
 class SudarshanDisplayAllProducts extends StatefulWidget {
-  const SudarshanDisplayAllProducts({super.key});
-
+  const SudarshanDisplayAllProducts({super.key, required this.subCatId});
+  final String subCatId;
   @override
   State<SudarshanDisplayAllProducts> createState() =>
       _SudarshanDisplayAllProductsState();
@@ -24,6 +25,7 @@ class _SudarshanDisplayAllProductsState
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
     return ResponsiveWid(
       mobile: Scaffold(
         backgroundColor: const Color(0xffFEF7F3),
@@ -327,7 +329,7 @@ class _SudarshanDisplayAllProductsState
                       ),
                       const SizedBox(height: 30),
                       StaggeredGrid.extent(
-                        maxCrossAxisExtent: 300,
+                        maxCrossAxisExtent: screenWidth < 500 ? 400 : 300,
                         mainAxisSpacing: 25,
                         crossAxisSpacing: 25,
                         // spacing: 25,
@@ -346,11 +348,12 @@ class _SudarshanDisplayAllProductsState
                                   hoverColor: Colors.transparent,
                                   splashColor: Colors.transparent,
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return const SudarshanProductDetails();
-                                      },
-                                    ));
+                                    context.go("${Routes.product}/id");
+                                    // Navigator.push(context, MaterialPageRoute(
+                                    //   builder: (context) {
+                                    //     return const SudarshanProductDetails();
+                                    //   },
+                                    // ));
                                   },
                                   child: const ProductBagWid(forHome: false));
                             },
@@ -701,11 +704,13 @@ class _SudarshanDisplayAllProductsState
                                   hoverColor: Colors.transparent,
                                   splashColor: Colors.transparent,
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return const SudarshanProductDetails();
-                                      },
-                                    ));
+                                    context.go("${Routes.product}/id");
+
+                                    // Navigator.push(context, MaterialPageRoute(
+                                    //   builder: (context) {
+                                    //     return const SudarshanProductDetails();
+                                    //   },
+                                    // ));
                                   },
                                   child: const ProductBagWid(forHome: false));
                             },

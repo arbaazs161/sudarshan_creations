@@ -3,7 +3,7 @@ import 'cartitems_model.dart';
 
 class UserModel {
   final String docId;
-  final String name;
+  final String? name;
   final String number;
   final String email;
   final List<String> favourites;
@@ -22,7 +22,7 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         docId: json['docId'] as String,
-        name: json['name'] as String,
+        name: json['name'],
         number: json['number'] as String,
         email: json['email'] as String,
         favourites: List<String>.from(json['favourites']),

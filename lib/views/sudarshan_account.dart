@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,9 @@ class _SudarshanAccountPageState extends State<SudarshanAccountPage> {
                       //   LOGIN SECTION
                       : ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 500),
-                          child: LoginPage(refresh: () {
+                          child: LoginPage(
+                              // goTo: Routes.auth,
+                              refresh: () {
                             setState(() {});
                           }),
                         )),
@@ -63,6 +66,7 @@ class _SudarshanAccountPageState extends State<SudarshanAccountPage> {
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.refresh});
   final Function refresh;
+  // final String? goTo;
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -167,7 +171,7 @@ class _LoginPageState extends State<LoginPage>
       if (emailFormKey.currentState!.validate()) {
         setState(() => loading = true);
         final otp = Random().nextInt(999999);
-        /*   final res = await FBFireStore.users
+        final res = await FBFireStore.users
             .where('authEmail', isEqualTo: emailCtrl.text)
             .get();
         if (res.docs.isNotEmpty) {
@@ -175,7 +179,7 @@ class _LoginPageState extends State<LoginPage>
           debugPrint("Old User");
           // Save Otp
           newUserEmailOtp = otp;
-          newUserEmailOtpSentOn = DateTime.now();
+          // newUserEmailOtpSentOn = DateTime.now();
           await FBFireStore.users.doc(res.docs.first.id).update({
             'otp': otp,
             'otpTime': FieldValue.serverTimestamp(),
@@ -192,7 +196,7 @@ class _LoginPageState extends State<LoginPage>
           // // New User
           debugPrint("New User");
           newUserEmailOtp = otp;
-          newUserEmailOtpSentOn = DateTime.now();
+          // newUserEmailOtpSentOn = DateTime.now();
           await FBFunctions.ff.httpsCallable('sendOtpEmail').call(
             {
               'email': emailCtrl.text,
@@ -200,7 +204,7 @@ class _LoginPageState extends State<LoginPage>
             },
           );
           showAppSnack("OTP Sent!");
-        } */
+        }
       }
       setState(() => loading = false);
     } catch (e) {
@@ -213,14 +217,12 @@ class _LoginPageState extends State<LoginPage>
     try {
       if (loading) return;
       setState(() => loading = true);
-      widget.refresh();
-      mobileCtrl.clear();
-      emailCtrl.clear();
-      otpCtrl.clear();
-      /* final res = await FBFireStore.users
+
+      final res = await FBFireStore.users
           .where('authEmail', isEqualTo: emailCtrl.text)
-          .get(); */
-      /*  if (res.docs.isNotEmpty) {
+          .get();
+
+      if (res.docs.isNotEmpty) {
         // // Doc Found
         debugPrint("Old User");
         final userDocData = res.docs.first;
@@ -234,9 +236,13 @@ class _LoginPageState extends State<LoginPage>
               email: emailCtrl.text, password: res.docs.first['password']);
           //
           if (context.mounted) {
-            context.go(widget.goTo != null
-                ? widget.goTo!
-                : routeHistory.reversed.elementAt(1));
+            widget.refresh();
+            mobileCtrl.clear();
+            emailCtrl.clear();
+            otpCtrl.clear();
+            // context.go(widget.goTo != null
+            //     ? widget.goTo!
+            //     : routeHistory.reversed.elementAt(1));
           }
         }
       } else {
@@ -253,24 +259,28 @@ class _LoginPageState extends State<LoginPage>
           var data = {
             'phone': "",
             'email': emailCtrl.text,
-            'firstOrderDone': false,
             'authEmail': emailCtrl.text,
             'defaultAddressId': null,
             'addresses': {},
-            'cartData': {},
+            'name': null,
+            'cartItems': {},
             'password': newPass,
           };
           await FBFireStore.users.doc(newUserCred.user?.uid).set(data);
           //
           if (mounted) {
-            context.go(widget.goTo != null
-                ? widget.goTo!
-                : routeHistory.reversed.elementAt(1));
+            widget.refresh();
+            mobileCtrl.clear();
+            emailCtrl.clear();
+            otpCtrl.clear();
+            // context.go(widget.goTo != null
+            //     ? widget.goTo!
+            //     : routeHistory.reversed.elementAt(1));
           }
         } else {
           showAppSnack("OTP Invalid or Expired!");
         }
-      } */
+      }
       setState(() => loading = false);
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
@@ -292,31 +302,33 @@ class _LoginPageState extends State<LoginPage>
       if (loading) return;
       setState(() => loading = true);
       UserCredential? userCredential = await confirmationResult?.confirm(otp);
-      widget.refresh();
+
+      if (userCredential != null && mounted) {
+        // context.go(widget.goTo != null
+        //     ? widget.goTo!
+        //     : routeHistory.reversed.elementAt(1));
+        if (!((await FBFireStore.users.doc(userCredential.user?.uid).get())
+            .exists)) {
+          var data = {
+            'phone': userCredential.user?.phoneNumber,
+            'email': emailCtrl.text,
+            // 'firstOrderDone': false,
+            'authEmail': "",
+            'defaultAddressId': null,
+            'name': null,
+            'addresses': {},
+            'cartItems': {},
+            'password': "",
+          };
+          await FBFireStore.users.doc(userCredential.user?.uid).set(data);
+        }
+      }
+
+      setState(() => loading = false);
       mobileCtrl.clear();
       emailCtrl.clear();
       otpCtrl.clear();
-
-      // if (userCredential != null && mounted) {
-      //   context.go(widget.goTo != null
-      //       ? widget.goTo!
-      //       : routeHistory.reversed.elementAt(1));
-      //   if (!((await FBFireStore.users.doc(userCredential.user?.uid).get())
-      //       .exists)) {
-      //     var data = {
-      //       'phone': userCredential.user?.phoneNumber,
-      //       'email': emailCtrl.text,
-      //       'firstOrderDone': false,
-      //       'authEmail': "",
-      //       'defaultAddressId': null,
-      //       'addresses': {},
-      //       'cartData': {},
-      //       'password': "",
-      //     };
-      //     await FBFireStore.users.doc(userCredential.user?.uid).set(data);
-      //   }
-      // }
-      setState(() => loading = false);
+      widget.refresh();
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
       if (e.code == 'invalid-verification-code') {
@@ -517,19 +529,20 @@ class _AccountDetailsState extends State<AccountDetails> {
               ],
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Personal Details"),
-                  Text("Your Orders"),
-                  Text("Support"),
+                  const Text("Personal Details"),
+                  const Text("Your Orders"),
+                  const Text("Support"),
                   TextButton(
                       onPressed: () async {
                         await FBAuth.auth.signOut();
                         widget.refresh();
                       },
-                      child: Text("Logout"))
+                      child: const Text("Logout"))
                 ],
               ),
             ),

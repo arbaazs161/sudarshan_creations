@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import '../shared/router.dart';
 import 'sudarshan_allproducts.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_card.dart';
 import 'widgets/sub_cat_product_topbar.dart';
 
 class SudarshanDisplayAllSubCategories extends StatefulWidget {
-  const SudarshanDisplayAllSubCategories({super.key});
-
+  const SudarshanDisplayAllSubCategories({super.key, required this.categoryId});
+  final String categoryId;
   @override
   State<SudarshanDisplayAllSubCategories> createState() =>
       _SudarshanDisplayAllSubCategoriesState();
@@ -55,11 +57,14 @@ class _SudarshanDisplayAllSubCategoriesState
                               hoverColor: Colors.transparent,
                               splashColor: Colors.transparent,
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return const SudarshanDisplayAllProducts();
-                                  },
-                                ));
+                                context.go("${Routes.subcategory}/id");
+
+                                // Navigator.push(context, MaterialPageRoute(
+                                //   builder: (context) {
+                                //     return const SudarshanDisplayAllProducts(
+                                //         subCatId: "");
+                                //   },
+                                // ));
                               },
                               child: SubCatCardWid(image: image, text: text));
                         },
@@ -110,11 +115,14 @@ class _SudarshanDisplayAllSubCategoriesState
                               hoverColor: Colors.transparent,
                               splashColor: Colors.transparent,
                               onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return const SudarshanDisplayAllProducts();
-                                  },
-                                ));
+                                context.go("${Routes.subcategory}/id");
+
+                                // Navigator.push(context, MaterialPageRoute(
+                                //   builder: (context) {
+                                //     return const SudarshanDisplayAllProducts(
+                                //         subCatId: "");
+                                //   },
+                                // ));
                               },
                               child: SubCatCardWid(image: image, text: text));
                         },
