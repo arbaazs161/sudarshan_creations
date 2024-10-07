@@ -712,14 +712,27 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                 ...List.generate(
                                   ctrl.homeCategories.length,
                                   (index) {
-                                    return Text(
+                                    final idx = ctrl.homeCategories[index].docId;
+                                    print(idx);
+                                    return InkWell( 
+                                      onHover: (idx){
+                                        print(idx);
+                                      },
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      onTap: (){
+                                        context.go(
+                                            "${Routes.category}/$idx");
+                                      },
+                                    child: Text(
                                       capilatlizeFirstLetter(
                                           ctrl.homeCategories[index].name),
                                       style: GoogleFonts.poppins(
                                         color: const Color(0xff303030),
                                         fontSize: 15,
                                       ),
-                                    );
+                                    ));
                                   },
                                 )
                               ],
