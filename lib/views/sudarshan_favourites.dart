@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 import '../shared/router.dart';
-import 'sudarshan_product_details.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/sub_cat_product_topbar.dart';
@@ -34,7 +33,7 @@ class _SudarshanDisplayFavouritesState
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              const SubCatProductTopBar(forSubCat: false),
+              const SubCatProductTopBar(forCatPage: false),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -43,7 +42,7 @@ class _SudarshanDisplayFavouritesState
                     maxWidth: 1200,
                     // imp: Min height calculation (deviceHeight- footerheight - top section height - extra height of sizedbox between widgets)
                     minHeight:
-                        MediaQuery.sizeOf(context).height - 200 - 350 - 75,
+                        MediaQuery.sizeOf(context).height - 200 - 300 - 70,
                   ),
                   child: Column(
                     children: [
@@ -377,7 +376,7 @@ class _SudarshanDisplayFavouritesState
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              const SubCatProductTopBar(forSubCat: false),
+              const SubCatProductTopBar(forCatPage: false),
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),

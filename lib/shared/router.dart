@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sudarshan_creations/views/sudarshan_account.dart';
@@ -9,7 +8,6 @@ import 'package:sudarshan_creations/views/sudarshan_subcategories.dart';
 import '../views/sudarshan_cart_page.dart';
 import '../views/sudarshan_favourites.dart';
 import 'error_page.dart';
-import 'methods.dart';
 
 final routeHistory = [Routes.home];
 
@@ -17,18 +15,18 @@ final GoRouter appRouter = GoRouter(
   debugLogDiagnostics: true,
   initialLocation: Routes.home,
   routes: _routes,
-  redirect: redirector,
+  // redirect: redirector,
   errorBuilder: (context, state) => const ErrorPage(),
 );
 
-FutureOr<String?> redirector(BuildContext context, GoRouterState state) {
-  // routeHistory.add(state.uri.path);
-  // if (isLoggedIn() && state.fullPath == Routes.auth) {
-  //   return routeHistory.reversed.elementAt(1);
-  //   // return Routes.home;
-  // }
-  // return null;
-}
+// FutureOr<String?> redirector(BuildContext context, GoRouterState state) {
+//   // routeHistory.add(state.uri.path);
+//   // if (isLoggedIn() && state.fullPath == Routes.auth) {
+//   //   return routeHistory.reversed.elementAt(1);
+//   //   // return Routes.home;
+//   // }
+//   // return null;
+// }
 
 List<RouteBase> get _routes {
   return <RouteBase>[
@@ -38,7 +36,7 @@ List<RouteBase> get _routes {
           const NoTransitionPage(child: SudarshanHomePage()),
     ),
     GoRoute(
-      path: Routes.auth,
+      path: Routes.account,
       pageBuilder: (BuildContext context, GoRouterState state) =>
           const NoTransitionPage(child: SudarshanAccountPage()),
     ),
@@ -169,7 +167,7 @@ class Routes {
   static const home = "/home";
   static const products = "/products";
   static const category = "/category";
-  static const auth = "/auth";
+  static const account = "/account";
   static const overview = "/overview";
   static const favourites = "/favourites";
   static const cart = "/cart";

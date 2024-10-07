@@ -535,7 +535,9 @@ class _AccountDetailsState extends State<AccountDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text("Personal Details"),
-                  const Text("Your Orders"),
+                  const Text("Addresses"),
+                  const Text("Orders"),
+                  const Text("Enquiries"),
                   const Text("Support"),
                   TextButton(
                       onPressed: () async {

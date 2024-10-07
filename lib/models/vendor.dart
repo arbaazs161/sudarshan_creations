@@ -6,6 +6,7 @@ class VendorModel {
   final String number;
   final String address;
   final String email;
+  final Timestamp createdAt;
   final List<String> subCatIds;
 
   VendorModel({
@@ -15,6 +16,7 @@ class VendorModel {
     required this.address,
     required this.email,
     required this.subCatIds,
+    required this.createdAt,
   });
 
   factory VendorModel.fromSnap(
@@ -25,6 +27,7 @@ class VendorModel {
       number: json['number'] as String,
       address: json['address'] as String,
       email: json['email'] as String,
+      createdAt: json['createdAt'],
       subCatIds: List<String>.from(json['subCatIds']),
     );
   }
@@ -34,6 +37,7 @@ class VendorModel {
       name: json['name'] as String,
       number: json['number'] as String,
       address: json['address'] as String,
+      createdAt: json['createdAt'],
       email: json['email'] as String,
       subCatIds: List<String>.from(json['subCatIds']),
     );
@@ -45,6 +49,7 @@ class VendorModel {
       name: json['name'] as String,
       number: json['number'] as String,
       address: json['address'] as String,
+      createdAt: json['createdAt'],
       email: json['email'] as String,
       subCatIds: List<String>.from(json['subCatIds']),
     );
@@ -56,6 +61,7 @@ class VendorModel {
         'number': number,
         'address': address,
         'email': email,
+        'createdAt': createdAt,
         'subCatIds': subCatIds,
       };
 }

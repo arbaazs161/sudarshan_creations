@@ -4,6 +4,7 @@ class MainCategory {
   final String docId;
   final String name;
   final String image;
+  final List<String> combinationNames;
   final bool showonHomePage;
   final bool isActive;
 
@@ -12,6 +13,7 @@ class MainCategory {
     required this.name,
     required this.image,
     required this.showonHomePage,
+    required this.combinationNames,
     required this.isActive,
   });
 
@@ -23,6 +25,7 @@ class MainCategory {
       image: json['image'] as String,
       showonHomePage: json['showonHomePage'] as bool,
       isActive: json['isActive'] as bool,
+      combinationNames: List<String>.from(json['combinationNames']),
     );
   }
   factory MainCategory.fromDocSnap(
@@ -33,6 +36,7 @@ class MainCategory {
       image: json['image'] as String,
       showonHomePage: json['showonHomePage'] as bool,
       isActive: json['isActive'] as bool,
+      combinationNames: List<String>.from(json['combinationNames']),
     );
   }
 
@@ -43,6 +47,7 @@ class MainCategory {
       image: json['image'] as String,
       showonHomePage: json['showonHomePage'] as bool,
       isActive: json['isActive'] as bool,
+      combinationNames: List<String>.from(json['combinationNames']),
     );
   }
 
@@ -52,5 +57,6 @@ class MainCategory {
         'image': image,
         'showonHomePage': showonHomePage,
         'isActive': isActive,
+        'combinationNames': combinationNames,
       };
 }

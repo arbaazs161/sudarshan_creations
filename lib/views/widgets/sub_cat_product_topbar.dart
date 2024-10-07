@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sudarshan_creations/models/main_category.dart';
+import 'package:sudarshan_creations/models/sub_category.dart';
+import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 
 import 'top_appbar.dart';
@@ -7,9 +10,14 @@ import 'top_appbar.dart';
 class SubCatProductTopBar extends StatelessWidget {
   const SubCatProductTopBar({
     super.key,
-    this.forSubCat = true,
+    this.forCatPage = true,
+    this.mainCategoryModel,
+    this.subCategoryModel,
   });
-  final bool forSubCat;
+  final bool forCatPage;
+  final MainCategory? mainCategoryModel;
+  final SubCategory? subCategoryModel;
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveWid(
@@ -44,16 +52,20 @@ class SubCatProductTopBar extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              forSubCat
-                                  ? "SUB CATEGORY"
-                                  : "SUB CATEGORY / GIFT BAGS",
+                              forCatPage ? "CATEGORY" : "SUB-CATEGORY",
                               style: GoogleFonts.brawler(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             Text(
-                              forSubCat ? "Gift Bags" : "Bluebird Harmony",
+                              forCatPage
+                                  ? capilatlizeFirstLetter(
+                                      mainCategoryModel?.name ??
+                                          "Category Name")
+                                  : capilatlizeFirstLetter(
+                                      subCategoryModel?.name ??
+                                          "Sub-Category Name"),
                               style: GoogleFonts.brawler(
                                 color: const Color(0xff95170D),
                                 fontSize: 27,
@@ -100,16 +112,20 @@ class SubCatProductTopBar extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              forSubCat
-                                  ? "SUB CATEGORY"
-                                  : "SUB CATEGORY / GIFT BAGS",
+                              forCatPage ? "CATEGORY" : "SUB-CATEGORY",
                               style: GoogleFonts.brawler(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
                             Text(
-                              forSubCat ? "Gift Bags" : "Bluebird Harmony",
+                              forCatPage
+                                  ? capilatlizeFirstLetter(
+                                      mainCategoryModel?.name ??
+                                          "Category Name")
+                                  : capilatlizeFirstLetter(
+                                      subCategoryModel?.name ??
+                                          "Sub-Category Name"),
                               style: GoogleFonts.brawler(
                                 color: const Color(0xff95170D),
                                 fontSize: 45,

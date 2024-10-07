@@ -7,8 +7,8 @@ import 'package:sudarshan_creations/shared/firebase.dart';
 import '../models/main_category.dart';
 
 class HomeCtrl extends GetxController {
-  List<MainCategory> categories = [];
-  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? categorystream;
+  List<MainCategory> homeCategories = [];
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? homecategorystream;
   @override
   void onInit() {
     super.onInit();
@@ -17,9 +17,15 @@ class HomeCtrl extends GetxController {
 
   getMainCategories() async {
     try {
-      categorystream?.cancel();
-      categorystream = FBFireStore.categories.snapshots().listen((event) {
-        categories = event.docs.map((e) => MainCategory.fromSnap(e)).toList();
+      homecategorystream?.cancel();
+      homecategorystream = FBFireStore.categories
+          .where('showonHomePage', isEqualTo: true)
+          .where('isActive', isEqualTo: true)
+          .snapshots()
+          .listen((event) {
+        homeCategories =
+            event.docs.map((e) => MainCategory.fromSnap(e)).toList();
+        // print(categories.length);
         update();
       });
     } catch (e) {

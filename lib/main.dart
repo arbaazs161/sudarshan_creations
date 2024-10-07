@@ -4,7 +4,6 @@ import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sudarshan_creations/shared/router.dart';
-import 'package:sudarshan_creations/views/sudarshan_homepage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +22,6 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Get.put(HomeCtrl());
   }

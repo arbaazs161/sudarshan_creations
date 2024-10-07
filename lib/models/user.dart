@@ -3,9 +3,12 @@ import 'cartitems_model.dart';
 
 class UserModel {
   final String docId;
-  final String? name;
+  final String name;
   final String number;
   final String email;
+  final String authEmail;
+  final String password;
+  final String defaultAddressId;
   final List<String> favourites;
   final List<CartModel> cartItems;
   final List<AddressModel> addresses;
@@ -15,6 +18,9 @@ class UserModel {
     required this.name,
     required this.number,
     required this.email,
+    required this.authEmail,
+    required this.password,
+    required this.defaultAddressId,
     required this.favourites,
     required this.cartItems,
     required this.addresses,
@@ -22,8 +28,11 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         docId: json['docId'] as String,
-        name: json['name'],
+        name: json['name'] as String,
         number: json['number'] as String,
+        authEmail: json['authEmail'] as String,
+        defaultAddressId: json['defaultAddressId'] as String,
+        password: json['password'] as String,
         email: json['email'] as String,
         favourites: List<String>.from(json['favourites']),
         cartItems: (json['cartItems'] as List<dynamic>)

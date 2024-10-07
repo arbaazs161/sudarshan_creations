@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class TagsModel {
+class TagModel {
   final String docId;
   final String name;
   final String type;
   final String typeId;
   final List<String> tags;
 
-  TagsModel({
+  TagModel({
     required this.docId,
     required this.name,
     required this.type,
@@ -15,31 +15,31 @@ class TagsModel {
     required this.tags,
   });
 
-  factory TagsModel.fromSnap(QueryDocumentSnapshot<Map<String, dynamic>> json) {
-    return TagsModel(
+  factory TagModel.fromSnap(QueryDocumentSnapshot<Map<String, dynamic>> json) {
+    return TagModel(
       docId: json.id,
       name: json['name'] as String,
-      type: json['image'] as String,
-      typeId: json['mainCatId'] as String,
+      type: json['type'] as String,
+      typeId: json['typeId'] as String,
       tags: List<String>.from(json['tags']),
     );
   }
-  factory TagsModel.fromDocSnap(DocumentSnapshot<Map<String, dynamic>> json) {
-    return TagsModel(
+  factory TagModel.fromDocSnap(DocumentSnapshot<Map<String, dynamic>> json) {
+    return TagModel(
       docId: json.id,
       name: json['name'] as String,
-      type: json['image'] as String,
-      typeId: json['mainCatId'] as String,
+      type: json['type'] as String,
+      typeId: json['typeId'] as String,
       tags: List<String>.from(json['tags']),
     );
   }
 
-  factory TagsModel.fromJson(Map<String, dynamic> json) {
-    return TagsModel(
+  factory TagModel.fromJson(Map<String, dynamic> json) {
+    return TagModel(
       docId: json['docId'] as String,
       name: json['name'] as String,
-      type: json['image'] as String,
-      typeId: json['mainCatId'] as String,
+      type: json['type'] as String,
+      typeId: json['typeId'] as String,
       tags: List<String>.from(json['tags']),
     );
   }
@@ -47,8 +47,14 @@ class TagsModel {
   Map<String, dynamic> toJson() => {
         'docId': docId,
         'name': name,
-        'image': type,
-        'mainCatId': typeId,
-        'isActive': tags,
+        'type': type,
+        'typeId': typeId,
+        'tags': tags,
       };
+}
+
+class TypeModel {
+  static const category = "cat";
+  static const subcat = "subcat";
+  static const product = "product";
 }

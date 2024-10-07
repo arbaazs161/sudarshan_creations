@@ -6,6 +6,8 @@ class SubCategory {
   final String image;
   final String mainCatId;
   final bool isActive;
+  final num minPrice;
+  final num maxPrice;
 
   SubCategory({
     required this.docId,
@@ -13,6 +15,8 @@ class SubCategory {
     required this.image,
     required this.mainCatId,
     required this.isActive,
+    required this.minPrice,
+    required this.maxPrice,
   });
 
   factory SubCategory.fromSnap(
@@ -23,6 +27,8 @@ class SubCategory {
       image: json['image'] as String,
       mainCatId: json['mainCatId'] as String,
       isActive: json['isActive'] as bool,
+      minPrice: json['minPrice'] as num,
+      maxPrice: json['maxPrice'] as num,
     );
   }
   factory SubCategory.fromDocSnap(DocumentSnapshot<Map<String, dynamic>> json) {
@@ -32,6 +38,8 @@ class SubCategory {
       image: json['image'] as String,
       mainCatId: json['mainCatId'] as String,
       isActive: json['isActive'] as bool,
+      minPrice: json['minPrice'] as num,
+      maxPrice: json['maxPrice'] as num,
     );
   }
 
@@ -42,6 +50,8 @@ class SubCategory {
       image: json['image'] as String,
       mainCatId: json['mainCatId'] as String,
       isActive: json['isActive'] as bool,
+      minPrice: json['minPrice'] as num,
+      maxPrice: json['maxPrice'] as num,
     );
   }
 
@@ -51,5 +61,7 @@ class SubCategory {
         'image': image,
         'mainCatId': mainCatId,
         'isActive': isActive,
+        'minPrice': minPrice,
+        'maxPrice': maxPrice,
       };
 }

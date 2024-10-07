@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sudarshan_creations/models/main_category.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 import 'package:sudarshan_creations/shared/router.dart';
+import '../models/product_model.dart';
+import '../models/sub_category.dart';
+import '../shared/firebase.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/sub_cat_product_topbar.dart';
@@ -19,6 +23,34 @@ class SudarshanDisplayAllProducts extends StatefulWidget {
 
 class _SudarshanDisplayAllProductsState
     extends State<SudarshanDisplayAllProducts> {
+  List<ProductModel> allproducts = [];
+  SubCategory? subCategory;
+  MainCategory? mainCategoryModel;
+  @override
+  void initState() {
+    super.initState();
+    getSubCategoriesData();
+  }
+
+  getSubCategoriesData() async {
+    // final ctrl = Get.find<HomeCtrl>();
+    // print("-=-=-=-=-==-=${ctrl.categories.length}");
+
+    // mainCategoryModel = ctrl.categories.firstWhereOrNull((element) {
+    //   return element.docId == widget.categoryId;
+    // });
+    final subcatSnap =
+        await FBFireStore.subCategories.doc(widget.subCatId).get();
+    subCategory = SubCategory.fromDocSnap(subcatSnap);
+    // final productSnap = await FBFireStore.products
+    //     .where('subCatDocId', isEqualTo: widget.categoryId)
+    //     .where('isActive', isEqualTo: true)
+    //     .get();
+    // allproducts =
+    //     productSnap.docs.map((e) => SubCategory.fromSnap(e)).toList();
+    setState(() {});
+  }
+
   String? selectedType;
   String? selectedPrice;
   final overlayPortalController = OverlayPortalController();
@@ -34,7 +66,8 @@ class _SudarshanDisplayAllProductsState
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              const SubCatProductTopBar(forSubCat: false),
+              SubCatProductTopBar(
+                  forCatPage: false, subCategoryModel: subCategory),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -43,7 +76,7 @@ class _SudarshanDisplayAllProductsState
                     maxWidth: 1200,
                     // imp: Min height calculation (deviceHeight- footerheight - top section height - extra height of sizedbox between widgets)
                     minHeight:
-                        MediaQuery.sizeOf(context).height - 200 - 350 - 75,
+                        MediaQuery.sizeOf(context).height - 200 - 300 - 70,
                   ),
                   child: Column(
                     children: [
@@ -299,32 +332,32 @@ class _SudarshanDisplayAllProductsState
                             ),
                           ),
                           /*  SizedBox(height: 20),
-                          TextFormField(
-                            cursorColor:
-                                const Color.fromARGB(255, 153, 149, 149),
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                CupertinoIcons.search,
-                                size: 18,
-                                color: Color(0xff6C6C6C),
+                            TextFormField(
+                              cursorColor:
+                                  const Color.fromARGB(255, 153, 149, 149),
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  CupertinoIcons.search,
+                                  size: 18,
+                                  color: Color(0xff6C6C6C),
+                                ),
+                                hintText: ' Search',
+                                hintStyle: TextStyle(
+                                    color: Color(0xff6C6C6C), fontSize: 14),
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xff6C6C6C)),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xff6C6C6C)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xff6C6C6C)),
+                                ),
                               ),
-                              hintText: ' Search',
-                              hintStyle: TextStyle(
-                                  color: Color(0xff6C6C6C), fontSize: 14),
-                              border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xff6C6C6C)),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xff6C6C6C)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xff6C6C6C)),
-                              ),
-                            ),
-                          ), */
+                            ), */
                         ],
                       ),
                       const SizedBox(height: 30),
@@ -376,7 +409,8 @@ class _SudarshanDisplayAllProductsState
           physics: const ClampingScrollPhysics(),
           child: Column(
             children: [
-              const SubCatProductTopBar(forSubCat: false),
+              SubCatProductTopBar(
+                  forCatPage: false, subCategoryModel: subCategory),
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
