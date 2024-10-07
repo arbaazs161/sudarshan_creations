@@ -71,7 +71,20 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                 ...List.generate(
                                   ctrl.homeCategories.length,
                                   (index) {
-                                    return Padding(
+                                    final idx = ctrl.homeCategories[index].docId;
+                                    print(idx);
+                                    return InkWell( 
+                                      onHover: (idx){
+                                        print(idx);
+                                      },
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      onTap: (){
+                                        context.go(
+                                            "${Routes.category}/$idx");
+                                      },
+                                      child: Padding(
                                       padding: index != 0
                                           ? const EdgeInsets.only(left: 20.0)
                                           : const EdgeInsets.only(left: 0.0),
@@ -83,7 +96,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                           fontSize: 15,
                                         ),
                                       ),
-                                    );
+                                    ));
                                   },
                                 ),
                               ],
