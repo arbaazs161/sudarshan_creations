@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sudarshan_creations/shared/firebase.dart';
+
 import '../models/main_category.dart';
 
 class HomeCtrl extends GetxController {
@@ -23,8 +24,10 @@ class HomeCtrl extends GetxController {
           .where('isActive', isEqualTo: true)
           .snapshots()
           .listen((event) {
-        homeCategories =
-            event.docs.map((e) => MainCategory.fromSnap(e)).toList();
+        homeCategories = event.docs
+            .getRange(0, 6)
+            .map((e) => MainCategory.fromSnap(e))
+            .toList();
         // print(categories.length);
         update();
       });

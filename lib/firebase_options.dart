@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '972816679519',
     projectId: 'sudarshan-creations-c8748',
     storageBucket: 'sudarshan-creations-c8748.appspot.com',
-    iosBundleId: 'com.example.sudarshanCreations',
+    iosBundleId: 'com.diwizon.sudarshanCreations',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '972816679519',
     projectId: 'sudarshan-creations-c8748',
     storageBucket: 'sudarshan-creations-c8748.appspot.com',
-    iosBundleId: 'com.example.sudarshanCreations',
+    iosBundleId: 'com.diwizon.sudarshanCreations',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

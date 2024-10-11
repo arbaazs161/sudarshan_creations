@@ -1,24 +1,24 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'variants_model.dart';
 
 class ProductModel {
   final String docId;
   final String name;
   final String lowerName;
-  final String combinationNames;
+  final List<String> combinationNames;
   final String mainCatDocId;
   final String subCatDocId;
   final String vendorDocId;
-  final bool available;
+  bool available;
   final String description;
   final bool isActive;
-  final bool topSelling;
-  final List<String> images;
-  final List<String> tags; // should be lower
+  final Timestamp createdAt;
+  bool topSelling;
   final List<VariantModel> variants;
   final num minPrice;
   final num maxPrice;
-  final List<String>
-      variantTypes; // ['enquiry', 'order'] if product varaint contain enquiryand order variants;
+  final List<String> variantTypes;
+  // ['enquiry', 'order'] if product varaint contain enquiryand order variants;
 
   ProductModel({
     required this.docId,
@@ -29,11 +29,10 @@ class ProductModel {
     required this.subCatDocId,
     required this.vendorDocId,
     required this.available,
+    required this.createdAt,
     required this.description,
     required this.isActive,
     required this.topSelling,
-    required this.images,
-    required this.tags,
     required this.variants,
     required this.minPrice,
     required this.maxPrice,
@@ -51,11 +50,13 @@ class ProductModel {
       'subCatDocId': subCatDocId,
       'vendorDocId': vendorDocId,
       'available': available,
+      'minPrice': minPrice,
+      'maxPrice': maxPrice,
+      'variantTypes': variantTypes,
+      'crecreatedAt': createdAt,
       'description': description,
       'isActive': isActive,
       'topSelling': topSelling,
-      'images': images,
-      'tags': tags, // Convert tags to lowercase
       'variants': variants.map((variant) => variant.toJson()).toList(),
     };
   }
@@ -72,16 +73,73 @@ class ProductModel {
       vendorDocId: json['vendorDocId'],
       available: json['available'],
       description: json['description'],
+      createdAt: json['createdAt'],
       isActive: json['isActive'],
       maxPrice: json['maxPrice'],
       minPrice: json['minPrice'],
       topSelling: json['topSelling'],
-      images: List<String>.from(json['images']),
       variantTypes: List<String>.from(json['variantTypes']),
-      tags: List<String>.from(json['tags']), // Ensure tags are lowercase
-      variants: (json['variants'] as List<dynamic>)
-          .map((variant) =>
-              VariantModel.fromJson(variant, variant as Map<String, dynamic>))
+      variants: Map.from(json['variants'])
+          .entries
+          .map((variantJson) =>
+              VariantModel.fromJson(variantJson.key, variantJson.value))
+          .toList(),
+    );
+  }
+
+  factory ProductModel.fromSnap(
+      QueryDocumentSnapshot<Map<String, dynamic>> json) {
+    return ProductModel(
+      docId: json.id,
+      name: json['name'],
+      lowerName: json['lowerName'],
+      combinationNames: List<String>.from(json['combinationNames']),
+      mainCatDocId: json['mainCatDocId'],
+      subCatDocId: json['subCatDocId'],
+      vendorDocId: json['vendorDocId'],
+      available: json['available'],
+      description: json['description'],
+      isActive: json['isActive'],
+      maxPrice: json['maxPrice'],
+      minPrice: json['minPrice'],
+      createdAt: json['createdAt'],
+      topSelling: json['topSelling'],
+      variantTypes: List<String>.from(json['variantTypes']),
+      variants: Map.from(json['variants'])
+          .entries
+          .map((variantJson) =>
+              VariantModel.fromJson(variantJson.key, variantJson.value))
+          .toList(),
+      // variants: (json['variants'] as Map<String, dynamic>)
+      //     .map((variant) =>
+      //         VariantModel.fromJson(variant, variant as Map<String, dynamic>))
+      //     .toList(),
+    );
+  }
+  factory ProductModel.fromDocSnap(
+      DocumentSnapshot<Map<String, dynamic>> json) {
+    return ProductModel(
+      docId: json.id,
+      name: json['name'],
+      lowerName: json['lowerName'],
+      combinationNames: List<String>.from(json['combinationNames']),
+
+      createdAt: json['createdAt'],
+      mainCatDocId: json['mainCatDocId'],
+      subCatDocId: json['subCatDocId'],
+      vendorDocId: json['vendorDocId'],
+      available: json['available'],
+      description: json['description'],
+      isActive: json['isActive'],
+      maxPrice: json['maxPrice'],
+      minPrice: json['minPrice'],
+      topSelling: json['topSelling'],
+      // images: List<String>.from(json['images']),
+      variantTypes: List<String>.from(json['variantTypes']),
+      variants: Map.from(json['variants'])
+          .entries
+          .map((variantJson) =>
+              VariantModel.fromJson(variantJson.key, variantJson.value))
           .toList(),
     );
   }

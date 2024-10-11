@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sudarshan_creations/models/main_category.dart';
-import 'package:sudarshan_creations/models/sub_category.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
-
+import '../../models/main_category.dart';
+import '../../models/sub_category.dart';
 import 'top_appbar.dart';
 
 class SubCatProductTopBar extends StatelessWidget {

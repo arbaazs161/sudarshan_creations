@@ -71,32 +71,31 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                 ...List.generate(
                                   ctrl.homeCategories.length,
                                   (index) {
-                                    final idx = ctrl.homeCategories[index].docId;
-                                    print(idx);
-                                    return InkWell( 
-                                      onHover: (idx){
-                                        print(idx);
-                                      },
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      splashColor: Colors.transparent,
-                                      onTap: (){
-                                        context.go(
-                                            "${Routes.category}/$idx");
-                                      },
-                                      child: Padding(
-                                      padding: index != 0
-                                          ? const EdgeInsets.only(left: 20.0)
-                                          : const EdgeInsets.only(left: 0.0),
-                                      child: Text(
-                                        capilatlizeFirstLetter(
-                                            ctrl.homeCategories[index].name),
-                                        style: GoogleFonts.poppins(
-                                          color: const Color(0xff303030),
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ));
+                                    final idx =
+                                        ctrl.homeCategories[index].docId;
+                                    return InkWell(
+                                        onHover: (idx) {},
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        splashColor: Colors.transparent,
+                                        onTap: () {
+                                          context.go("${Routes.category}/$idx");
+                                        },
+                                        child: Padding(
+                                          padding: index != 0
+                                              ? const EdgeInsets.only(
+                                                  left: 20.0)
+                                              : const EdgeInsets.only(
+                                                  left: 0.0),
+                                          child: Text(
+                                            capilatlizeFirstLetter(ctrl
+                                                .homeCategories[index].name),
+                                            style: GoogleFonts.poppins(
+                                              color: const Color(0xff303030),
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ));
                                   },
                                 ),
                               ],
@@ -712,27 +711,24 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                 ...List.generate(
                                   ctrl.homeCategories.length,
                                   (index) {
-                                    final idx = ctrl.homeCategories[index].docId;
-                                    print(idx);
-                                    return InkWell( 
-                                      onHover: (idx){
-                                        print(idx);
-                                      },
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      splashColor: Colors.transparent,
-                                      onTap: (){
-                                        context.go(
-                                            "${Routes.category}/$idx");
-                                      },
-                                    child: Text(
-                                      capilatlizeFirstLetter(
-                                          ctrl.homeCategories[index].name),
-                                      style: GoogleFonts.poppins(
-                                        color: const Color(0xff303030),
-                                        fontSize: 15,
-                                      ),
-                                    ));
+                                    final mainCategory =
+                                        ctrl.homeCategories[index];
+                                    return InkWell(
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        splashColor: Colors.transparent,
+                                        onTap: () {
+                                          context.go(
+                                              "${Routes.category}/${mainCategory.docId}");
+                                        },
+                                        child: Text(
+                                          capilatlizeFirstLetter(
+                                              mainCategory.name),
+                                          style: GoogleFonts.poppins(
+                                            color: const Color(0xff303030),
+                                            fontSize: 15,
+                                          ),
+                                        ));
                                   },
                                 )
                               ],

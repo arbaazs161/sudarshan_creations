@@ -28,7 +28,6 @@
         "lib/firebase_options.dart": {
           "projectId": "sudarshan-creations-c8748",
           "configurations": {
-            "ios": "1:972816679519:ios:dd20461e56baef4f6d11ea",
             "web": "1:972816679519:web:fb2102c58b575f886d11ea"
           }
         }
