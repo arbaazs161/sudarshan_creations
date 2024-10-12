@@ -1,3 +1,4 @@
+
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/models/product_model.dart';
+import 'package:sudarshan_creations/models/variants_model.dart';
 import 'package:sudarshan_creations/shared/const.dart';
 import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
@@ -31,7 +33,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   ];
   List<String> personalize = ['Personlised', 'Non-Personlised'];
   int qty = 1;
-  int selectedVariant = 1;
+  VariantModel? selectedVariant;
+  TextEditingController quantityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     
@@ -50,7 +53,13 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
         }
         if(snapshot.hasData){
           final product = snapshot.data;
-          final choosedVariant = product?.variants.firstWhere((element) => element.defaultt,);
+          //variantModel? choosedVariantMinPrice;
+          final choosedVariant = selectedVariant??product?.variants.firstWhere((element) => element.defaultt,);
+          if(choosedVariant?.priceType == PriceTypeModel.priceRange){
+            choosedVariant?.priceRange.sort((a, b) => a.price.compareTo(b.price),);
+            //choosedVariantMinPrice = choosedVariant?.priceRange[0].price;
+
+          }
           
         return product!=null && choosedVariant!=null? ResponsiveWid(
           mobile: Scaffold(
@@ -369,7 +378,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                             highlightColor: Colors.transparent,
                                             splashColor: Colors.transparent,
                                             onTap: () {
-                                              selectedVariant = index;
+                                              selectedVariant = null;
                                               setState(() {});
                                             },
                                             child: Container(
@@ -782,7 +791,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     ],
                                   ),
                                   const SizedBox(height: 20),
-                                  if(choosedVariant!=null && choosedVariant.priceType == PriceTypeModel.fixedPrice)Text.rich(TextSpan(children: [
+                                  if(choosedVariant.priceType == PriceTypeModel.fixedPrice)Text.rich(TextSpan(children: [
                                     TextSpan(
                                         text: '₹${choosedVariant.fixedPrice}',
                                         style: GoogleFonts.poppins(
@@ -800,7 +809,48 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     //       decoration: TextDecoration.lineThrough,
                                     //     )),
                                   ])),
+                                  if(choosedVariant.priceType == PriceTypeModel.priceRange)Text.rich(TextSpan(children: [
+                                    TextSpan(
+                                        text: 'Starting at ',
+                                        style: GoogleFonts.poppins(
+                                          color: const Color(0xff4F4F4F),
+                                          fontSize: 18,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.w600,
+                                        )),
+                                    TextSpan(
+                                        text: '₹${choosedVariant.priceRange[0].price}',
+                                        style: GoogleFonts.poppins(
+                                          color: const Color(0xff4F4F4F),
+                                          fontSize: 22,
+                                          letterSpacing: 1,
+                                          fontWeight: FontWeight.w600,
+                                        )),
+                                  ])),
+                                  if(choosedVariant.priceType == PriceTypeModel.priceRange)
+                                  Row(
+                                    children: [
+                                      Text(
+                                            'For a minimum quantity ${choosedVariant.priceRange[0].startQty}',
+                                            style: GoogleFonts.leagueSpartan(
+                                              color: const Color(0xff828282),
+                                              fontSize: 18,
+                                            )),
+                                            SizedBox(width: 5,),
+                                            Tooltip(
+                                              message: "Show Price Ranges",
+                                              child: IconButton(onPressed: (){
+                                                //show ranges table
+                                              }, icon: Icon(CupertinoIcons.info),
+                                              
+                                              ),
+                                            )
+                                            
+                                    ],
+
+                                  ),
                                   const SizedBox(height: 8),
+                                  if(choosedVariant.priceType != PriceTypeModel.inquiry)
                                   Text(
                                     choosedVariant.available?'In Stock':'Out of Stock',
                                     style: GoogleFonts.leagueSpartan(
@@ -810,75 +860,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     ),
                                   ),
                                   const SizedBox(height: 30),
-                                  // Text(
-                                  //   "Quantity:",
-                                  //   style: GoogleFonts.poppins(
-                                  //     color: const Color(0xff828282),
-                                  //     fontSize: 14,
-                                  //   ),
-                                  // ),
-                                  // const SizedBox(height: 10),
-                                  // Wrap(
-                                  //   spacing: 15,
-                                  //   runSpacing: 15,
-                                  //   children: [
-                                  //     ...List.generate(
-                                  //       qunatitySet.length,
-                                  //       (index) {
-                                  //         return Container(
-                                  //           padding: const EdgeInsets.symmetric(
-                                  //               vertical: 7, horizontal: 15),
-                                  //           decoration: BoxDecoration(
-                                  //             border: Border.all(
-                                  //                 color: const Color(0xffE0E0E0)),
-                                  //           ),
-                                  //           child: Text(
-                                  //             qunatitySet[index],
-                                  //             style: GoogleFonts.poppins(
-                                  //               color: const Color(0xff6C6C6C),
-                                  //               fontSize: 12,
-                                  //             ),
-                                  //           ),
-                                  //         );
-                                  //       },
-                                  //     )
-                                  //   ],
-                                  // ),
-                                  // const SizedBox(height: 20),
-                                  // Text(
-                                  //   "Personlisation:",
-                                  //   style: GoogleFonts.poppins(
-                                  //     color: const Color(0xff828282),
-                                  //     fontSize: 14,
-                                  //   ),
-                                  // ),
-                                  // const SizedBox(height: 10),
-                                  // Wrap(
-                                  //   spacing: 15,
-                                  //   runSpacing: 15,
-                                  //   children: [
-                                  //     ...List.generate(
-                                  //       personalize.length,
-                                  //       (index) {
-                                  //         return Container(
-                                  //           padding: const EdgeInsets.symmetric(
-                                  //               vertical: 7, horizontal: 15),
-                                  //           decoration: BoxDecoration(
-                                  //             border: Border.all(
-                                  //                 color: const Color(0xffE0E0E0)),
-                                  //           ),
-                                  //           child: Text(
-                                  //             personalize[index],
-                                  //             style: GoogleFonts.poppins(
-                                  //               color: const Color(0xff6C6C6C),
-                                  //               fontSize: 12,
-                                  //             ),
-                                  //           ),
-                                  //         );
-                                  //       },
-                                  //     ),
-                                  //   ],
-                                  // ),
+                            
                                   Text(
                                     "Options:",
                                     style: GoogleFonts.poppins(
@@ -894,7 +876,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     runAlignment: WrapAlignment.start,
                                     children: [
                                       ...List.generate(
-                                        product.variants.length-1,
+                                        product.variants.length,
                                         (index) {
                                           final variant = product.variants[index];
                                           return InkWell(
@@ -902,7 +884,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                             highlightColor: Colors.transparent,
                                             splashColor: Colors.transparent,
                                             onTap: () {
-                                              selectedVariant = index;
+                                              selectedVariant = variant;
                                               setState(() {});
                                             },
                                             child: Container(
@@ -916,6 +898,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                     color: const Color.fromARGB(
                                                         255, 161, 161, 161)),
                                               ),
+                                              
                                               child: ListTile(
                                                 contentPadding:
                                                     const EdgeInsets.symmetric(
@@ -926,14 +909,14 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                   // width: 50,
                                                   decoration: const BoxDecoration(
                                                       shape: BoxShape.circle),
-                                                  // child: Image.asset(
-                                                  //   imgList[index],
-                                                  //   fit: BoxFit.cover,
-                                                  // ),
+                                                  child: Image.network(
+                                                    variant.images.first,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                                 // minLeadingWidth: 50,
-                                                title: const Text(
-                                                  "Material lorem ipsum",
+                                                title: Text(
+                                                  variant.material??"",
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -951,54 +934,45 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
-                                                    Text(
-                                                      "variant description lorem ipsum dolor sit amet, consectetur adipiscing.",
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 10,
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                    ),
+                                                    
                                                   ],
                                                 ),
                                               ),
                                             ),
-                                            // child: Container(
-                                            //   height: 140,
-                                            //   width: 100,
-                                            //   clipBehavior:
-                                            //       Clip.antiAlias,
-                                            //   decoration: BoxDecoration(
-                                            //       borderRadius:
-                                            //           BorderRadius
-                                            //               .circular(5)),
-                                            //   child: Column(
-                                            //     crossAxisAlignment:
-                                            //         CrossAxisAlignment
-                                            //             .start,
-                                            //     children: [
-                                            //       Container(
-                                            //         decoration: BoxDecoration(
-                                            //             borderRadius:
-                                            //                 BorderRadius
-                                            //                     .circular(
-                                            //                         5)),
-                                            //         clipBehavior:
-                                            //             Clip.antiAlias,
-                                            //         child: Image.asset(
-                                            //           imgList[index],
-                                            //           fit:
-                                            //               BoxFit.fitWidth,
-                                            //         ),
-                                            //       ),
-                                            //       const Text("₹150/pc")
-                                            //     ],
-                                            //   ),
-                                            // ),
-                                          );
-                                        },
+                                          //   child: Container(
+                                          //     height: 140,
+                                          //     width: 100,
+                                          //     clipBehavior:
+                                          //         Clip.antiAlias,
+                                          //     decoration: BoxDecoration(
+                                          //         borderRadius:
+                                          //             BorderRadius
+                                          //                 .circular(5)),
+                                          //     child: Column(
+                                          //       crossAxisAlignment:
+                                          //           CrossAxisAlignment
+                                          //               .start,
+                                          //       children: [
+                                          //         Container(
+                                          //           decoration: BoxDecoration(
+                                          //               borderRadius:
+                                          //                   BorderRadius
+                                          //                       .circular(
+                                          //                           5)),
+                                          //           clipBehavior:
+                                          //               Clip.antiAlias,
+                                          //           // child: Image.asset(
+                                          //           //   imgList[index],
+                                          //           //   fit:
+                                          //           //       BoxFit.fitWidth,
+                                          //           // ),
+                                          //         ),
+                                          //         const Text("₹150/pc")
+                                          //       ],
+                                          //     ),
+                                          //   ),
+                                           );
+                                      },
                                       )
                                     ],
                                   ),
@@ -1036,6 +1010,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                             )),
                                         const SizedBox(width: 17),
                                         Text(
+
+                                          //controller: quantityController,
+
                                           qty.toString(),
                                           style: GoogleFonts.poppins(
                                             color: const Color(0xff6C6C6C),
@@ -1045,7 +1022,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                         const SizedBox(width: 17),
                                         InkWell(
                                           onTap: () {
-                                            qty++;
+                                            //qty++;
+                                            quantityController.text = (int.parse(quantityController.text.trim())+1) as String;
                                             setState(() {});
                                           },
                                           child: const Padding(
