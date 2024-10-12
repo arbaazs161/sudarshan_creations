@@ -4,6 +4,23 @@ const mobileMinSize2 = mobileMinSize - 200;
 const mobileMinSize3 = mobileMinSize + 200;
 const desktopMinSize2 = desktopMinSize - 200;
 
+class PriceTypeModel {
+  static const fixedPrice = 'Fixed Price';
+  static const priceRange = 'Price Range';
+  static const inquiry = 'Inquiry';
+}
+
+class VariantTypeModel {
+  static const inquiry = 'Inquiry';
+  static const order = 'Order';
+}
+
+List<String> priceTypes = [
+  PriceTypeModel.fixedPrice,
+  PriceTypeModel.priceRange,
+  PriceTypeModel.inquiry
+];
+
 
 // const splitViewMinSize = 700;
 // const breakPointLarge = 1124;

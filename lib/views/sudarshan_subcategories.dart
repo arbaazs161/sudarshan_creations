@@ -73,38 +73,42 @@ class _SudarshanDisplayAllSubCategoriesState
                       minHeight:
                           MediaQuery.sizeOf(context).height - 200 - 300 - 100,
                     ),
-                    child: StaggeredGrid.extent(
-                      maxCrossAxisExtent: 400,
-                      mainAxisSpacing: 25,
-                      crossAxisSpacing: 25,
-                      children: [
-                        ...List.generate(
-                          subCategories.length,
-                          (index) {
-                            final image = subCategories[index].image;
-                            final text = subCategories[index].name;
-                            return InkWell(
-                                highlightColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  context.go(
-                                      "${Routes.subcategory}/${subCategories[index].docId}");
+                    child: subCategories.isEmpty
+                        ? const Center(
+                            child: Text("No sub-category"),
+                          )
+                        : StaggeredGrid.extent(
+                            maxCrossAxisExtent: 400,
+                            mainAxisSpacing: 25,
+                            crossAxisSpacing: 25,
+                            children: [
+                              ...List.generate(
+                                subCategories.length,
+                                (index) {
+                                  final image = subCategories[index].image;
+                                  final text = subCategories[index].name;
+                                  return InkWell(
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      onTap: () {
+                                        context.go(
+                                            "${Routes.subcategory}/${subCategories[index].docId}");
 
-                                  // Navigator.push(context, MaterialPageRoute(
-                                  //   builder: (context) {
-                                  //     return const SudarshanDisplayAllProducts(
-                                  //         subCatId: "");
-                                  //   },
-                                  // ));
+                                        // Navigator.push(context, MaterialPageRoute(
+                                        //   builder: (context) {
+                                        //     return const SudarshanDisplayAllProducts(
+                                        //         subCatId: "");
+                                        //   },
+                                        // ));
+                                      },
+                                      child: SubCatCardWid(
+                                          image: image,
+                                          text: capilatlizeFirstLetter(text)));
                                 },
-                                child: SubCatCardWid(
-                                    image: image,
-                                    text: capilatlizeFirstLetter(text)));
-                          },
-                        )
-                      ],
-                    ),
+                              )
+                            ],
+                          ),
                   ),
                 ),
                 const SizedBox(height: 50),
@@ -131,38 +135,42 @@ class _SudarshanDisplayAllSubCategoriesState
                       minHeight:
                           MediaQuery.sizeOf(context).height - 60 - 350 - 100,
                     ),
-                    child: StaggeredGrid.extent(
-                      maxCrossAxisExtent: 300,
-                      mainAxisSpacing: 25,
-                      crossAxisSpacing: 25,
-                      children: [
-                        ...List.generate(
-                          subCategories.length,
-                          (index) {
-                            final image = subCategories[index].image;
-                            final text = subCategories[index].name;
-                            return InkWell(
-                                highlightColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                onTap: () {
-                                  context.go(
-                                      "${Routes.subcategory}/${subCategories[index].docId}");
+                    child: subCategories.isEmpty
+                        ? const Center(
+                            child: Text("No sub-category"),
+                          )
+                        : StaggeredGrid.extent(
+                            maxCrossAxisExtent: 300,
+                            mainAxisSpacing: 25,
+                            crossAxisSpacing: 25,
+                            children: [
+                              ...List.generate(
+                                subCategories.length,
+                                (index) {
+                                  final image = subCategories[index].image;
+                                  final text = subCategories[index].name;
+                                  return InkWell(
+                                      highlightColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      splashColor: Colors.transparent,
+                                      onTap: () {
+                                        context.go(
+                                            "${Routes.subcategory}/${subCategories[index].docId}");
 
-                                  // Navigator.push(context, MaterialPageRoute(
-                                  //   builder: (context) {
-                                  //     return const SudarshanDisplayAllProducts(
-                                  //         subCatId: "");
-                                  //   },
-                                  // ));
+                                        // Navigator.push(context, MaterialPageRoute(
+                                        //   builder: (context) {
+                                        //     return const SudarshanDisplayAllProducts(
+                                        //         subCatId: "");
+                                        //   },
+                                        // ));
+                                      },
+                                      child: SubCatCardWid(
+                                          image: image,
+                                          text: capilatlizeFirstLetter(text)));
                                 },
-                                child: SubCatCardWid(
-                                    image: image,
-                                    text: capilatlizeFirstLetter(text)));
-                          },
-                        )
-                      ],
-                    ),
+                              )
+                            ],
+                          ),
                   ),
                 ),
                 const SizedBox(height: 50),

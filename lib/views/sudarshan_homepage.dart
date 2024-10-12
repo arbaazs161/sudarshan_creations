@@ -28,6 +28,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
   //   'NOTECARDS KIDS',
   //   'GIFT SETS',
   // ];
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeCtrl>(builder: (ctrl) {
@@ -358,8 +359,10 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                               // spacing: 17,
                               children: [
                                 ...List.generate(
-                                  4,
+                                  ctrl.topSellingProducts.length,
                                   (index) {
+                                    final product =
+                                        ctrl.topSellingProducts[index];
                                     return Padding(
                                       padding:
                                           const EdgeInsets.only(right: 25.0),
@@ -367,7 +370,8 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                           highlightColor: Colors.transparent,
                                           hoverColor: Colors.transparent,
                                           onTap: () {
-                                            context.go("${Routes.product}/id");
+                                            context.go(
+                                                "${Routes.product}/${product.docId}");
 
                                             // Navigator.push(context,
                                             //     MaterialPageRoute(
@@ -376,8 +380,8 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                             //   },
                                             // ));
                                           },
-                                          child: const ProductBagWid(
-                                              forHome: true)),
+                                          child: ProductBagWid(
+                                              product: product, forHome: true)),
                                     );
                                   },
                                 )
@@ -917,8 +921,10 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                               // spacing: 17,
                               children: [
                                 ...List.generate(
-                                  4,
+                                  ctrl.topSellingProducts.length,
                                   (index) {
+                                    final product =
+                                        ctrl.topSellingProducts[index];
                                     return Padding(
                                       padding:
                                           const EdgeInsets.only(right: 25.0),
@@ -935,8 +941,8 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                             //   },
                                             // ));
                                           },
-                                          child: const ProductBagWid(
-                                              forHome: true)),
+                                          child: ProductBagWid(
+                                              product: product, forHome: true)),
                                     );
                                   },
                                 )

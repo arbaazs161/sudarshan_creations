@@ -393,27 +393,29 @@ class _SudarshanDisplayAllProductsState
                               // runSpacing: 25,
                               children: [
                                 ...List.generate(
-                                  6,
+                                  filteredProducts.length,
                                   (index) {
                                     // final image = index % 2 == 0
                                     //     ? 'assets/money_envol_image.png'
                                     //     : 'assets/gift_sets_image.png';
                                     // final text =
                                     //     index % 2 == 0 ? "GFT SETS" : "MONEY ENVELOPES";
+                                    final product = filteredProducts[index];
                                     return InkWell(
                                         highlightColor: Colors.transparent,
                                         hoverColor: Colors.transparent,
                                         splashColor: Colors.transparent,
                                         onTap: () {
-                                          context.go("${Routes.product}/id");
+                                          context.go(
+                                              "${Routes.product}/${product.docId}");
                                           // Navigator.push(context, MaterialPageRoute(
                                           //   builder: (context) {
                                           //     return const SudarshanProductDetails();
                                           //   },
                                           // ));
                                         },
-                                        child: const ProductBagWid(
-                                            forHome: false));
+                                        child: ProductBagWid(
+                                            product: product, forHome: false));
                                   },
                                 )
                               ],
@@ -804,8 +806,8 @@ class _SudarshanDisplayAllProductsState
                                           //   },
                                           // ));
                                         },
-                                        child: const ProductBagWid(
-                                            forHome: false));
+                                        child: ProductBagWid(
+                                            product: product, forHome: false));
                                   },
                                 )
                               ],
