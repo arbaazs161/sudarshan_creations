@@ -828,27 +828,32 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                         )),
                                   ])),
                                   if(choosedVariant.priceType == PriceTypeModel.priceRange)
-                                  Row(
-                                    children: [
-                                      Text(
-                                            'For a minimum quantity ${choosedVariant.priceRange[0].startQty}',
-                                            style: GoogleFonts.leagueSpartan(
-                                              color: const Color(0xff828282),
-                                              fontSize: 18,
-                                            )),
-                                            SizedBox(width: 5,),
-                                            Tooltip(
-                                              message: "Show Price Ranges",
-                                              child: IconButton(onPressed: (){
-                                                //show ranges table
-                                              }, icon: Icon(CupertinoIcons.info),
-                                              
-                                              ),
-                                            )
-                                            
-                                    ],
-
+                                  Container(
+                                    color: const Color.fromARGB(255, 241, 200, 174), //Choose appropriate color here
+                                    padding: EdgeInsets.all(8), 
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'For a minimum quantity ${choosedVariant.priceRange[0].startQty}',
+                                          style: GoogleFonts.leagueSpartan(
+                                            color: const Color(0xff828282),
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        SizedBox(width: 5),
+                                        Tooltip(
+                                          message: "Show Price Ranges",
+                                          child: IconButton(
+                                            onPressed: () {
+                                              // Show ranges table
+                                            },
+                                            icon: Icon(CupertinoIcons.greaterthan),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
+
                                   const SizedBox(height: 8),
                                   if(choosedVariant.priceType != PriceTypeModel.inquiry)
                                   Text(
@@ -879,6 +884,12 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                         product.variants.length,
                                         (index) {
                                           final variant = product.variants[index];
+                                          String formattedString;
+                                          formattedString = [
+                                                    variant.material?.isNotEmpty == true ? variant.material : null,
+                                                    variant.color?.isNotEmpty == true ? variant.color : null,
+                                                    variant.size?.isNotEmpty == true ? variant.size : null
+                                                  ].where((element) => element != null).join('/');
                                           return InkWell(
                                             hoverColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
@@ -914,21 +925,22 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
+                                                
                                                 // minLeadingWidth: 50,
                                                 title: Text(
-                                                  variant.material??"",
+                                                  formattedString,
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                       fontSize: 13,
                                                       fontWeight: FontWeight.w500),
                                                 ),
-                                                subtitle: const Column(
+                                                subtitle: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      "₹200/ pc",
+                                                    if(variant.priceType != PriceTypeModel.inquiry)Text(
+                                                      "₹${variant.fixedPrice}",//Assume that pricerange variant also has a fixed price.
                                                       style: TextStyle(
                                                           fontSize: 11,
                                                           fontWeight:
@@ -1242,7 +1254,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                               thickness: .6),
                                           const SizedBox(height: 7),
                                           Text(
-                                            "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
+                                            choosedVariant.description,
+                                            //"Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
                                             style: GoogleFonts.poppins(
                                                 height: 1.7,
                                                 fontSize: 12,
