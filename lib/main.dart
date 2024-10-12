@@ -5,6 +5,8 @@ import 'package:sudarshan_creations/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sudarshan_creations/shared/router.dart';
 
+import 'shared/theme.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -36,10 +38,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Sudardshan Creations',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: themeData,
+      // theme: ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      //   useMaterial3: true,
+      // ),
       routerConfig: appRouter,
     );
   }
