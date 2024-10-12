@@ -827,29 +827,40 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                           fontWeight: FontWeight.w600,
                                         )),
                                   ])),
+                                  const SizedBox(height: 10),
                                   if(choosedVariant.priceType == PriceTypeModel.priceRange)
                                   Container(
-                                    color: const Color.fromARGB(255, 241, 200, 174), //Choose appropriate color here
-                                    padding: EdgeInsets.all(8), 
                                     child: Row(
                                       children: [
-                                        Text(
-                                          'For a minimum quantity ${choosedVariant.priceRange[0].startQty}',
-                                          style: GoogleFonts.leagueSpartan(
-                                            color: const Color(0xff828282),
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                        SizedBox(width: 5),
-                                        Tooltip(
-                                          message: "Show Price Ranges",
-                                          child: IconButton(
-                                            onPressed: () {
-                                              // Show ranges table
-                                            },
-                                            icon: Icon(CupertinoIcons.greaterthan),
+                                        GestureDetector(
+                                          onTap: () {
+                                            //show table
+                                          },
+                                          child: Container(
+                                            color: const Color.fromARGB(255, 230, 216, 197), 
+                                            padding: EdgeInsets.all(5),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min, 
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'For a minimum quantity ${choosedVariant.priceRange[0].startQty}',
+                                                  style: GoogleFonts.leagueSpartan(
+                                                    color: const Color(0xff828282),
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10), 
+                                                Icon(
+                                                  CupertinoIcons.greaterthan_circle_fill, 
+                                                  color: const Color(0xff828282), 
+                                                  size: 16, 
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         )
+
                                       ],
                                     ),
                                   ),
