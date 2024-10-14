@@ -833,16 +833,16 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                             )
                           ],
                         ), */
-                        const SizedBox(height: 50),
-                      ],
+                                  const SizedBox(height: 50),
+                                ],
+                              ),
+                            ),
+                            const SudarshanFooterSection(),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  const SudarshanFooterSection(),
-                ],
-              ),
-            ),
-          ),
-          desktop: Scaffold(
+                    /*  desktop: Scaffold(
             backgroundColor: const Color(0xffFEF7F3),
             body: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
@@ -1461,7 +1461,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                           ],
                         ),
                       ),
-                    ),
+                    ), */
                     desktop: Scaffold(
                       backgroundColor: const Color(0xffFEF7F3),
                       body: SingleChildScrollView(
@@ -2335,34 +2335,6 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
           }
           return const SizedBox();
         });
-  }
-}
-
-class TopAppBarWithBgImg extends StatelessWidget {
-  const TopAppBarWithBgImg({
-    super.key,
-    required this.mobile,
-  });
-  final bool mobile;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: Stack(
-        children: [
-          Image.asset(
-            'assets/top_bg_img.png',
-            width: double.maxFinite,
-            height: double.maxFinite,
-            fit: BoxFit.cover,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-            child: TopAppBar(mobile: mobile),
-          ),
-        ],
-      ),
-    );
   }
 }
 

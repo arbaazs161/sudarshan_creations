@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 import 'package:sudarshan_creations/shared/router.dart';
+import 'package:sudarshan_creations/views/wrapper.dart';
 import '../models/main_category.dart';
 import '../models/product_model.dart';
 import '../models/sub_category.dart';
@@ -12,6 +13,8 @@ import '../shared/firebase.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/sub_cat_product_topbar.dart';
+
+final _allProductsScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanDisplayAllProducts extends StatefulWidget {
   const SudarshanDisplayAllProducts({super.key, required this.subCatId});
@@ -56,8 +59,9 @@ class _SudarshanDisplayAllProductsState
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     return ResponsiveWid(
-      mobile: Scaffold(
-        backgroundColor: const Color(0xffFEF7F3),
+      mobile: Wrapper(
+        scafkey: _allProductsScafKey,
+        // small: true,
         // backgroundColor: Colors.white,
         body: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
@@ -431,8 +435,9 @@ class _SudarshanDisplayAllProductsState
           ),
         ),
       ),
-      desktop: Scaffold(
-        backgroundColor: const Color(0xffFEF7F3),
+      desktop: Wrapper(
+        scafkey: _allProductsScafKey,
+        // small: false,
         body: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Column(

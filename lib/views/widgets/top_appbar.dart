@@ -11,10 +11,13 @@ class TopAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Icon(
-          Icons.menu,
-          color: Color(0xff95170D),
-          size: 28,
+        InkWell(
+          onTap: () => Scaffold.of(context).openDrawer(),
+          child: const Icon(
+            Icons.menu,
+            color: Color(0xff95170D),
+            size: 28,
+          ),
         ),
         const Spacer(),
         InkWell(
@@ -93,6 +96,34 @@ class TopAppBar extends StatelessWidget {
           ],
         )
       ],
+    );
+  }
+}
+
+class TopAppBarWithBgImg extends StatelessWidget {
+  const TopAppBarWithBgImg({
+    super.key,
+    required this.mobile,
+  });
+  final bool mobile;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 100,
+      child: Stack(
+        children: [
+          Image.asset(
+            'assets/top_bg_img.png',
+            width: double.maxFinite,
+            height: double.maxFinite,
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+            child: TopAppBar(mobile: mobile),
+          ),
+        ],
+      ),
     );
   }
 }

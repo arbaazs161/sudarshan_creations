@@ -6,12 +6,15 @@ import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import 'package:sudarshan_creations/views/wrapper.dart';
 import '../models/main_category.dart';
 import '../models/sub_category.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_card.dart';
 import 'widgets/sub_cat_product_topbar.dart';
+
+final _subCategoriesScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanDisplayAllSubCategories extends StatefulWidget {
   const SudarshanDisplayAllSubCategories({super.key, required this.categoryId});
@@ -55,8 +58,8 @@ class _SudarshanDisplayAllSubCategoriesState
         return element.docId == widget.categoryId;
       });
       return ResponsiveWid(
-        mobile: Scaffold(
-          backgroundColor: const Color(0xffFEF7F3),
+        mobile: Wrapper(
+          scafkey: _subCategoriesScafKey,
           body: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Column(
@@ -117,8 +120,8 @@ class _SudarshanDisplayAllSubCategoriesState
             ),
           ),
         ),
-        desktop: Scaffold(
-          backgroundColor: const Color(0xffFEF7F3),
+        desktop: Wrapper(
+          scafkey: _subCategoriesScafKey,
           body: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Column(

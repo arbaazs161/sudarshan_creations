@@ -6,11 +6,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import 'package:sudarshan_creations/views/wrapper.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/product_card.dart';
 import 'widgets/top_appbar.dart';
+
+final _homePageScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanHomePage extends StatefulWidget {
   const SudarshanHomePage({super.key});
@@ -33,8 +36,10 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
   Widget build(BuildContext context) {
     return GetBuilder<HomeCtrl>(builder: (ctrl) {
       return ResponsiveWid(
-        mobile: Scaffold(
-          backgroundColor: const Color(0xffFEF7F3),
+        mobile: Wrapper(
+          scafkey: _homePageScafKey,
+          // small: true,
+          // backgroundColor: const Color(0xffFEF7F3),
           body: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Column(
@@ -677,8 +682,10 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
         ),
 
         // ================================================================ DESKTOP START
-        desktop: Scaffold(
-          backgroundColor: const Color(0xffFEF7F3),
+        desktop: Wrapper(
+          // backgroundColor: const Color(0xffFEF7F3),
+          scafkey: _homePageScafKey,
+          // small: false,
           body: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             child: Column(
@@ -932,7 +939,8 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                           highlightColor: Colors.transparent,
                                           hoverColor: Colors.transparent,
                                           onTap: () {
-                                            context.go("${Routes.product}/id");
+                                            context.go(
+                                                "${Routes.product}/${product.docId}");
 
                                             // Navigator.push(context,
                                             //     MaterialPageRoute(

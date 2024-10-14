@@ -4,10 +4,13 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import 'package:sudarshan_creations/views/wrapper.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/sub_cat_product_topbar.dart';
+
+final _favouriteScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanDisplayFavourites extends StatefulWidget {
   const SudarshanDisplayFavourites({super.key});
@@ -26,8 +29,9 @@ class _SudarshanDisplayFavouritesState
   @override
   Widget build(BuildContext context) {
     return ResponsiveWid(
-      mobile: Scaffold(
-        backgroundColor: const Color(0xffFEF7F3),
+      mobile: Wrapper(
+        scafkey: _favouriteScafKey,
+        // small: true,
         // backgroundColor: Colors.white,
         body: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
@@ -370,8 +374,8 @@ class _SudarshanDisplayFavouritesState
           ),
         ),
       ),
-      desktop: Scaffold(
-        backgroundColor: const Color(0xffFEF7F3),
+      desktop: Wrapper(
+        scafkey: _favouriteScafKey,
         body: SingleChildScrollView(
           physics: const ClampingScrollPhysics(),
           child: Column(

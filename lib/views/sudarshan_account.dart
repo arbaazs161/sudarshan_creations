@@ -8,8 +8,11 @@ import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 import 'package:sudarshan_creations/shared/snackbar.dart';
+import 'package:sudarshan_creations/views/wrapper.dart';
 import 'widgets/footer.dart';
 import 'widgets/sub_cat_product_topbar.dart';
+
+final _accountPageScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanAccountPage extends StatefulWidget {
   const SudarshanAccountPage({super.key});
@@ -21,8 +24,9 @@ class SudarshanAccountPage extends StatefulWidget {
 class _SudarshanAccountPageState extends State<SudarshanAccountPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffFEF7F3),
+    return Wrapper(
+      scafkey: _accountPageScafKey,
+      // small: false,
       body: SingleChildScrollView(
         physics: const ClampingScrollPhysics(),
         child: Column(
