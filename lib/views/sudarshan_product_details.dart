@@ -53,21 +53,20 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   }
   getUser() async{
     if (isLoggedIn() && FBAuth.auth.currentUser != null) {
-    // Fetch user document reference
+      print("returning user");
       final userDocRef = 
           await FBFireStore.users.doc(FBAuth.auth.currentUser!.uid).get();
       
-      // Check if the document exists and contains data
       if (userDocRef.exists && userDocRef.data() != null) {
-        // Return the user object from Firestore data
         
         user =  UserModel.fromJson(userDocRef.data()!);
         print("User found ${user}");
-        return true;
+        
       }
+      return user;
     }
     print("Returning null");
-    return false;
+    return null;
   }
   @override
   Widget build(BuildContext context) {
@@ -1355,7 +1354,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                                           6)),
                                                         ),
                                                         onPressed: () async {
-                                                          if(getUser()){
+                                                          if(await getUser() != null){
                                                             print("Inside addd to cart");
                                                             CartModel cart = CartModel(id: choosedVariant.id, productId: product.docId, qty: qty);
                                                                 List<CartModel>? existingCart = user?.cartItems;
@@ -1379,7 +1378,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                                   .update({'cartItems': existingCart?.map((item) => item.toJson()).toList()});
 
                                                             setState(() {});
-                                                          } if(!getUser()){
+                                                          } if(await getUser() == null){
                                                             print("Inside Go to account");
                                                             context.go(Routes.account);
                                                           }
