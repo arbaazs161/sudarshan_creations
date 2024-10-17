@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/models/cartitems_model.dart';
 import 'package:sudarshan_creations/models/product_model.dart';
+import 'package:sudarshan_creations/models/sub_category.dart';
 import 'package:sudarshan_creations/models/user.dart';
 import 'package:sudarshan_creations/models/variants_model.dart';
 import 'package:sudarshan_creations/shared/const.dart';
@@ -43,13 +44,13 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   UserModel? user;
   VariantModel? selectedVariant;
   TextEditingController quantityController = TextEditingController();
-
-  
+  List<ProductModel> filteredProducts = [];
 
   @override
   void initState() {
     super.initState();
     _controller.text = qty.toString();
+    getRelatedProducts();
   }
   getUser() async{
     if (isLoggedIn() && FBAuth.auth.currentUser != null) {
@@ -68,6 +69,85 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
     print("Returning null");
     return null;
   }
+
+  getRelatedProducts() async {
+    final tempProd =
+        await FBFireStore.products.doc(widget.productId).get();
+    ProductModel tProd = ProductModel.fromDocSnap(tempProd);
+    final productSnap = await FBFireStore.products
+            .where('subCatDocId', isEqualTo: tProd.subCatDocId)
+            .get();
+    filteredProducts.clear();
+    
+    filteredProducts.addAll(productSnap.docs.map((e) => ProductModel.fromSnap(e)));
+    print(filteredProducts[1].docId);
+  }
+
+  showContactDialog(BuildContext context, VariantModel variant, ProductModel product) {
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Send Inquiry'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: 'Phone Number',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: descriptionController,
+              maxLines: 3,
+              decoration: InputDecoration(
+                labelText: 'Description',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Close the dialog
+              Navigator.of(context).pop();
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              String phone = phoneController.text;
+              String email = emailController.text;
+              String description = descriptionController.text;
+
+            
+              Navigator.of(context).pop();
+            },
+            child: Text('Submit'),
+          ),
+        ],
+      );
+    },
+  );
+}
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ProductModel>(
@@ -90,12 +170,14 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
             );
           }
           if (snapshot.hasData) {
+            print(filteredProducts.length);
             final product = snapshot.data;
             //variantModel? choosedVariantMinPrice;
             final choosedVariant = selectedVariant ??
                 product?.variants.firstWhere(
                   (element) => element.defaultt,
                 );
+            
             if (choosedVariant?.priceType == PriceTypeModel.priceRange) {
               choosedVariant?.priceRange.sort(
                 (a, b) => a.price.compareTo(b.price),
@@ -1210,38 +1292,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                           ),
                                                         ),
                                                       ),
-                                                      //   child: Container(
-                                                      //     height: 140,
-                                                      //     width: 100,
-                                                      //     clipBehavior:
-                                                      //         Clip.antiAlias,
-                                                      //     decoration: BoxDecoration(
-                                                      //         borderRadius:
-                                                      //             BorderRadius
-                                                      //                 .circular(5)),
-                                                      //     child: Column(
-                                                      //       crossAxisAlignment:
-                                                      //           CrossAxisAlignment
-                                                      //               .start,
-                                                      //       children: [
-                                                      //         Container(
-                                                      //           decoration: BoxDecoration(
-                                                      //               borderRadius:
-                                                      //                   BorderRadius
-                                                      //                       .circular(
-                                                      //                           5)),
-                                                      //           clipBehavior:
-                                                      //               Clip.antiAlias,
-                                                      //           // child: Image.asset(
-                                                      //           //   imgList[index],
-                                                      //           //   fit:
-                                                      //           //       BoxFit.fitWidth,
-                                                      //           // ),
-                                                      //         ),
-                                                      //         const Text("₹150/pc")
-                                                      //       ],
-                                                      //     ),
-                                                      //   ),
+                                                  
                                                     );
                                                   },
                                                 )
@@ -1454,7 +1505,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                                           6)),
                                                         ),
                                                         onPressed: () {
-
+                                                          showContactDialog(context, choosedVariant, product);
                                                         },
                                                         child: Text(
                                                           "Send Inquiry",
@@ -1466,137 +1517,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                         ))),
                                               ],
                                             ),
-                                            // const SizedBox(height: 20),
-                                            // Text(
-                                            //   "Options:",
-                                            //   style: GoogleFonts.poppins(
-                                            //     color: const Color(0xff828282),
-                                            //     fontSize: 14,
-                                            //   ),
-                                            // ),
-                                            // const SizedBox(height: 10),
-                                            // Wrap(
-                                            //   spacing: 12,
-                                            //   runSpacing: 15,
-                                            //   alignment: WrapAlignment.start,
-                                            //   runAlignment: WrapAlignment.start,
-                                            //   children: [
-                                            //     ...List.generate(
-                                            //       4,
-                                            //       (index) {
-                                            //         List<String> imgList = [
-                                            //           'assets/bag_img.png',
-                                            //           'assets/bag_img2.png',
-                                            //           'assets/bag_img3.png',
-                                            //           'assets/bag_img4.png'
-                                            //         ];
-                                            //         // bool isSelected =
-                                            //         //     index == selectedVariant;
-                                            //         return InkWell(
-                                            //           hoverColor: Colors.transparent,
-                                            //           highlightColor: Colors.transparent,
-                                            //           splashColor: Colors.transparent,
-                                            //           onTap: () {
-                                            //             selectedVariant = index;
-                                            //             setState(() {});
-                                            //           },
-                                            //           child: Container(
-                                            //             width: 200,
-                                            //             decoration: BoxDecoration(
-                                            //               // color: Colors.white54,
-                                            //               borderRadius:
-                                            //                   BorderRadius.circular(4),
-                                            //               border: Border.all(
-                                            //                   width: .2,
-                                            //                   color: const Color.fromARGB(
-                                            //                       255, 161, 161, 161)),
-                                            //             ),
-                                            //             child: ListTile(
-                                            //               contentPadding:
-                                            //                   const EdgeInsets.symmetric(
-                                            //                       horizontal: 8),
-                                            //               minVerticalPadding: 8,
-                                            //               leading: Container(
-                                            //                 height: 100,
-                                            //                 // width: 50,
-                                            //                 decoration: const BoxDecoration(
-                                            //                     shape: BoxShape.circle),
-                                            //                 child: Image.asset(
-                                            //                   imgList[index],
-                                            //                   fit: BoxFit.cover,
-                                            //                 ),
-                                            //               ),
-                                            //               // minLeadingWidth: 50,
-                                            //               title: const Text(
-                                            //                 "Material lorem ipsum",
-                                            //                 maxLines: 1,
-                                            //                 overflow: TextOverflow.ellipsis,
-                                            //                 style: TextStyle(
-                                            //                     fontSize: 13,
-                                            //                     fontWeight: FontWeight.w500),
-                                            //               ),
-                                            //               subtitle: const Column(
-                                            //                 crossAxisAlignment:
-                                            //                     CrossAxisAlignment.start,
-                                            //                 children: [
-                                            //                   Text(
-                                            //                     "₹200/ pc",
-                                            //                     style: TextStyle(
-                                            //                         fontSize: 11,
-                                            //                         fontWeight:
-                                            //                             FontWeight.w500),
-                                            //                   ),
-                                            //                   Text(
-                                            //                     "variant description lorem ipsum dolor sit amet, consectetur adipiscing.",
-                                            //                     maxLines: 1,
-                                            //                     overflow:
-                                            //                         TextOverflow.ellipsis,
-                                            //                     style: TextStyle(
-                                            //                         fontSize: 10,
-                                            //                         fontWeight:
-                                            //                             FontWeight.w500),
-                                            //                   ),
-                                            //                 ],
-                                            //               ),
-                                            //             ),
-                                            //           ),
-                                            //           // child: Container(
-                                            //           //   height: 140,
-                                            //           //   width: 100,
-                                            //           //   clipBehavior:
-                                            //           //       Clip.antiAlias,
-                                            //           //   decoration: BoxDecoration(
-                                            //           //       borderRadius:
-                                            //           //           BorderRadius
-                                            //           //               .circular(5)),
-                                            //           //   child: Column(
-                                            //           //     crossAxisAlignment:
-                                            //           //         CrossAxisAlignment
-                                            //           //             .start,
-                                            //           //     children: [
-                                            //           //       Container(
-                                            //           //         decoration: BoxDecoration(
-                                            //           //             borderRadius:
-                                            //           //                 BorderRadius
-                                            //           //                     .circular(
-                                            //           //                         5)),
-                                            //           //         clipBehavior:
-                                            //           //             Clip.antiAlias,
-                                            //           //         child: Image.asset(
-                                            //           //           imgList[index],
-                                            //           //           fit:
-                                            //           //               BoxFit.fitWidth,
-                                            //           //         ),
-                                            //           //       ),
-                                            //           //       const Text("₹150/pc")
-                                            //           //     ],
-                                            //           //   ),
-                                            //           // ),
-                                            //         );
-                                            //       },
-                                            //     )
-                                            //   ],
-                                            // ),
+                                            
                                             const SizedBox(height: 15),
                                             ExpansionTile(
                                               // backgroundColor: Colors.transparent,
@@ -1624,8 +1545,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                         thickness: .6),
                                                     const SizedBox(height: 7),
                                                     Text(
-                                                      choosedVariant
-                                                          .description,
+                                                      product.description,
                                                       //"Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
                                                       style: GoogleFonts.poppins(
                                                           height: 1.7,
@@ -1664,8 +1584,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                         thickness: .6),
                                                     const SizedBox(height: 7),
                                                     Text(
-                                                      "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
-                                                      style: GoogleFonts.poppins(
+                                                      choosedVariant.description,
+                                                     style: GoogleFonts.poppins(
                                                           height: 1.7,
                                                           fontSize: 12,
                                                           color: const Color(
@@ -1678,118 +1598,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                             const Divider(
                                                 color: Color(0xffDADADA),
                                                 thickness: .6),
-                                            ExpansionTile(
-                                              tilePadding: EdgeInsets.zero,
-                                              title: Text(
-                                                'Customization',
-                                                style: GoogleFonts.poppins(
-                                                    color:
-                                                        const Color(0xff4F4F4F),
-                                                    fontSize: 15),
-                                              ),
-                                              iconColor:
-                                                  const Color(0xff4F4F4F),
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                      side: BorderSide.none),
-                                              childrenPadding: EdgeInsets.zero,
-                                              children: [
-                                                Column(
-                                                  children: [
-                                                    const Divider(
-                                                        color:
-                                                            Color(0xffDADADA),
-                                                        thickness: .6),
-                                                    const SizedBox(height: 7),
-                                                    Text(
-                                                      "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
-                                                      style: GoogleFonts.poppins(
-                                                          height: 1.7,
-                                                          fontSize: 12,
-                                                          color: const Color(
-                                                              0xff4F4F4F)),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                            ],
                                         ),
                                       ),
-                                      /* const SizedBox(width: 30),
-                            // Spacer(),
-                            SizedBox(
-                              width: 150,
-                              child: ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    List<String> imgList = [
-                                      'assets/bag_img.png',
-                                      'assets/bag_img2.png',
-                                      'assets/bag_img3.png',
-                                      'assets/bag_img4.png'
-                                    ];
-                                    bool isSelected = index == selectedVariant;
-                                    return Stack(
-                                      children: [
-                                        InkWell(
-                                          hoverColor: Colors.transparent,
-                                          highlightColor: Colors.transparent,
-                                          splashColor: Colors.transparent,
-                                          onTap: () {
-                                            selectedVariant = index;
-                                            setState(() {});
-                                          },
-                                          child: Container(
-                                            height: 140,
-                                            width: 100,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(5)),
-                                                  clipBehavior: Clip.antiAlias,
-                                                  child: Image.asset(
-                                                    imgList[index],
-                                                    fit: BoxFit.fitWidth,
-                                                  ),
-                                                ),
-                                                const Text("₹150/pc")
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        if (isSelected)
-                                          Container(
-                                            height: 140,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                                color: Colors.white54,
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: const Center(
-                                                child: Icon(
-                                              CupertinoIcons.checkmark_alt_circle,
-                                              size: 30,
-                                              color: Color(0xff95170D),
-                                            )),
-                                          ),
-                                      ],
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    return const SizedBox(height: 15);
-                                  },
-                                  itemCount: 4),
-                            ), */
                                     ],
                                   ),
                                   const SizedBox(height: 50),
@@ -1804,14 +1615,14 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     maxCrossAxisExtent: 300,
                                     mainAxisSpacing: 25,
                                     crossAxisSpacing: 25,
-                                    // // spacing: 10,
-                                    // runSpacing: 20,
-                                    // alignment: WrapAlignment.start,
-                                    // runAlignment: WrapAlignment.start,
                                     children: [
                                       ...List.generate(
-                                        4,
+                                        filteredProducts.length,
+                                        
                                         (index) {
+                                          print(filteredProducts);
+                                          final suggestionProduct = filteredProducts[index];
+                                          print("Product ID: ${suggestionProduct.docId}");
                                           return InkWell(
                                               highlightColor:
                                                   Colors.transparent,
@@ -1819,15 +1630,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                               splashColor: Colors.transparent,
                                               onTap: () {
                                                 context
-                                                    .go("${Routes.product}/id");
-
-                                                // Navigator.push(context, MaterialPageRoute(
-                                                //   builder: (context) {
-                                                //     return const SudarshanProductDetails();
-                                                //   },
-                                                // ));
+                                                    .go("${Routes.product}/${suggestionProduct.docId}");
                                               },
-                                              child: const ProductBagWid());
+                                              child: ProductBagWid(product: suggestionProduct, forHome: false));
                                         },
                                       )
                                     ],
