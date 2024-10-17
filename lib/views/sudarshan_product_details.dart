@@ -60,11 +60,14 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
       // Check if the document exists and contains data
       if (userDocRef.exists && userDocRef.data() != null) {
         // Return the user object from Firestore data
+        
         user =  UserModel.fromJson(userDocRef.data()!);
-        return 1;
+        print("User found ${user}");
+        return true;
       }
     }
-    return null;
+    print("Returning null");
+    return false;
   }
   @override
   Widget build(BuildContext context) {
@@ -1352,8 +1355,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                                           6)),
                                                         ),
                                                         onPressed: () async {
-                                                          if(getUser() != null){
-                                                            
+                                                          if(getUser()){
+                                                            print("Inside addd to cart");
                                                             CartModel cart = CartModel(id: choosedVariant.id, productId: product.docId, qty: qty);
                                                                 List<CartModel>? existingCart = user?.cartItems;
 
@@ -1376,6 +1379,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                                                   .update({'cartItems': existingCart?.map((item) => item.toJson()).toList()});
 
                                                             setState(() {});
+                                                          } if(!getUser()){
+                                                            print("Inside Go to account");
+                                                            context.go(Routes.account);
                                                           }
                                                           
                                                         },
