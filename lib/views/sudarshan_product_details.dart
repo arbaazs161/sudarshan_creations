@@ -57,10 +57,10 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
       productSream = FBFireStore.products
           .doc(widget.productId)
           .snapshots()
-          .listen((event) {
+          .listen((event) async {
         if (!event.exists) return;
         product = ProductModel.fromDocSnap(event);
-        getRelatedProducts();
+        await getRelatedProducts();
         loaded = true;
         setState(() {});
       });
@@ -100,17 +100,21 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
 
   getRelatedProducts() async {
     if (loaded) return;
+    filteredProducts.clear();
     final tempProd = await FBFireStore.products.doc(widget.productId).get();
     ProductModel tProd = ProductModel.fromDocSnap(tempProd);
     final productSnap = await FBFireStore.products
         .where('subCatDocId', isEqualTo: tProd.subCatDocId)
         .limit(4)
         .get();
-    filteredProducts.clear();
-
-    filteredProducts
-        .addAll(productSnap.docs.map((e) => ProductModel.fromSnap(e)));
-    print(filteredProducts[1].docId);
+    filteredProducts.addAll(
+  productSnap.docs
+      .where((e) => e.id != product?.docId) // Filter out products where docId matches productId
+      .map((e) => ProductModel.fromSnap(e))
+      .toList(),
+);
+        
+    print(filteredProducts.length);
   }
 
   showContactDialog(
@@ -183,7 +187,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   Widget build(BuildContext context) {
     if (!loaded) return const Center(child: CircularProgressIndicator());
     //getRelatedProducts();
-    //print(filteredProducts.length);
+    
     //variantModel? choosedVariantMinPrice;
     final choosedVariant = selectedVariant ??
         product?.variants.firstWhere(
@@ -204,8 +208,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
     if (existingItemIndex != -1) {
       qty = existingCart?[existingItemIndex].qty ?? 1;
     }
-
-    return product != null && choosedVariant != null
+    //print(filteredProducts.length);
+    return product != null && choosedVariant != null && loaded
         ? ResponsiveWid(
             mobile: Scaffold(
               backgroundColor: const Color(0xffFEF7F3),
@@ -1112,6 +1116,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                           (index) {
                                             final variant =
                                                 product!.variants[index];
+                                                print("Filtered ${filteredProducts.length}");
                                             String formattedString;
                                             formattedString = [
                                               variant.material?.isNotEmpty ==
@@ -1543,10 +1548,11 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                             mainAxisSpacing: 25,
                             crossAxisSpacing: 25,
                             children: [
+                              if(loaded)
                               ...List.generate(
                                 filteredProducts.length,
                                 (index) {
-                                  print(filteredProducts);
+                                  print("Printing: ${filteredProducts.length}");
                                   final suggestionProduct =
                                       filteredProducts[index];
                                   print(
