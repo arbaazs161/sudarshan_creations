@@ -9,9 +9,9 @@ class CartModel {
     required this.qty,
   });
 
-  factory CartModel.fromJson(String keyId, Map<String, dynamic> json) =>
+  factory CartModel.fromJson(Map<String, dynamic> json) =>
       CartModel(
-        id: keyId,
+        id: json['id'],
         productId: json['productId'] as String,
         qty: json['qty'] as int,
       );

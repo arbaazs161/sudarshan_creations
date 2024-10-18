@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/models/cartitems_model.dart';
 import 'package:sudarshan_creations/models/product_model.dart';
-import 'package:sudarshan_creations/models/sub_category.dart';
 import 'package:sudarshan_creations/models/user.dart';
 import 'package:sudarshan_creations/models/variants_model.dart';
 import 'package:sudarshan_creations/shared/const.dart';
@@ -26,6 +25,7 @@ class SudarshanProductDetails extends StatefulWidget {
   const SudarshanProductDetails({super.key, this.productId});
   final String? productId;
   
+  
 
   @override
   State<SudarshanProductDetails> createState() =>
@@ -38,6 +38,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
     'Set of 10 pieces',
     'Set of 15 pieces'
   ];
+  String? uid;
   List<String> personalize = ['Personlised', 'Non-Personlised'];
   int qty = 1;
   final TextEditingController _controller = TextEditingController();
@@ -50,19 +51,22 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   void initState() {
     super.initState();
     _controller.text = qty.toString();
-    getRelatedProducts();
+    //getRelatedProducts();
   }
   getUser() async{
     if (isLoggedIn() && FBAuth.auth.currentUser != null) {
       print("returning user");
       final userDocRef = 
           await FBFireStore.users.doc(FBAuth.auth.currentUser!.uid).get();
+        print(userDocRef.data());
       
-      if (userDocRef.exists && userDocRef.data() != null) {
-        
-        user =  UserModel.fromJson(userDocRef.data()!);
-        print("User found ${user}");
-        
+      if (userDocRef.data() != null) {
+        try{
+          user =  UserModel.fromJson(userDocRef);
+          print("User found ${user?.docId}");
+        } on Exception catch (_, e){
+          print(e.toString());
+        }
       }
       return user;
     }
@@ -148,6 +152,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
     },
   );
 }
+  
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ProductModel>(
@@ -170,7 +175,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
             );
           }
           if (snapshot.hasData) {
-            print(filteredProducts.length);
+            //getRelatedProducts();
+            //print(filteredProducts.length);
             final product = snapshot.data;
             //variantModel? choosedVariantMinPrice;
             final choosedVariant = selectedVariant ??
