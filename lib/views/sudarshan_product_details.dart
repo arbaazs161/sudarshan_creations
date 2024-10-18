@@ -60,6 +60,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
           .listen((event) {
         if (!event.exists) return;
         product = ProductModel.fromDocSnap(event);
+        getRelatedProducts();
         loaded = true;
         setState(() {});
       });
@@ -98,10 +99,12 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   }
 
   getRelatedProducts() async {
+    if (loaded) return;
     final tempProd = await FBFireStore.products.doc(widget.productId).get();
     ProductModel tProd = ProductModel.fromDocSnap(tempProd);
     final productSnap = await FBFireStore.products
         .where('subCatDocId', isEqualTo: tProd.subCatDocId)
+        .limit(4)
         .get();
     filteredProducts.clear();
 
