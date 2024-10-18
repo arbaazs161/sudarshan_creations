@@ -48,6 +48,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   //
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? productSream;
   ProductModel? product;
+  bool loaded = false;
   //
 
   setProductStream() async {
@@ -59,6 +60,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
           .listen((event) {
         if (!event.exists) return;
         product = ProductModel.fromDocSnap(event);
+        loaded = true;
         setState(() {});
       });
     } catch (e) {
@@ -176,6 +178,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    if (!loaded) return const Center(child: CircularProgressIndicator());
     //getRelatedProducts();
     //print(filteredProducts.length);
     //variantModel? choosedVariantMinPrice;
