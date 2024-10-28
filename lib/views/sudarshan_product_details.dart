@@ -20,6 +20,9 @@ import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/top_appbar.dart';
+import 'wrapper.dart';
+
+final _productScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanProductDetails extends StatefulWidget {
   const SudarshanProductDetails({super.key, this.productId});
@@ -31,24 +34,25 @@ class SudarshanProductDetails extends StatefulWidget {
 }
 
 class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
-  List<String> qunatitySet = [
-    'Set of 5 pieces',
-    'Set of 10 pieces',
-    'Set of 15 pieces'
-  ];
+  // List<String> qunatitySet = [
+  //   'Set of 5 pieces',
+  //   'Set of 10 pieces',
+  //   'Set of 15 pieces'
+  // ];
+  // List<String> personalize = ['Personlised', 'Non-Personlised'];
   String? uid;
-  List<String> personalize = ['Personlised', 'Non-Personlised'];
   int qty = 1;
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController qtyController = TextEditingController();
   UserModel? user;
   VariantModel? selectedVariant;
   TextEditingController quantityController = TextEditingController();
-  List<ProductModel> filteredProducts = [];
+  List<ProductModel> similarProducts = [];
 
   //
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? productSream;
   ProductModel? product;
   bool loaded = false;
+  bool isFavourites = false;
   //
 
   setProductStream() async {
@@ -60,7 +64,13 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
           .listen((event) async {
         if (!event.exists) return;
         product = ProductModel.fromDocSnap(event);
+        selectedVariant = selectedVariant ??
+            product?.variants.firstWhere(
+              (element) => element.defaultt,
+            );
+
         await getRelatedProducts();
+        await getUser();
         loaded = true;
         setState(() {});
       });
@@ -72,49 +82,47 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   @override
   void initState() {
     super.initState();
-    _controller.text = qty.toString();
+    qtyController.text = qty.toString();
     setProductStream();
+    // getUser();
     //getRelatedProducts();
   }
 
   getUser() async {
-    if (isLoggedIn() && FBAuth.auth.currentUser != null) {
-      print("returning user");
-      final userDocRef =
-          await FBFireStore.users.doc(FBAuth.auth.currentUser!.uid).get();
-      print(userDocRef.data());
-
-      if (userDocRef.data() != null) {
-        try {
-          user = UserModel.fromJson(userDocRef);
-          print("User found ${user?.docId}");
-        } on Exception catch (_, e) {
-          print(e.toString());
-        }
+    if (isLoggedIn()) {
+      try {
+        final userDocRef =
+            await FBFireStore.users.doc(FBAuth.auth.currentUser!.uid).get();
+        user = UserModel.fromSnap(userDocRef);
+      } on Exception catch (e) {
+        debugPrint(e.toString());
+      }
+      if (user != null) {
+        // checkFavourites();
       }
       return user;
     }
-    print("Returning null");
     return null;
   }
 
   getRelatedProducts() async {
     if (loaded) return;
-    filteredProducts.clear();
+    similarProducts.clear();
     final tempProd = await FBFireStore.products.doc(widget.productId).get();
     ProductModel tProd = ProductModel.fromDocSnap(tempProd);
     final productSnap = await FBFireStore.products
         .where('subCatDocId', isEqualTo: tProd.subCatDocId)
         .limit(4)
         .get();
-    filteredProducts.addAll(
-  productSnap.docs
-      .where((e) => e.id != product?.docId) // Filter out products where docId matches productId
-      .map((e) => ProductModel.fromSnap(e))
-      .toList(),
-);
-        
-    print(filteredProducts.length);
+    similarProducts.addAll(
+      productSnap.docs
+          .where((e) =>
+              e.id !=
+              product
+                  ?.docId) // Filter out products where docId matches productId
+          .map((e) => ProductModel.fromSnap(e))
+          .toList(),
+    );
   }
 
   showContactDialog(
@@ -127,32 +135,32 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Send Inquiry'),
+          title: const Text('Send Inquiry'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Phone Number',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: descriptionController,
                 maxLines: 3,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
@@ -165,7 +173,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                 // Close the dialog
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -175,7 +183,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
 
                 Navigator.of(context).pop();
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         );
@@ -185,9 +193,10 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    // checkFavourites();
     if (!loaded) return const Center(child: CircularProgressIndicator());
     //getRelatedProducts();
-    
+    // checkFavourites();
     //variantModel? choosedVariantMinPrice;
     final choosedVariant = selectedVariant ??
         product?.variants.firstWhere(
@@ -208,11 +217,13 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
     if (existingItemIndex != -1) {
       qty = existingCart?[existingItemIndex].qty ?? 1;
     }
+
     //print(filteredProducts.length);
     return product != null && choosedVariant != null && loaded
         ? ResponsiveWid(
-            mobile: Scaffold(
-              backgroundColor: const Color(0xffFEF7F3),
+            mobile: Wrapper(
+              scafkey: _productScafKey,
+              // backgroundColor: const Color(0xffFEF7F3),
               body: SingleChildScrollView(
                 physics: const ClampingScrollPhysics(),
                 child: Column(
@@ -240,14 +251,12 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const ImageBox(
-                                  variant: [
-                                    'assets/bag_img.png',
-                                    'assets/bag_img2.png',
-                                    'assets/bag_img3.png'
-                                  ],
+                                ImageBox(
+                                  variant: choosedVariant.images,
                                 ),
                                 const SizedBox(height: 30),
+                                _productDetails(choosedVariant, context)
+                                /*    
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -269,7 +278,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                         ),
                                         const SizedBox(width: 5),
                                         IconButton(
-                                            onPressed: () {
+                                            onPressed: () async {
                                               //mark favourite
                                             },
                                             icon: const Icon(
@@ -279,720 +288,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                             ))
                                       ],
                                     ),
-                                    const SizedBox(height: 20),
-                                    Text.rich(TextSpan(children: [
-                                      TextSpan(
-                                          text: '₹50.00',
-                                          style: GoogleFonts.poppins(
-                                            color: const Color(0xff4F4F4F),
-                                            fontSize: 22,
-                                            letterSpacing: 1,
-                                            fontWeight: FontWeight.w600,
-                                          )),
-                                      const TextSpan(text: '  '),
-                                      TextSpan(
-                                          text: '₹100.00',
-                                          style: GoogleFonts.leagueSpartan(
-                                            color: const Color(0xff828282),
-                                            fontSize: 18,
-                                            decoration:
-                                                TextDecoration.lineThrough,
-                                          )),
-                                    ])),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'In Stock',
-                                      style: GoogleFonts.leagueSpartan(
-                                        color: const Color(0xff4F4F4F),
-                                        fontSize: 14,
-                                        // fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 30),
-                                    Text(
-                                      "Quantity:",
-                                      style: GoogleFonts.poppins(
-                                        color: const Color(0xff828282),
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Wrap(
-                                      spacing: 15,
-                                      runSpacing: 15,
-                                      children: [
-                                        ...List.generate(
-                                          qunatitySet.length,
-                                          (index) {
-                                            return Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 7,
-                                                      horizontal: 15),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: const Color(
-                                                        0xffE0E0E0)),
-                                              ),
-                                              child: Text(
-                                                qunatitySet[index],
-                                                style: GoogleFonts.poppins(
-                                                  color:
-                                                      const Color(0xff6C6C6C),
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      "Personlisation:",
-                                      style: GoogleFonts.poppins(
-                                        color: const Color(0xff828282),
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Wrap(
-                                      spacing: 15,
-                                      runSpacing: 15,
-                                      children: [
-                                        ...List.generate(
-                                          personalize.length,
-                                          (index) {
-                                            return Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 7,
-                                                      horizontal: 15),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: const Color(
-                                                        0xffE0E0E0)),
-                                              ),
-                                              child: Text(
-                                                personalize[index],
-                                                style: GoogleFonts.poppins(
-                                                  color:
-                                                      const Color(0xff6C6C6C),
-                                                  fontSize: 12,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      "Quantity:",
-                                      style: GoogleFonts.poppins(
-                                        color: const Color(0xff828282),
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Container(
-                                      // padding: const EdgeInsets.symmetric(vertical: 7),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: const Color(0xffE0E0E0)),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          InkWell(
-                                              onTap: () {
-                                                if (qty == 1) return;
-                                                qty--;
-                                                setState(() {});
-                                              },
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Icon(
-                                                  CupertinoIcons.minus,
-                                                  color: Color(0xff828282),
-                                                  size: 15,
-                                                ),
-                                              )),
-                                          const SizedBox(width: 17),
-                                          Container(
-                                            width: 40,
-                                            child: TextField(
-                                              controller: _controller,
-                                              textAlign: TextAlign.center,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                border: InputBorder.none,
-                                                contentPadding:
-                                                    EdgeInsets.all(0),
-                                              ),
-                                              style: GoogleFonts.poppins(
-                                                color: const Color(0xff6C6C6C),
-                                                fontSize: 12,
-                                              ),
-                                              onSubmitted: (value) {
-                                                setState(() {
-                                                  qty = int.tryParse(value) ??
-                                                      qty;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                          const SizedBox(width: 17),
-                                          InkWell(
-                                            onTap: () {
-                                              qty++;
-                                              setState(() {});
-                                            },
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Icon(
-                                                CupertinoIcons.add,
-                                                color: Color(0xff828282),
-                                                size: 15,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 25),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                elevation: 0,
-                                                // fixedSize:
-                                                //     const Size.fromWidth(double.maxFinite),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 15),
-                                                backgroundColor:
-                                                    const Color(0xff535353),
-                                                surfaceTintColor:
-                                                    const Color(0xff535353),
-                                                shadowColor: Colors.transparent,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            6)),
-                                              ),
-                                              onPressed: () {},
-                                              child: Text(
-                                                "Add to Cart",
-                                                style:
-                                                    GoogleFonts.leagueSpartan(
-                                                        color: Colors.white,
-                                                        fontSize: 17,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                elevation: 0,
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 15),
-                                                // fixedSize:
-                                                //     const Size.fromWidth(double.maxFinite),
-                                                backgroundColor:
-                                                    const Color(0xff95170D),
-                                                surfaceTintColor:
-                                                    const Color(0xff95170D),
-                                                shadowColor: Colors.transparent,
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            6)),
-                                              ),
-                                              onPressed: () {},
-                                              child: Text(
-                                                "Buy Now",
-                                                style:
-                                                    GoogleFonts.leagueSpartan(
-                                                        color: Colors.white,
-                                                        fontSize: 17,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      "Options:",
-                                      style: GoogleFonts.poppins(
-                                        color: const Color(0xff828282),
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    StaggeredGrid.extent(
-                                      maxCrossAxisExtent: 200,
-                                      mainAxisSpacing: 15,
-                                      crossAxisSpacing: 15,
-                                      // spacing: 15,
-                                      // runSpacing: 15,
-                                      // alignment: WrapAlignment.start,
-                                      // runAlignment: WrapAlignment.start,
-                                      children: [
-                                        ...List.generate(
-                                          4,
-                                          (index) {
-                                            List<String> imgList = [
-                                              'assets/bag_img.png',
-                                              'assets/bag_img2.png',
-                                              'assets/bag_img3.png',
-                                              'assets/bag_img4.png'
-                                            ];
-                                            // bool isSelected =
-                                            //     index == selectedVariant;
-                                            return InkWell(
-                                              hoverColor: Colors.transparent,
-                                              highlightColor:
-                                                  Colors.transparent,
-                                              splashColor: Colors.transparent,
-                                              onTap: () {
-                                                selectedVariant = null;
-                                                setState(() {});
-                                              },
-                                              child: Container(
-                                                width: 150,
-                                                decoration: BoxDecoration(
-                                                  // color: Colors.white54,
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                  border: Border.all(
-                                                      width: .2,
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              161,
-                                                              161,
-                                                              161)),
-                                                ),
-                                                child: ListTile(
-                                                  contentPadding:
-                                                      const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 8),
-                                                  minVerticalPadding: 8,
-                                                  leading: Container(
-                                                    height: 100,
-                                                    // width: 50,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            shape: BoxShape
-                                                                .circle),
-                                                    child: Image.asset(
-                                                      imgList[index],
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                  // minLeadingWidth: 50,
-                                                  title: const Text(
-                                                    "Material lorem ipsum",
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                        fontSize: 13,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                  subtitle: const Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "₹200/ pc",
-                                                        style: TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                      Text(
-                                                        "variant description lorem ipsum dolor sit amet, consectetur adipiscing.",
-                                                        maxLines: 1,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              // child: Container(
-                                              //   height: 140,
-                                              //   width: 100,
-                                              //   clipBehavior:
-                                              //       Clip.antiAlias,
-                                              //   decoration: BoxDecoration(
-                                              //       borderRadius:
-                                              //           BorderRadius
-                                              //               .circular(5)),
-                                              //   child: Column(
-                                              //     crossAxisAlignment:
-                                              //         CrossAxisAlignment
-                                              //             .start,
-                                              //     children: [
-                                              //       Container(
-                                              //         decoration: BoxDecoration(
-                                              //             borderRadius:
-                                              //                 BorderRadius
-                                              //                     .circular(
-                                              //                         5)),
-                                              //         clipBehavior:
-                                              //             Clip.antiAlias,
-                                              //         child: Image.asset(
-                                              //           imgList[index],
-                                              //           fit:
-                                              //               BoxFit.fitWidth,
-                                              //         ),
-                                              //       ),
-                                              //       const Text("₹150/pc")
-                                              //     ],
-                                              //   ),
-                                              // ),
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                    const SizedBox(height: 15),
-                                    ExpansionTile(
-                                      // backgroundColor: Colors.transparent,
-                                      // collapsedBackgroundColor: Colors.transparent,
-                                      tilePadding: EdgeInsets.zero,
-                                      title: Text(
-                                        'Description',
-                                        style: GoogleFonts.poppins(
-                                            color: const Color(0xff4F4F4F),
-                                            fontSize: 15),
-                                      ),
-                                      iconColor: const Color(0xff4F4F4F),
-                                      shape: const RoundedRectangleBorder(
-                                          side: BorderSide.none),
-                                      childrenPadding: EdgeInsets.zero,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            const Divider(
-                                                color: Color(0xffDADADA),
-                                                thickness: .6),
-                                            const SizedBox(height: 7),
-                                            Text(
-                                              "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
-                                              style: GoogleFonts.poppins(
-                                                  height: 1.7,
-                                                  fontSize: 12,
-                                                  color:
-                                                      const Color(0xff4F4F4F)),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const Divider(
-                                        color: Color(0xffDADADA),
-                                        thickness: .6),
-                                    ExpansionTile(
-                                      tilePadding: EdgeInsets.zero,
-                                      title: Text(
-                                        'Details',
-                                        style: GoogleFonts.poppins(
-                                            color: const Color(0xff4F4F4F),
-                                            fontSize: 15),
-                                      ),
-                                      iconColor: const Color(0xff4F4F4F),
-                                      shape: const RoundedRectangleBorder(
-                                          side: BorderSide.none),
-                                      childrenPadding: EdgeInsets.zero,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            const Divider(
-                                                color: Color(0xffDADADA),
-                                                thickness: .6),
-                                            const SizedBox(height: 7),
-                                            Text(
-                                              "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
-                                              style: GoogleFonts.poppins(
-                                                  height: 1.7,
-                                                  fontSize: 12,
-                                                  color:
-                                                      const Color(0xff4F4F4F)),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const Divider(
-                                        color: Color(0xffDADADA),
-                                        thickness: .6),
-                                    ExpansionTile(
-                                      tilePadding: EdgeInsets.zero,
-                                      title: Text(
-                                        'Customization',
-                                        style: GoogleFonts.poppins(
-                                            color: const Color(0xff4F4F4F),
-                                            fontSize: 15),
-                                      ),
-                                      iconColor: const Color(0xff4F4F4F),
-                                      shape: const RoundedRectangleBorder(
-                                          side: BorderSide.none),
-                                      childrenPadding: EdgeInsets.zero,
-                                      children: [
-                                        Column(
-                                          children: [
-                                            const Divider(
-                                                color: Color(0xffDADADA),
-                                                thickness: .6),
-                                            const SizedBox(height: 7),
-                                            Text(
-                                              "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
-                                              style: GoogleFonts.poppins(
-                                                  height: 1.7,
-                                                  fontSize: 12,
-                                                  color:
-                                                      const Color(0xff4F4F4F)),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                /* const SizedBox(width: 30),
-                              // Spacer(),
-                              SizedBox(
-                                width: 150,
-                                child: ListView.separated(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      List<String> imgList = [
-                                        'assets/bag_img.png',
-                                        'assets/bag_img2.png',
-                                        'assets/bag_img3.png',
-                                        'assets/bag_img4.png'
-                                      ];
-                                      bool isSelected = index == selectedVariant;
-                                      return Stack(
-                                        children: [
-                                          InkWell(
-                                            hoverColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            splashColor: Colors.transparent,
-                                            onTap: () {
-                                              selectedVariant = index;
-                                              setState(() {});
-                                            },
-                                            child: Container(
-                                              height: 140,
-                                              width: 100,
-                                              clipBehavior: Clip.antiAlias,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5)),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(5)),
-                                                    clipBehavior: Clip.antiAlias,
-                                                    child: Image.asset(
-                                                      imgList[index],
-                                                      fit: BoxFit.fitWidth,
-                                                    ),
-                                                  ),
-                                                  const Text("₹150/pc")
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          if (isSelected)
-                                            Container(
-                                              height: 140,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white54,
-                                                  borderRadius:
-                                                      BorderRadius.circular(4)),
-                                              child: const Center(
-                                                  child: Icon(
-                                                CupertinoIcons.checkmark_alt_circle,
-                                                size: 30,
-                                                color: Color(0xff95170D),
-                                              )),
-                                            ),
-                                        ],
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) {
-                                      return const SizedBox(height: 15);
-                                    },
-                                    itemCount: 4),
-                              ), */
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 50),
-                          Text(
-                            "SIMILAR PRODUCTS",
-                            style: GoogleFonts.brawler(
-                                fontSize: 28, fontWeight: FontWeight.w700),
-                          ),
-                          const SizedBox(height: 30),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Row(
-                              children: [
-                                ...List.generate(
-                                  4,
-                                  (index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(right: 20),
-                                      child: InkWell(
-                                          highlightColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          splashColor: Colors.transparent,
-                                          onTap: () {
-                                            context.go("${Routes.product}/id");
-
-                                            // Navigator.push(context, MaterialPageRoute(
-                                            //   builder: (context) {
-                                            //     return const SudarshanProductDetails();
-                                            //   },
-                                            // ));
-                                          },
-                                          child: const ProductBagWid()),
-                                    );
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                          /* StaggeredGrid.extent(
-                          maxCrossAxisExtent: 300,
-                          mainAxisSpacing: 25,
-                          crossAxisSpacing: 25,
-                          // // spacing: 10,
-                          // runSpacing: 20,
-                          // alignment: WrapAlignment.start,
-                          // runAlignment: WrapAlignment.start,
-                          children: [
-                            ...List.generate(
-                              4,
-                              (index) {
-                                return InkWell(
-                                    highlightColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    splashColor: Colors.transparent,
-                                    onTap: () {
-                                     // Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return const SudarshanProductDetails();
-                                        },
-                                      ));
-                                    },
-                                    child: const ProductBagWid());
-                              },
-                            )
-                          ],
-                        ), */
-                          const SizedBox(height: 50),
-                        ],
-                      ),
-                    ),
-                    const SudarshanFooterSection(),
-                  ],
-                ),
-              ),
-            ),
-            desktop: Scaffold(
-              backgroundColor: const Color(0xffFEF7F3),
-              body: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                child: Column(
-                  children: [
-                    const TopAppBarWithBgImg(mobile: false),
-                    const Divider(color: Color(0xff95170D), height: 0),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 30, horizontal: 25),
-                      constraints: BoxConstraints(
-                          maxWidth: 1200,
-                          // min height = screen height - appbar height - footer height - in b/w sizedbox heights
-                          minHeight:
-                              MediaQuery.sizeOf(context).height - 80 - 70 - 20),
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                  // flex: 2,
-                                  child: ImageBox(
-                                variant: choosedVariant.images,
-                              )),
-                              const SizedBox(width: 50),
-                              Expanded(
-                                // flex: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            product?.name ?? "",
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: GoogleFonts.brawler(
-                                                height: 0,
-                                                color: const Color(0xff4F4F4F),
-                                                fontSize: 35,
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(
-                                              CupertinoIcons.heart,
-                                              size: 25,
-                                              color: Color(0xff961810),
-                                            ))
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
+                                    if (choosedVariant.priceType !=
+                                        PriceTypeModel.inquiry)
+                                      const SizedBox(height: 20),
                                     if (choosedVariant.priceType ==
                                         PriceTypeModel.fixedPrice)
                                       Text.rich(TextSpan(children: [
@@ -1035,7 +333,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                               fontWeight: FontWeight.w600,
                                             )),
                                       ])),
-                                    const SizedBox(height: 8),
+                                    if (choosedVariant.priceType !=
+                                        PriceTypeModel.inquiry)
+                                      const SizedBox(height: 8),
                                     if (choosedVariant.priceType ==
                                         PriceTypeModel.priceRange)
                                       Container(
@@ -1083,7 +383,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                           ),
                                         ),
                                       ),
-                                    const SizedBox(height: 8),
+                                    if (choosedVariant.priceType !=
+                                        PriceTypeModel.inquiry)
+                                      const SizedBox(height: 8),
                                     if (choosedVariant.priceType !=
                                         PriceTypeModel.inquiry)
                                       Text(
@@ -1116,7 +418,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                           (index) {
                                             final variant =
                                                 product!.variants[index];
-                                                print("Filtered ${filteredProducts.length}");
+                                            print(
+                                                "Filtered ${similarProducts.length}");
                                             String formattedString;
                                             formattedString = [
                                               variant.material?.isNotEmpty ==
@@ -1213,253 +516,6 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                       ],
                                     ),
                                     const SizedBox(height: 20),
-                                    if (choosedVariant.priceType !=
-                                        PriceTypeModel.inquiry)
-                                      Text(
-                                        "Quantity:",
-                                        style: GoogleFonts.poppins(
-                                          color: const Color(0xff828282),
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    const SizedBox(height: 10),
-                                    if (choosedVariant.priceType !=
-                                        PriceTypeModel.inquiry)
-                                      Container(
-                                        // padding: const EdgeInsets.symmetric(vertical: 7),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: const Color(0xffE0E0E0)),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            InkWell(
-                                                onTap: () {
-                                                  if (qty == 1) return;
-                                                  qty--;
-                                                  _controller.text =
-                                                      qty.toString();
-                                                  //setState(() {});
-                                                },
-                                                child: const Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Icon(
-                                                    CupertinoIcons.minus,
-                                                    color: Color(0xff828282),
-                                                    size: 15,
-                                                  ),
-                                                )),
-                                            const SizedBox(width: 17),
-                                            Container(
-                                              width: 40,
-                                              child: TextField(
-                                                controller: _controller,
-                                                textAlign: TextAlign.center,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  contentPadding:
-                                                      EdgeInsets.all(0),
-                                                ),
-                                                style: GoogleFonts.poppins(
-                                                  color:
-                                                      const Color(0xff6C6C6C),
-                                                  fontSize: 12,
-                                                ),
-                                                onSubmitted: (value) {
-                                                  setState(() {
-                                                    qty = int.tryParse(value) ??
-                                                        qty;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                            const SizedBox(width: 17),
-                                            InkWell(
-                                              onTap: () {
-                                                qty++;
-                                                _controller.text =
-                                                    qty.toString();
-                                                //setState(() {});
-                                              },
-                                              child: const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Icon(
-                                                  CupertinoIcons.add,
-                                                  color: Color(0xff828282),
-                                                  size: 15,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    const SizedBox(height: 25),
-                                    if (choosedVariant.priceType !=
-                                        PriceTypeModel.inquiry)
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    elevation: 0,
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 15),
-                                                    backgroundColor:
-                                                        const Color(0xff535353),
-                                                    surfaceTintColor:
-                                                        const Color(0xff535353),
-                                                    shadowColor:
-                                                        Colors.transparent,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6)),
-                                                  ),
-                                                  onPressed: () async {
-                                                    if (await getUser() !=
-                                                        null) {
-                                                      print(
-                                                          "Inside addd to cart");
-                                                      CartModel cart =
-                                                          CartModel(
-                                                              id: choosedVariant
-                                                                  .id,
-                                                              productId:
-                                                                  product!
-                                                                      .docId,
-                                                              qty: qty);
-                                                      List<CartModel>?
-                                                          existingCart =
-                                                          user?.cartItems;
-
-                                                      // Check if an item with the same id already exists in the cart
-                                                      int existingItemIndex =
-                                                          existingCart?.indexWhere(
-                                                                  (item) =>
-                                                                      item.id ==
-                                                                      choosedVariant
-                                                                          .id) ??
-                                                              -1;
-
-                                                      if (existingItemIndex !=
-                                                          -1) {
-                                                        // If the item exists, replace it with the new CartModel
-                                                        existingCart?[
-                                                                existingItemIndex] =
-                                                            cart;
-                                                      } else {
-                                                        // If the item doesn't exist, add the new item
-                                                        existingCart?.add(cart);
-                                                      }
-
-                                                      // Update Firestore with the modified cart
-                                                      await FBFireStore.users
-                                                          .doc(user?.docId)
-                                                          .update({
-                                                        'cartItems': existingCart
-                                                            ?.map((item) =>
-                                                                item.toJson())
-                                                            .toList()
-                                                      });
-
-                                                      setState(() {});
-                                                    }
-                                                    if (await getUser() ==
-                                                        null) {
-                                                      print(
-                                                          "Inside Go to account");
-                                                      context
-                                                          .go(Routes.account);
-                                                    }
-                                                  },
-                                                  child: Text(
-                                                    "Add to Cart",
-                                                    style: GoogleFonts
-                                                        .leagueSpartan(
-                                                            color: Colors.white,
-                                                            fontSize: 15),
-                                                  ))),
-                                          const SizedBox(width: 15),
-                                          Expanded(
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    elevation: 0,
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 15),
-                                                    backgroundColor:
-                                                        const Color(0xff95170D),
-                                                    surfaceTintColor:
-                                                        const Color(0xff95170D),
-                                                    shadowColor:
-                                                        Colors.transparent,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6)),
-                                                  ),
-                                                  onPressed: () {},
-                                                  child: Text(
-                                                    "Buy Now",
-                                                    style: GoogleFonts
-                                                        .leagueSpartan(
-                                                            color: Colors.white,
-                                                            fontSize: 15),
-                                                  ))),
-                                        ],
-                                      ),
-                                    if (choosedVariant.priceType ==
-                                        PriceTypeModel.inquiry)
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                              child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    elevation: 0,
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        vertical: 15),
-                                                    backgroundColor:
-                                                        const Color(0xff95170D),
-                                                    surfaceTintColor:
-                                                        const Color(0xff95170D),
-                                                    shadowColor:
-                                                        Colors.transparent,
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        6)),
-                                                  ),
-                                                  onPressed: () {
-                                                    showContactDialog(
-                                                        context,
-                                                        choosedVariant,
-                                                        product!);
-                                                  },
-                                                  child: Text(
-                                                    "Send Inquiry",
-                                                    style: GoogleFonts
-                                                        .leagueSpartan(
-                                                            color: Colors.white,
-                                                            fontSize: 15),
-                                                  ))),
-                                        ],
-                                      ),
-                                    const SizedBox(height: 15),
                                     ExpansionTile(
                                       // backgroundColor: Colors.transparent,
                                       // collapsedBackgroundColor: Colors.transparent,
@@ -1476,6 +532,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                       childrenPadding: EdgeInsets.zero,
                                       children: [
                                         Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             const Divider(
                                                 color: Color(0xffDADADA),
@@ -1483,7 +541,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                             const SizedBox(height: 7),
                                             Text(
                                               product!.description,
-                                              //"Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
+                                              /*  "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
+                                               */
                                               style: GoogleFonts.poppins(
                                                   height: 1.7,
                                                   fontSize: 12,
@@ -1511,6 +570,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                       childrenPadding: EdgeInsets.zero,
                                       children: [
                                         Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             const Divider(
                                                 color: Color(0xffDADADA),
@@ -1518,6 +579,9 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                             const SizedBox(height: 7),
                                             Text(
                                               choosedVariant.description,
+                                              /* 
+                                              "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
+                                              */
                                               style: GoogleFonts.poppins(
                                                   height: 1.7,
                                                   fontSize: 12,
@@ -1531,8 +595,195 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     const Divider(
                                         color: Color(0xffDADADA),
                                         thickness: .6),
+                                    /*
+                                    ExpansionTile(
+                                      tilePadding: EdgeInsets.zero,
+                                      title: Text(
+                                        'Customization',
+                                        style: GoogleFonts.poppins(
+                                            color: const Color(0xff4F4F4F),
+                                            fontSize: 15),
+                                      ),
+                                      iconColor: const Color(0xff4F4F4F),
+                                      shape: const RoundedRectangleBorder(
+                                          side: BorderSide.none),
+                                      childrenPadding: EdgeInsets.zero,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            const Divider(
+                                                color: Color(0xffDADADA),
+                                                thickness: .6),
+                                            const SizedBox(height: 7),
+                                            Text(
+                                              "Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
+                                              style: GoogleFonts.poppins(
+                                                  height: 1.7,
+                                                  fontSize: 12,
+                                                  color:
+                                                      const Color(0xff4F4F4F)),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ), */
                                   ],
                                 ),
+                               
+                                */
+
+                                /* const SizedBox(width: 30),
+                              // Spacer(),
+                              SizedBox(
+                                width: 150,
+                                child: ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      List<String> imgList = [
+                                        'assets/bag_img.png',
+                                        'assets/bag_img2.png',
+                                        'assets/bag_img3.png',
+                                        'assets/bag_img4.png'
+                                      ];
+                                      bool isSelected = index == selectedVariant;
+                                      return Stack(
+                                        children: [
+                                          InkWell(
+                                            hoverColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            splashColor: Colors.transparent,
+                                            onTap: () {
+                                              selectedVariant = index;
+                                              setState(() {});
+                                            },
+                                            child: Container(
+                                              height: 140,
+                                              width: 100,
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(5)),
+                                                    clipBehavior: Clip.antiAlias,
+                                                    child: Image.asset(
+                                                      imgList[index],
+                                                      fit: BoxFit.fitWidth,
+                                                    ),
+                                                  ),
+                                                  const Text("₹150/pc")
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          if (isSelected)
+                                            Container(
+                                              height: 140,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white54,
+                                                  borderRadius:
+                                                      BorderRadius.circular(4)),
+                                              child: const Center(
+                                                  child: Icon(
+                                                CupertinoIcons.checkmark_alt_circle,
+                                                size: 30,
+                                                color: Color(0xff95170D),
+                                              )),
+                                            ),
+                                        ],
+                                      );
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      return const SizedBox(height: 15);
+                                    },
+                                    itemCount: 4),
+                              ), */
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 50),
+                          Text(
+                            "SIMILAR PRODUCTS",
+                            style: GoogleFonts.brawler(
+                                fontSize: 28, fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 30),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Row(
+                              children: [
+                                ...List.generate(
+                                  similarProducts.length,
+                                  (index) {
+                                    final suggestionProduct =
+                                        similarProducts[index];
+                                    return InkWell(
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        splashColor: Colors.transparent,
+                                        onTap: () {
+                                          context.go(
+                                              "${Routes.product}/${suggestionProduct.docId}");
+                                        },
+                                        child: ProductBagWid(
+                                            product: suggestionProduct,
+                                            forHome: false));
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 50),
+                        ],
+                      ),
+                    ),
+                    const SudarshanFooterSection(),
+                  ],
+                ),
+              ),
+            ),
+            desktop: Wrapper(
+              scafkey: _productScafKey,
+              // backgroundColor: const Color(0xffFEF7F3),
+              body: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Column(
+                  children: [
+                    const TopAppBarWithBgImg(mobile: false),
+                    const Divider(color: Color(0xff95170D), height: 0),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 30, horizontal: 25),
+                      constraints: BoxConstraints(
+                          maxWidth: 1200,
+                          // min height = screen height - appbar height - footer height - in b/w sizedbox heights
+                          minHeight:
+                              MediaQuery.sizeOf(context).height - 80 - 70 - 20),
+                      child: Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                // flex: 2,
+                                child: ImageBox(
+                                  variant: choosedVariant.images,
+                                ),
+                              ),
+                              const SizedBox(width: 50),
+                              Expanded(
+                                // flex: 2,
+                                child: _productDetails(choosedVariant, context),
                               ),
                             ],
                           ),
@@ -1548,28 +799,25 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                             mainAxisSpacing: 25,
                             crossAxisSpacing: 25,
                             children: [
-                              if(loaded)
-                              ...List.generate(
-                                filteredProducts.length,
-                                (index) {
-                                  print("Printing: ${filteredProducts.length}");
-                                  final suggestionProduct =
-                                      filteredProducts[index];
-                                  print(
-                                      "Product ID: ${suggestionProduct.docId}");
-                                  return InkWell(
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      splashColor: Colors.transparent,
-                                      onTap: () {
-                                        context.go(
-                                            "${Routes.product}/${suggestionProduct.docId}");
-                                      },
-                                      child: ProductBagWid(
-                                          product: suggestionProduct,
-                                          forHome: false));
-                                },
-                              )
+                              if (loaded)
+                                ...List.generate(
+                                  similarProducts.length,
+                                  (index) {
+                                    final suggestionProduct =
+                                        similarProducts[index];
+                                    return InkWell(
+                                        highlightColor: Colors.transparent,
+                                        hoverColor: Colors.transparent,
+                                        splashColor: Colors.transparent,
+                                        onTap: () {
+                                          context.go(
+                                              "${Routes.product}/${suggestionProduct.docId}");
+                                        },
+                                        child: ProductBagWid(
+                                            product: suggestionProduct,
+                                            forHome: false));
+                                  },
+                                )
                             ],
                           ),
                           const SizedBox(height: 50),
@@ -1585,6 +833,482 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
         : const Center(
             child: Text("No Product Found"),
           );
+  }
+
+  Column _productDetails(VariantModel choosedVariant, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                product?.name ?? "",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.brawler(
+                    height: 0,
+                    color: const Color(0xff4F4F4F),
+                    fontSize: 35,
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+            const SizedBox(width: 5),
+            isFavourites
+                ? IconButton(
+                    onPressed: () async {
+                      isLoggedIn()
+                          ? await FBFireStore.users
+                              .doc(FBAuth.auth.currentUser?.uid)
+                              .update({
+                              'favourites': FieldValue.arrayRemove(
+                                  ['${widget.productId}/${choosedVariant.id}']),
+                            })
+                          : context.go(Routes.account);
+                      // checkFavourites();
+                      setState(() {});
+                    },
+                    icon: const Icon(
+                      CupertinoIcons.heart_fill,
+                      size: 25,
+                      color: Color(0xff961810),
+                    ))
+                : IconButton(
+                    onPressed: () async {
+                      isLoggedIn()
+                          ? await FBFireStore.users
+                              .doc(FBAuth.auth.currentUser?.uid)
+                              .update({
+                              'favourites': FieldValue.arrayUnion(
+                                  ['${widget.productId}/${choosedVariant.id}']),
+                            })
+                          : context.go(Routes.account);
+                      // checkFavourites();
+                      setState(() {});
+                    },
+                    icon: const Icon(
+                      CupertinoIcons.heart,
+                      size: 25,
+                      color: Color(0xff961810),
+                    ))
+          ],
+        ),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          const SizedBox(height: 20),
+        if (choosedVariant.priceType == PriceTypeModel.fixedPrice)
+          Text.rich(TextSpan(children: [
+            TextSpan(
+                text: '₹${choosedVariant.fixedPrice}',
+                style: GoogleFonts.poppins(
+                  color: const Color(0xff4F4F4F),
+                  fontSize: 22,
+                  letterSpacing: 1,
+                  fontWeight: FontWeight.w600,
+                )),
+            // const TextSpan(text: '  '),
+            // TextSpan(
+            //     text: '₹100.00',
+            //     style: GoogleFonts.leagueSpartan(
+            //       color: const Color(0xff828282),
+            //       fontSize: 18,
+            //       decoration: TextDecoration.lineThrough,
+            //     )),
+          ])),
+        if (choosedVariant.priceType == PriceTypeModel.priceRange)
+          Text.rich(TextSpan(children: [
+            TextSpan(
+                text: 'Starting at ',
+                style: GoogleFonts.poppins(
+                  color: const Color(0xff4F4F4F),
+                  fontSize: 18,
+                  letterSpacing: 1,
+                  fontWeight: FontWeight.w600,
+                )),
+            TextSpan(
+                text: '₹${choosedVariant.priceRange[0].price}',
+                style: GoogleFonts.poppins(
+                  color: const Color(0xff4F4F4F),
+                  fontSize: 22,
+                  letterSpacing: 1,
+                  fontWeight: FontWeight.w600,
+                )),
+          ])),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          const SizedBox(height: 8),
+        if (choosedVariant.priceType == PriceTypeModel.priceRange)
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: const Color(0xfff9ece0), //Choose appropriate color here
+                borderRadius: BorderRadius.circular(7)),
+            child: Tooltip(
+              message: "Show Price Ranges",
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'For a minimum quantity ${choosedVariant.priceRange[0].startQty}',
+                    style: GoogleFonts.leagueSpartan(
+                      height: 0,
+                      color: const Color(0xff828282),
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    CupertinoIcons.chevron_right,
+                    size: 15,
+                    color: Color(0xff828282),
+                  )
+                  // IconButton(
+                  //   onPressed: () {
+                  //     // Show ranges table
+                  //   },
+                  //   icon: const Icon(
+                  //     CupertinoIcons.info,
+                  //     size: 18,
+                  //     color:
+                  //         Color(0xff828282),
+                  //   ),
+                  // )
+                ],
+              ),
+            ),
+          ),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          const SizedBox(height: 8),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          Text(
+            choosedVariant.available ? 'In Stock' : 'Out of Stock',
+            style: GoogleFonts.leagueSpartan(
+              color: const Color(0xff4F4F4F),
+              fontSize: 14,
+              // fontWeight: FontWeight.w600,
+            ),
+          ),
+        const SizedBox(height: 30),
+        Text(
+          "Options:",
+          style: GoogleFonts.poppins(
+            color: const Color(0xff828282),
+            fontSize: 14,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 12,
+          runSpacing: 15,
+          alignment: WrapAlignment.start,
+          runAlignment: WrapAlignment.start,
+          children: [
+            ...List.generate(
+              product!.variants.length,
+              (index) {
+                final variant = product!.variants[index];
+                String formattedString;
+                formattedString = [
+                  variant.material?.isNotEmpty == true
+                      ? variant.material
+                      : null,
+                  variant.color?.isNotEmpty == true ? variant.color : null,
+                  variant.size?.isNotEmpty == true ? variant.size : null
+                ].where((element) => element != null).join('/');
+                return InkWell(
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                  onTap: () {
+                    selectedVariant = variant;
+                    setState(() {});
+                  },
+                  child: Container(
+                    width: 200,
+                    decoration: BoxDecoration(
+                      // color: Colors.white54,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                          width: .2,
+                          color: const Color.fromARGB(255, 161, 161, 161)),
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                      minVerticalPadding: 8,
+                      leading: Container(
+                        height: 100,
+                        // width: 50,
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                        child: Image.network(
+                          variant.images.first,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+
+                      // minLeadingWidth: 50,
+                      title: Text(
+                        formattedString,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (variant.priceType != PriceTypeModel.inquiry)
+                            Text(
+                              "₹${variant.fixedPrice}", //Assume that pricerange variant also has a fixed price.
+                              style: const TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.w500),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+        const SizedBox(height: 20),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          Text(
+            "Quantity:",
+            style: GoogleFonts.poppins(
+              color: const Color(0xff828282),
+              fontSize: 14,
+            ),
+          ),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          const SizedBox(height: 10),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          Container(
+            height: 47,
+            // padding: const EdgeInsets.symmetric(vertical: 7),
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xffE0E0E0)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                    onTap: () {
+                      if (qty == 1) return;
+                      qty--;
+                      qtyController.text = qty.toString();
+                      //setState(() {});
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Icon(
+                        CupertinoIcons.minus,
+                        color: Color(0xff828282),
+                        size: 15,
+                      ),
+                    )),
+                // const SizedBox(width: 10),
+                SizedBox(
+                  width: 50,
+                  child: TextFormField(
+                    controller: qtyController,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    style: GoogleFonts.poppins(
+                      color: const Color(0xff6C6C6C),
+                      fontSize: 12,
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        qty = int.tryParse(value) ?? qty;
+                      });
+                    },
+                  ),
+                ),
+                // const SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
+                    qty++;
+                    qtyController.text = qty.toString();
+                    //setState(() {});
+                  },
+                  child: const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Icon(
+                      CupertinoIcons.add,
+                      color: Color(0xff828282),
+                      size: 15,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          const SizedBox(height: 25),
+        if (choosedVariant.priceType != PriceTypeModel.inquiry)
+          Row(
+            children: [
+              Expanded(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        backgroundColor: const Color(0xff535353),
+                        surfaceTintColor: const Color(0xff535353),
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                      ),
+                      onPressed: () async {
+                        if (await getUser() != null) {
+                          CartModel cart = CartModel(
+                              id: choosedVariant.id,
+                              productId: product!.docId,
+                              qty: qty);
+                          List<CartModel>? existingCart = user?.cartItems;
+
+                          // Check if an item with the same id already exists in the cart
+                          int existingItemIndex = existingCart?.indexWhere(
+                                  (item) => item.id == choosedVariant.id) ??
+                              -1;
+
+                          if (existingItemIndex != -1) {
+                            // If the item exists, replace it with the new CartModel
+                            existingCart?[existingItemIndex] = cart;
+                          } else {
+                            // If the item doesn't exist, add the new item
+                            existingCart?.add(cart);
+                          }
+
+                          // Update Firestore with the modified cart
+                          await FBFireStore.users.doc(user?.docId).update({
+                            'cartItems': existingCart
+                                ?.map((item) => item.toJson())
+                                .toList()
+                          });
+
+                          setState(() {});
+                        }
+                        if (await getUser() == null) {
+                          context.go(Routes.account);
+                        }
+                      },
+                      child: Text(
+                        "Add to Cart",
+                        style: GoogleFonts.leagueSpartan(
+                            color: Colors.white, fontSize: 15),
+                      ))),
+              const SizedBox(width: 15),
+              Expanded(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        backgroundColor: const Color(0xff95170D),
+                        surfaceTintColor: const Color(0xff95170D),
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                      ),
+                      onPressed: () {},
+                      child: Text(
+                        "Buy Now",
+                        style: GoogleFonts.leagueSpartan(
+                            color: Colors.white, fontSize: 15),
+                      ))),
+            ],
+          ),
+        if (choosedVariant.priceType == PriceTypeModel.inquiry)
+          Row(
+            children: [
+              Expanded(
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        backgroundColor: const Color(0xff95170D),
+                        surfaceTintColor: const Color(0xff95170D),
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                      ),
+                      onPressed: () {
+                        showContactDialog(context, choosedVariant, product!);
+                      },
+                      child: Text(
+                        "Send Inquiry",
+                        style: GoogleFonts.leagueSpartan(
+                            color: Colors.white, fontSize: 15),
+                      ))),
+            ],
+          ),
+        const SizedBox(height: 15),
+        ExpansionTile(
+          // backgroundColor: Colors.transparent,
+          // collapsedBackgroundColor: Colors.transparent,
+          tilePadding: EdgeInsets.zero,
+          title: Text(
+            'Description',
+            style: GoogleFonts.poppins(
+                color: const Color(0xff4F4F4F), fontSize: 15),
+          ),
+          iconColor: const Color(0xff4F4F4F),
+          shape: const RoundedRectangleBorder(side: BorderSide.none),
+          childrenPadding: EdgeInsets.zero,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(color: Color(0xffDADADA), thickness: .6),
+                const SizedBox(height: 7),
+                Text(
+                  product!.description,
+                  //"Quisque sed nulla gravida leo volutpat aliquam nec quis eros. Donec sed eros venenatis, rhoncus mauris ac, viverra ipsum. Sed suscipit est in dui molestie dapibus. Pellentesque id nunc sem. Nulla enim sem, pretium eget eleifend vel, tempus a risus. Vestibulum et sem id est posuere pellentesque. Quisque non neque odio. Curabitur molestie nibh suscipit, euismod turpis at, tempus mauris. Aenean consequat ipsum vel orci fermentum volutpat. Vestibulum blandit nibh sed magna egestas, sed aliquam justo tincidunt. Fusce tincidunt, elit ut porta ullamcorper, ipsum enim rutrum dolor, non venenatis odio neque in quam. Morbi nunc quam, viverra vitae ex id, venenatis sagittis quam. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras hendrerit fringilla magna quis feugiat. Nulla molestie mauris at eros porta, ac aliquet enim viverra. Mauris ac nulla lorem.",
+                  style: GoogleFonts.poppins(
+                      height: 1.7,
+                      fontSize: 12,
+                      color: const Color(0xff4F4F4F)),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const Divider(color: Color(0xffDADADA), thickness: .6),
+        ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          title: Text(
+            'Details',
+            style: GoogleFonts.poppins(
+                color: const Color(0xff4F4F4F), fontSize: 15),
+          ),
+          iconColor: const Color(0xff4F4F4F),
+          shape: const RoundedRectangleBorder(side: BorderSide.none),
+          childrenPadding: EdgeInsets.zero,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Divider(color: Color(0xffDADADA), thickness: .6),
+                const SizedBox(height: 7),
+                Text(
+                  choosedVariant.description,
+                  style: GoogleFonts.poppins(
+                      height: 1.7,
+                      fontSize: 12,
+                      color: const Color(0xff4F4F4F)),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const Divider(color: Color(0xffDADADA), thickness: .6),
+      ],
+    );
   }
 }
 
