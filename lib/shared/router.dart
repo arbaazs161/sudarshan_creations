@@ -37,13 +37,17 @@ List<RouteBase> get _routes {
     ),
     GoRoute(
       path: Routes.account,
-      pageBuilder: (BuildContext context, GoRouterState state) =>
-          const NoTransitionPage(child: SudarshanAccountPage()),
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        final routeTo = state.extra as String?;
+
+        return NoTransitionPage(child: SudarshanAccountPage(routeTo: routeTo));
+      },
     ),
     GoRoute(
       path: Routes.cart,
-      pageBuilder: (BuildContext context, GoRouterState state) =>
-          const NoTransitionPage(child: SudarshanCartPage()),
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return const NoTransitionPage(child: SudarshanCartPage());
+      },
     ),
     GoRoute(
       path: Routes.favourites,

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
@@ -15,8 +16,8 @@ import 'widgets/sub_cat_product_topbar.dart';
 final _accountPageScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanAccountPage extends StatefulWidget {
-  const SudarshanAccountPage({super.key});
-
+  const SudarshanAccountPage({super.key, this.routeTo});
+  final String? routeTo;
   @override
   State<SudarshanAccountPage> createState() => _SudarshanAccountPageState();
 }
@@ -53,10 +54,10 @@ class _SudarshanAccountPageState extends State<SudarshanAccountPage> {
                       : ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 500),
                           child: LoginPage(
-                              // goTo: Routes.auth,
+                              goTo: widget.routeTo,
                               refresh: () {
-                            setState(() {});
-                          }),
+                                setState(() {});
+                              }),
                         )),
             ),
             const SudarshanFooterSection(),
@@ -68,9 +69,9 @@ class _SudarshanAccountPageState extends State<SudarshanAccountPage> {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.refresh});
+  const LoginPage({super.key, required this.refresh, this.goTo});
   final Function refresh;
-  // final String? goTo;
+  final String? goTo;
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -268,6 +269,7 @@ class _LoginPageState extends State<LoginPage>
             'addresses': {},
             'name': null,
             'cartItems': {},
+            'favourites': [],
             'password': newPass,
           };
           await FBFireStore.users.doc(newUserCred.user?.uid).set(data);
@@ -277,9 +279,7 @@ class _LoginPageState extends State<LoginPage>
             mobileCtrl.clear();
             emailCtrl.clear();
             otpCtrl.clear();
-            // context.go(widget.goTo != null
-            //     ? widget.goTo!
-            //     : routeHistory.reversed.elementAt(1));
+            if (widget.goTo != null) context.go(widget.goTo!);
           }
         } else {
           showAppSnack("OTP Invalid or Expired!");
@@ -332,7 +332,7 @@ class _LoginPageState extends State<LoginPage>
       mobileCtrl.clear();
       emailCtrl.clear();
       otpCtrl.clear();
-      widget.refresh();
+      widget.goTo != null ? context.go(widget.goTo!) : widget.refresh();
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
       if (e.code == 'invalid-verification-code') {
