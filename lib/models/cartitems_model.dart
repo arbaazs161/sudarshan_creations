@@ -1,7 +1,10 @@
+import 'package:sudarshan_creations/models/product_model.dart';
+
 class CartModel {
   final String id;
   final String productId;
   final String vId;
+  final ProductModel? product;
   int qty;
 
   CartModel({
@@ -9,6 +12,7 @@ class CartModel {
     required this.productId,
     required this.vId,
     required this.qty,
+     this.product,
   });
 
   factory CartModel.fromJson(id, Map<String, dynamic> json) => CartModel(

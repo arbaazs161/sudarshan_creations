@@ -67,7 +67,7 @@ class TopAppBar extends StatelessWidget {
             if (!mobile)
               InkWell(
                 onTap: () {
-                  context.go(Routes.favourites);
+                  context.go(Routes.cart);
 
                   // Navigator.push(context, MaterialPageRoute(
                   //   builder: (context) {

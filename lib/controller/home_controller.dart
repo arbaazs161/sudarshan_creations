@@ -83,21 +83,17 @@ class HomeCtrl extends GetxController {
       cartproductIds.addAll(cartData.map((e) => e.productId).toList());
       int starting = 0;
       int ending = cartproductIds.length >= 25 ? 25 : cartproductIds.length;
-      int noofLoops = (cartproductIds.length % 25).ceil();
+      int noofLoops = (cartproductIds.length / 25).ceil();
+      
       products.clear();
+      print( cartproductIds.getRange(starting, ending).toList());
       for (var loop = 0; loop < noofLoops; loop++) {
-        for (var j = starting; j < ending; j++) {
           final productSnap = await FBFireStore.products
-              .where(FieldPath.documentId, isEqualTo: cartproductIds[j])
+              .where(FieldPath.documentId, whereIn: cartproductIds.getRange(starting, ending).toList())
               .get();
-          // final productsSnap = await FBFireStore.products
-          //     .where(FieldPath.documentId,
-          //         arrayContainsAny: cartproductIds.sublist(starting, ending))
-          //     .get();
           final productsget =
               productSnap.docs.map((e) => ProductModel.fromDocSnap(e)).toList();
           products.addAll(productsget);
-        }
         if ((ending + 25) <= cartproductIds.length) {
           starting = ending;
           ending = ending + 25;
@@ -116,6 +112,7 @@ class HomeCtrl extends GetxController {
             product != null,
             CartModel(
                 id: itm.id,
+                product: product,
                 productId: product!.docId,
                 vId: itm.vId,
                 qty: itm.qty));
