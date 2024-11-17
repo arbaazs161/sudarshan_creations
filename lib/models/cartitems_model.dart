@@ -12,7 +12,7 @@ class CartModel {
     required this.productId,
     required this.vId,
     required this.qty,
-     this.product,
+    this.product,
   });
 
   factory CartModel.fromJson(id, Map<String, dynamic> json) => CartModel(

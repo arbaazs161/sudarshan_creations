@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sudarshan_creations/shared/methods.dart';
+import 'package:sudarshan_creations/views/sudarshan_favourites.dart';
 
 import '../../shared/router.dart';
 
@@ -67,13 +69,13 @@ class TopAppBar extends StatelessWidget {
             if (!mobile)
               InkWell(
                 onTap: () {
-                  context.go(Routes.cart);
+                  //context.go(Routes.cart);
 
-                  // Navigator.push(context, MaterialPageRoute(
-                  //   builder: (context) {
-                  //     return const SudarshanDisplayFavourites();
-                  //   },
-                  // ));
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const SudarshanDisplayFavourites();
+                    },
+                  ));
                 },
                 child: const Icon(
                   CupertinoIcons.heart,
@@ -88,11 +90,28 @@ class TopAppBar extends StatelessWidget {
               size: 25,
             ),
             const SizedBox(width: 15),
-            const Icon(
-              CupertinoIcons.shopping_cart,
-              color: Color(0xff95170D),
-              size: 25,
-            ),
+            if (!mobile)
+              InkWell(
+                onTap: () {
+                  //context.go(Routes.cart);
+                  if (isLoggedIn()) {
+                    context.go(Routes.cart);
+                  } else {
+                    context.go(Routes.account);
+                  }
+
+                  // Navigator.push(context, MaterialPageRoute(
+                  //   builder: (context) {
+                  //     return const SudarshanDisplayFavourites();
+                  //   },
+                  // ));
+                },
+                child: const Icon(
+                  CupertinoIcons.shopping_cart,
+                  color: Color(0xff95170D),
+                  size: 25,
+                ),
+              ),
           ],
         )
       ],

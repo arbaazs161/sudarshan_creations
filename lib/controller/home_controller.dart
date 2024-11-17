@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sudarshan_creations/models/address_model.dart';
 import 'package:sudarshan_creations/models/cartitems_model.dart';
 import 'package:sudarshan_creations/models/product_model.dart';
 import 'package:sudarshan_creations/models/user.dart';
@@ -25,6 +26,7 @@ class HomeCtrl extends GetxController {
 
   List<CartModel> cartItems = <CartModel>[];
   List<String> userFavourites = <String>[];
+  List<AddressModel> userAddresses = <AddressModel>[];
   @override
   void onInit() {
     super.onInit();
@@ -60,6 +62,7 @@ class HomeCtrl extends GetxController {
           if (currentUserdata != null) {
             syncCartItems();
             userFavourites = currentUserdata?.favourites ?? [];
+            userAddresses = currentUserdata?.addresses ?? [];
           }
           update();
         }
@@ -84,16 +87,17 @@ class HomeCtrl extends GetxController {
       int starting = 0;
       int ending = cartproductIds.length >= 25 ? 25 : cartproductIds.length;
       int noofLoops = (cartproductIds.length / 25).ceil();
-      
+
       products.clear();
-      print( cartproductIds.getRange(starting, ending).toList());
+      print(cartproductIds.getRange(starting, ending).toList());
       for (var loop = 0; loop < noofLoops; loop++) {
-          final productSnap = await FBFireStore.products
-              .where(FieldPath.documentId, whereIn: cartproductIds.getRange(starting, ending).toList())
-              .get();
-          final productsget =
-              productSnap.docs.map((e) => ProductModel.fromDocSnap(e)).toList();
-          products.addAll(productsget);
+        final productSnap = await FBFireStore.products
+            .where(FieldPath.documentId,
+                whereIn: cartproductIds.getRange(starting, ending).toList())
+            .get();
+        final productsget =
+            productSnap.docs.map((e) => ProductModel.fromDocSnap(e)).toList();
+        products.addAll(productsget);
         if ((ending + 25) <= cartproductIds.length) {
           starting = ending;
           ending = ending + 25;
