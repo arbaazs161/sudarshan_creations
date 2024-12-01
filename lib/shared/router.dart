@@ -76,11 +76,11 @@ List<RouteBase> get _routes {
               child: SudarshanDisplayAllSubCategories(
                   categoryId: state.pathParameters['id'] ?? "")),
     ),
-    // GoRoute(
-    //   path: Routes.checkout,
-    //   pageBuilder: (BuildContext context, GoRouterState state) =>
-    //       const NoTransitionPage(child: CheckoutPage()),
-    // ),
+    GoRoute(
+      path: Routes.addressbook,
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          const NoTransitionPage(child: AddressDetail()),
+    ),
     // GoRoute(
     //   path: Routes.overview,
     //   pageBuilder: (BuildContext context, GoRouterState state) =>

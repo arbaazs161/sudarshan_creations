@@ -232,6 +232,19 @@ class HomeCtrl extends GetxController {
     }
   }
 
+  clearCart() async {
+    try {
+      if (isLoggedIn()) {
+        await FBFireStore.users
+            .doc(FBAuth.auth.currentUser?.uid)
+            .update({'cartItems': []});
+        print("Cart Cleared and order processed");
+      }
+    } catch (e) {
+      print("Error clearing cart: $e");
+    }
+  }
+
   updateDBCart() async {
     try {
       final cartData = {};

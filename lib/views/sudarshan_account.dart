@@ -5,9 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import 'package:sudarshan_creations/shared/router.dart';
 import 'package:sudarshan_creations/shared/snackbar.dart';
 import 'package:sudarshan_creations/views/wrapper.dart';
 import 'widgets/footer.dart';
@@ -510,72 +512,204 @@ class AccountDetails extends StatefulWidget {
 }
 
 class _AccountDetailsState extends State<AccountDetails> {
+  //late final TextEditingController nameCtrl;
+  TextEditingController? nameCtrl;
+
   @override
   Widget build(BuildContext context) {
-    return ResponsiveWid(
-      mobile: const Placeholder(),
-      desktop: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 250,
-            // height: 500,
-            decoration: BoxDecoration(
-              color: const Color(0xffFEF7F3),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: .5,
-                  color: Colors.black26,
-                  // spreadRadius: .5,
-                  offset: Offset(0, 0),
+    return GetBuilder<HomeCtrl>(builder: (ctrl) {
+      nameCtrl = TextEditingController(text: ctrl.currentUserdata?.name);
+      print("Hello: ${ctrl.currentUserdata?.name}");
+      return ResponsiveWid(
+        mobile: const Placeholder(),
+        desktop: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 250,
+              // height: 500,
+              decoration: BoxDecoration(
+                color: const Color(0xffFEF7F3),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: .5,
+                    color: Colors.black26,
+                    // spreadRadius: .5,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
+                child: Column(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, // Vertically center the content
+                  crossAxisAlignment: CrossAxisAlignment
+                      .center, // Horizontally center the content
+
+                  children: [
+                    Column(
+                      children: [
+                        const Text("Personal Details",
+                            style: TextStyle(
+                                fontSize: 18.0, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 16.0),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextField(
+                            controller: nameCtrl,
+                            textAlign: TextAlign.center,
+                            decoration: const InputDecoration(
+                                labelText: "Name", alignLabelWithHint: true),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.push(Routes.addressbook);
+                        },
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Adjust the radius as needed
+                            ),
+                          ),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 12.0),
+                          ),
+                          backgroundColor: WidgetStateProperty.all(
+                              Colors.blue), // Customize the background color
+                          foregroundColor: WidgetStateProperty.all(
+                              Colors.white), // Customize the text color
+                        ),
+                        child: const Text("Addresses"),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Adjust the radius as needed
+                            ),
+                          ),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 12.0),
+                          ),
+                          backgroundColor: WidgetStateProperty.all(
+                              Colors.blue), // Customize the background color
+                          foregroundColor: WidgetStateProperty.all(
+                              Colors.white), // Customize the text color
+                        ),
+                        child: const Text("Orders"),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Adjust the radius as needed
+                            ),
+                          ),
+                          padding: WidgetStateProperty.all(
+                            const EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 12.0),
+                          ),
+                          backgroundColor: WidgetStateProperty.all(
+                              Colors.blue), // Customize the background color
+                          foregroundColor: WidgetStateProperty.all(
+                              Colors.white), // Customize the text color
+                        ),
+                        child: const Text("Enquiries"),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                          onPressed: () async {
+                            await FBAuth.auth.signOut();
+                            widget.refresh();
+                          },
+                          child: const Text("Support")),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                          onPressed: () async {
+                            await FBAuth.auth.signOut();
+                            widget.refresh();
+                          },
+                          child: const Text("Logout")),
+                    )
+                  ],
                 ),
-              ],
+              ),
             ),
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
-              child: Column(
+            const SizedBox(width: 25),
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xffFEF7F3),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: const [
+                  BoxShadow(
+                    blurRadius: .5,
+                    color: Colors.black26,
+                    // spreadRadius: .5,
+                    offset: Offset(0, 0),
+                  ),
+                ],
+              ),
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Personal Details"),
-                  const Text("Addresses"),
-                  const Text("Orders"),
-                  const Text("Enquiries"),
-                  const Text("Support"),
-                  TextButton(
-                      onPressed: () async {
-                        await FBAuth.auth.signOut();
-                        widget.refresh();
-                      },
-                      child: const Text("Logout"))
+                  Text("data"),
                 ],
               ),
             ),
-          ),
-          const SizedBox(width: 25),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xffFEF7F3),
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: .5,
-                  color: Colors.black26,
-                  // spreadRadius: .5,
-                  offset: Offset(0, 0),
-                ),
-              ],
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("data"),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class AddressDetail extends StatefulWidget {
+  const AddressDetail({super.key});
+
+  @override
+  State<AddressDetail> createState() => AddressDetailState();
+}
+
+class AddressDetailState extends State<AddressDetail> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

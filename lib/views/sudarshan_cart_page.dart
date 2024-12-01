@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/controller/home_controller.dart';
+import 'package:sudarshan_creations/models/orders.dart';
+import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 import 'package:sudarshan_creations/shared/router.dart';
 import 'package:sudarshan_creations/views/widgets/cart_card.dart';
@@ -29,14 +31,50 @@ class _SudarshanCartPageState extends State<SudarshanCartPage> {
   bool isAddress = false;
   bool isOrder = false;
 
+  Future<void> processOrder(HomeCtrl hctrl) async {
+    List<OrderProductModel> products = <OrderProductModel>[];
+    for (var item in hctrl.cartItems) {
+      final selectedVariant = item.product?.variants
+          .firstWhereOrNull((element) => element.id == item.vId);
+      OrderProductModel productDetail = OrderProductModel(
+          docId: item.id,
+          name: item.product!.name,
+          variantId: item.vId,
+          fixedPrice: selectedVariant!.fixedPrice ??
+              selectedVariant.priceRange.first.price,
+          qty: item.qty,
+          tax: item.product!.tax);
+      products.add(productDetail);
+    }
+
+    OrderModel order = OrderModel(
+      docId: null, // Firestore generates this
+      userDocId: hctrl.currentUserdata?.docId,
+      addressId: "123A3",
+      orderDate: DateTime.now(),
+      products: products,
+      totalPrice: totalPrice.toString(),
+      orderConfirmed: false,
+      paymentMethod: "COD",
+      isPaid: false,
+    );
+    //await FBFireStore.orders.add(order.toJson());
+    final docRef = await FBFireStore.orders.add(order.toJson());
+    print("Order successfully added to Firestore!");
+    await hctrl.clearCart();
+    setState(() {});
+  }
+
   void calculateTotalPrice(HomeCtrl hctrl) {
     totalPrice = 0; // Reset to ensure we don't keep adding on rebuilds
     for (var item in hctrl.cartItems) {
       final selectedVariant = item.product?.variants
           .firstWhereOrNull((element) => element.id == item.vId);
       if (selectedVariant != null && selectedVariant.fixedPrice != null) {
-        totalPrice +=
+        final itemPrice =
             item.qty.toDouble() * selectedVariant.fixedPrice!.toDouble();
+        final itemTax = itemPrice * (item.product!.tax?.toDouble() ?? 0) / 100;
+        totalPrice += itemPrice + itemTax;
       }
     }
   }
@@ -242,7 +280,7 @@ class _SudarshanCartPageState extends State<SudarshanCartPage> {
                                       if (ctrl.userAddresses.isEmpty && isCart)
                                         addAddressButton(),
                                       //child: Text("Address Drop Down here")),
-                                      if (isCart) showCartSummaryPrice(),
+                                      if (isCart) showCartSummaryPrice(ctrl),
                                       if (isAddress) Text("Address Box here"),
                                       if (isOrder)
                                         Text("Order Confirmation here"),
@@ -314,7 +352,7 @@ class _SudarshanCartPageState extends State<SudarshanCartPage> {
     );
   }
 
-  Container showCartSummaryPrice() {
+  Container showCartSummaryPrice(HomeCtrl hctrl) {
     return Container(
       //height: 300,
       width: 500,
@@ -349,6 +387,7 @@ class _SudarshanCartPageState extends State<SudarshanCartPage> {
                   isCart = false;
                   isAddress = false;
                   setState(() {});
+                  processOrder(hctrl);
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white, // Text color

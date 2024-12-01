@@ -30,8 +30,13 @@ class _CartCardWidState extends State<CartCardWid> {
     final selectedVariant = widget.cartModel?.product?.variants
         .firstWhereOrNull((element) => element.id == widget.cartModel?.vId);
     final product = widget.cartModel?.product;
+    double productTax = double.parse((((widget.cartModel.product!.tax / 100) *
+                selectedVariant!.fixedPrice!.toDouble()) *
+            widget.cartModel.qty.toDouble())
+        .toStringAsFixed(2));
     double productTotal = widget.cartModel.qty.toDouble() *
-        selectedVariant!.fixedPrice!.toDouble();
+            selectedVariant!.fixedPrice!.toDouble() +
+        productTax;
     if (qtyCtrl.text != widget.cartModel?.qty.toString())
       qtyCtrl.text = widget.cartModel?.qty.toString() ?? "1";
     return Padding(
@@ -282,7 +287,23 @@ class _CartCardWidState extends State<CartCardWid> {
           //       ],
           //     ),
 
-          Text("Total: ₹${productTotal}"),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Row(
+              children: [
+                Text("Tax: ₹${productTax}"),
+                const SizedBox(width: 8),
+                Tooltip(
+                  message: "Tax Rate: ${widget.cartModel.product!.tax}%",
+                  child: Icon(Icons.info_outline, size: 16, color: Colors.grey),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text("Total: ₹${productTotal}"),
+          ]),
+
           SizedBox(
             width: 20,
           ),

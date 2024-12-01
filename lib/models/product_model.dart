@@ -18,6 +18,7 @@ class ProductModel {
   final num minPrice;
   final num maxPrice;
   final List<String> variantTypes;
+  num tax;
   // ['enquiry', 'order'] if product varaint contain enquiryand order variants;
 
   ProductModel({
@@ -37,6 +38,7 @@ class ProductModel {
     required this.minPrice,
     required this.maxPrice,
     required this.variantTypes,
+    required this.tax,
   });
 
   // Convert a ProductModel instance to JSON
@@ -58,6 +60,7 @@ class ProductModel {
       'isActive': isActive,
       'topSelling': topSelling,
       'variants': variants.map((variant) => variant.toJson()).toList(),
+      'tax': tax,
     };
   }
 
@@ -84,6 +87,7 @@ class ProductModel {
           .map((variantJson) =>
               VariantModel.fromJson(variantJson.key, variantJson.value))
           .toList(),
+      tax: json['tax'],
     );
   }
 
@@ -110,6 +114,7 @@ class ProductModel {
           .map((variantJson) =>
               VariantModel.fromJson(variantJson.key, variantJson.value))
           .toList(),
+      tax: json['tax'],
       // variants: (json['variants'] as Map<String, dynamic>)
       //     .map((variant) =>
       //         VariantModel.fromJson(variant, variant as Map<String, dynamic>))
@@ -141,6 +146,7 @@ class ProductModel {
           .map((variantJson) =>
               VariantModel.fromJson(variantJson.key, variantJson.value))
           .toList(),
+      tax: json['tax'],
     );
   }
 }
