@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:get/get.dart';
 import 'package:sudarshan_creations/shared/firebase.dart';
 
@@ -9,6 +8,7 @@ Random _rnd = Random();
 
 String getRandomId(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+
 capilatlizeFirstLetter(String text) {
   final splitList = text.trim().split(" ");
   List<String> capilatlizedString = [];

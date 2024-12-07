@@ -176,6 +176,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
   Widget build(BuildContext context) {
     // checkFavourites();
     if (!loaded) return const Center(child: CircularProgressIndicator());
+
     //getRelatedProducts();
     // checkFavourites();
     //variantModel? selectedVariantMinPrice;
@@ -200,6 +201,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
     // }
 
     //print(filteredProducts.length);
+
     return product != null && selectedVariant != null && loaded
         ? GetBuilder<HomeCtrl>(builder: (hctrl) {
             qty = hctrl.cartItems
