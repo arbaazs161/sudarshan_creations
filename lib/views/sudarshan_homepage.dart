@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import 'package:sudarshan_creations/shared/wrapper.dart';
 import 'package:sudarshan_creations/views/wrapper.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
@@ -682,557 +684,1314 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
         ),
 
         // ================================================================ DESKTOP START
-        desktop: Wrapper(
-          // backgroundColor: const Color(0xffFEF7F3),
-          scafkey: _homePageScafKey,
-          // small: false,
-          body: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Column(
-              children: [
-                // HERO SECTION
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: 800,
-                      width: double.maxFinite,
-                      child: Image.asset(
-                        'assets/Hero_section_bg.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    // Container(
-                    //   height: 800,
-                    //   width: double.maxFinite,
-                    //   color: Colors.white60,
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 25.0, horizontal: 25),
-                      child: Column(
-                        children: [
-                          const TopAppBar(mobile: false),
-                          const SizedBox(height: 15),
-                          const Divider(height: 0, color: Color(0xffB58543)),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ...List.generate(
-                                  ctrl.homeCategories.length,
-                                  (index) {
-                                    final mainCategory =
-                                        ctrl.homeCategories[index];
-                                    return InkWell(
-                                        highlightColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onTap: () {
-                                          context.go(
-                                              "${Routes.category}/${mainCategory.docId}");
-                                        },
-                                        child: Text(
-                                          capilatlizeFirstLetter(
-                                              mainCategory.name),
-                                          style: GoogleFonts.poppins(
-                                            color: const Color(0xff303030),
-                                            fontSize: 15,
-                                          ),
-                                        ));
-                                  },
-                                )
-                              ],
-                            ),
+        desktop: true
+            ? Wrapper(
+                body: NestedScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverAppBar(
+                          // forceMaterialTransparency: true,
+                          title: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 300),
+                            child: TopAppBarDesk(mobile: false),
                           ),
-                          const Divider(height: 0, color: Color(0xffB58543)),
-                          const SizedBox(height: 15),
-                          SizedBox(
-                            // color: Colors.black12,
-                            height: 600,
-                            child: SizedBox(
-                              // width: 1024,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 100.0),
-                                    child: SizedBox(
-                                        // height: 400,
-                                        height:
-                                            MediaQuery.sizeOf(context).width *
-                                                .25,
-                                        child: Image.asset(
-                                            'assets/hero_left_tilt_img.png')),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(height: 50),
-                                      Text("Luxurious Gifting",
-                                          style: GoogleFonts.brawler(
-                                            color: const Color(0xff95170D),
-                                            fontSize: 50,
-                                            fontWeight: FontWeight.w700,
-                                          )),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Elevate Gifts with Personalised Envelopes",
-                                        style: GoogleFonts.poppins(
-                                          color: const Color(0xff303030),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 60),
-                                      ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            padding: const EdgeInsets.all(20),
-                                            elevation: 0,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            backgroundColor:
-                                                const Color(0xffFBD554),
-                                          ),
-                                          onPressed: () {},
-                                          child: Text(
-                                            "Shop Now",
-                                            style: GoogleFonts.brawler(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.black),
-                                          ))
-                                    ],
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 100.0),
-                                    child: SizedBox(
-                                        // height: 400,
-                                        height:
-                                            MediaQuery.sizeOf(context).width *
-                                                .25,
-                                        child: Image.asset(
-                                            'assets/hero_right_tilt_image.png')),
-                                  ),
-                                ],
+                          pinned: true,
+                          automaticallyImplyLeading: false,
+                          actions: const [SizedBox()],
+                          snap: true,
+                          toolbarHeight: 60,
+                          floating: true,
+                          titleSpacing: 30,
+                          backgroundColor: Colors.black45,
+                          forceElevated: innerBoxIsScrolled,
+                          expandedHeight: (kIsWeb ? 80 : 60) + 32 + 20,
+                          bottom: const NavBar())
+                    ];
+                  },
+                  body: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        // HERO SECTION
+                        Stack(
+                          children: [
+                            SizedBox(
+                              height: 800,
+                              width: double.maxFinite,
+                              child: Image.asset(
+                                'assets/banner1.png',
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                          // Positioned(
-                          //     child: Row(
-                          //   children: [],
-                          // )),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-
-                // HERO SECTION COMPLETED
-
-                // SHOP BY CATEGORIES
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 30),
-                      Text(
-                        "SHOP BY CATEGORIES",
-                        style: GoogleFonts.brawler(
-                          color: const Color(0xff242424),
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 50),
-                      Center(
-                        child: Container(
-                          width: 1200,
-                          // color: Colors.black12,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: StaggeredGrid.extent(
-                            maxCrossAxisExtent: 400,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 20,
-                            children: [
-                              ...List.generate(
-                                ctrl.homeCategories.length,
-                                (index) {
-                                  final image =
-                                      ctrl.homeCategories[index].image;
-                                  final text = ctrl.homeCategories[index].name;
-                                  return InkWell(
-                                      highlightColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      splashColor: Colors.transparent,
-                                      onTap: () {
-                                        context.go(
-                                            "${Routes.category}/${ctrl.homeCategories[index].docId}",
-                                            extra: ctrl.homeCategories[index]);
-                                        // Navigator.push(context, MaterialPageRoute(
-                                        //   builder: (context) {
-                                        //     return const SudarshanDisplayAllSubCategories(
-                                        //         categoryId: "");
-                                        //   },
-                                        // ));
-                                      },
-                                      child: SubCatCardWid(
-                                          image: image,
-                                          text: capilatlizeFirstLetter(text)));
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 70),
-                    ],
-                  ),
-                ),
-
-                // SHOP BY CATEGORIES COMPLETED
-
-                // TOP SELLING
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: 620,
-                      width: double.maxFinite,
-                      child: Image.asset(
-                        'assets/top_seliing_bg.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Center(
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 50),
-                          Text(
-                            "TOP SELLING",
-                            style: GoogleFonts.brawler(
-                              color: const Color(0xff242424),
-                              fontSize: 30,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(height: 60),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.only(left: 25.0),
-                            child: Row(
-                              // runAlignment: WrapAlignment.center,
-                              // runSpacing: 15,
-                              // spacing: 17,
-                              children: [
-                                ...List.generate(
-                                  ctrl.topSellingProducts.length,
-                                  (index) {
-                                    final product =
-                                        ctrl.topSellingProducts[index];
-                                    return Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 25.0),
-                                      child: InkWell(
-                                          highlightColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          onTap: () {
-                                            context.go(
-                                                "${Routes.product}/${product.docId}");
-
-                                            // Navigator.push(context,
-                                            //     MaterialPageRoute(
-                                            //   builder: (context) {
-                                            //     return const SudarshanProductDetails();
-                                            //   },
-                                            // ));
-                                          },
-                                          child: ProductBagWid(
-                                              product: product, forHome: true)),
-                                    );
-                                  },
-                                )
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 70),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                // TOP SELLING COMPLTED
-
-                // BRAND HIGHLIGHTS
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 50),
-                      Text(
-                        "BRAND HIGHLIGHTS",
-                        style: GoogleFonts.brawler(
-                          color: const Color(0xff242424),
-                          fontSize: 30,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        // runAlignment: WrapAlignment.center,
-                        runSpacing: 15,
-                        children: [
-                          // const Spacer(),
-                          SizedBox(
-                            width: 250,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 150,
-                                  child: Image.asset('assets/medal_img.png'),
-                                ),
-                                const SizedBox(height: 17),
-                                Text(
-                                  "Impeccable quality",
-                                  style: GoogleFonts.brawler(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Superior Craftsmanship, Unmatched Quality & Unique Designs",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                      /* fontWeight: FontWeight.w700, */ fontSize:
-                                          13),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                          SizedBox(
-                            width: 250,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 150,
-                                  child: Image.asset('assets/people_img.png'),
-                                ),
-                                const SizedBox(height: 17),
-                                Text(
-                                  "Customer satisfaction",
-                                  style: GoogleFonts.brawler(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "12000+ Happy & Satisfied Customers Around The Globe",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                      /* fontWeight: FontWeight.w700, */ fontSize:
-                                          13),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                          SizedBox(
-                            width: 250,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 150,
-                                  child:
-                                      Image.asset('assets/stationary_img.png'),
-                                ),
-                                const SizedBox(height: 17),
-                                Text(
-                                  "Customised stationery",
-                                  style: GoogleFonts.brawler(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Name Personalisation Perfection Awaits You",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                      /* fontWeight: FontWeight.w700, */ fontSize:
-                                          13),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                          SizedBox(
-                            width: 250,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 150,
-                                  child: Image.asset(
-                                      'assets/hand_crafted_img.png'),
-                                ),
-                                const SizedBox(height: 17),
-                                Text(
-                                  "Hand crafted",
-                                  style: GoogleFonts.brawler(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Handcrafted With Love, Exuding Artisanal Excellence",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                      /* fontWeight: FontWeight.w700, */ fontSize:
-                                          13),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 25),
-                          SizedBox(
-                            width: 250,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 150,
-                                  child: Image.asset(
-                                      'assets/women_empowerment_img.png'),
-                                ),
-                                const SizedBox(height: 17),
-                                Text(
-                                  "Women empowerment",
-                                  style: GoogleFonts.brawler(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  "Empowering Women, Crafting Excellence Together",
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                      /* fontWeight: FontWeight.w700, */ fontSize:
-                                          13),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // const Spacer(),
-                        ],
-                      ),
-                      const SizedBox(height: 80),
-                      Center(
-                        child: SizedBox(
-                          width: 1024,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Image.asset('assets/welcome_bg.png'),
-                              Align(
-                                alignment: const Alignment(-.55, 0),
-                                child: SizedBox(
-                                  width: 650,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Welcome to Sudarshan!!!",
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 250),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const SizedBox(height: 50),
+                                    Text("Luxurious Gifting",
                                         style: GoogleFonts.brawler(
-                                          color: const Color(0xff95170D),
-                                          fontSize: 35,
+                                          color: Colors.white,
+                                          fontSize: 50,
                                           fontWeight: FontWeight.w700,
-                                        ),
+                                        )),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "Elevate Gifts with Personalised Envelopes",
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                      const SizedBox(height: 10),
-                                      // SizedBox(height: 10),
-                                      Text.rich(TextSpan(children: [
-                                        TextSpan(
-                                            text:
-                                                "Discover a world of exquisite stationery and impeccable craftsmanship at ",
-                                            style: GoogleFonts.poppins(
-                                                height: 2.2,
-                                                color: const Color(0xff030303),
-                                                fontSize: 13.5)),
-                                        TextSpan(
-                                            text: "Sudarshan Cards.",
-                                            style: GoogleFonts.poppins(
-                                                height: 2.2,
-                                                color: const Color(0xff030303),
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 13.5)),
-                                      ])),
+                                    ),
+                                    const SizedBox(height: 60),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.all(20),
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          backgroundColor: Colors.white,
+                                          side: BorderSide.none,
+                                        ),
+                                        onPressed: () {},
+                                        child: Text(
+                                          "Shop Now",
+                                          style: GoogleFonts.brawler(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.black),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
 
-                                      Text.rich(TextSpan(children: [
-                                        TextSpan(
-                                            text:
-                                                'We are your one-stop shop for all your stationery needs, offering a wide range of products including ',
-                                            style: GoogleFonts.poppins(
-                                                height: 2.2,
-                                                color: const Color(0xff030303),
-                                                fontSize: 13.5)),
-                                        TextSpan(
-                                            text: 'money envelopes',
-                                            style: GoogleFonts.poppins(
-                                                height: 2.2,
-                                                color: const Color(0xff030303),
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                decorationThickness: 2,
-                                                fontSize: 13.5)),
-                                        TextSpan(
-                                            text:
-                                                ', notecards, gift sets, gift bags, wax seals, and ',
-                                            style: GoogleFonts.poppins(
-                                                height: 2.2,
-                                                color: const Color(0xff030303),
-                                                fontSize: 13.5)),
-                                        TextSpan(
-                                            text: 'pillow boxes.',
-                                            style: GoogleFonts.poppins(
-                                                height: 2.2,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                decorationThickness: 2,
-                                                color: const Color(0xff030303),
-                                                fontSize: 13.5)),
-                                      ])),
-                                      /* 
+                        // HERO SECTION COMPLETED
+
+                        // SHOP BY CATEGORIES
+                        Container(
+                          color: Colors.white,
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 30),
+                                Text(
+                                  "SHOP BY CATEGORIES",
+                                  style: GoogleFonts.brawler(
+                                    color: const Color(0xff242424),
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 50),
+                                Center(
+                                  child: Container(
+                                    width: 1200,
+                                    // color: Colors.black12,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    child: StaggeredGrid.extent(
+                                      maxCrossAxisExtent: 400,
+                                      mainAxisSpacing: 20,
+                                      crossAxisSpacing: 20,
+                                      children: [
+                                        ...List.generate(
+                                          ctrl.homeCategories.length,
+                                          (index) {
+                                            final image = ctrl
+                                                .homeCategories[index].image;
+                                            final text =
+                                                ctrl.homeCategories[index].name;
+                                            return InkWell(
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                hoverColor: Colors.transparent,
+                                                splashColor: Colors.transparent,
+                                                onTap: () {
+                                                  context.go(
+                                                      "${Routes.category}/${ctrl.homeCategories[index].docId}",
+                                                      extra:
+                                                          ctrl.homeCategories[
+                                                              index]);
+                                                  // Navigator.push(context, MaterialPageRoute(
+                                                  //   builder: (context) {
+                                                  //     return const SudarshanDisplayAllSubCategories(
+                                                  //         categoryId: "");
+                                                  //   },
+                                                  // ));
+                                                },
+                                                child: SubCatCardWid(
+                                                    image: image,
+                                                    text:
+                                                        capilatlizeFirstLetter(
+                                                            text)));
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 70),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        // SHOP BY CATEGORIES COMPLETED
+
+                        // TOP SELLING
+                        Stack(
+                          children: [
+                            SizedBox(
+                              height: 620,
+                              width: double.maxFinite,
+                              child: true
+                                  ? Container(
+                                      color: Colors.white,
+                                    )
+                                  : Image.asset(
+                                      'assets/top_seliing_bg.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                            Center(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 50),
+                                  Text(
+                                    "TOP SELLING",
+                                    style: GoogleFonts.brawler(
+                                      color: const Color(0xff242424),
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 60),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    padding: const EdgeInsets.only(left: 25.0),
+                                    child: Row(
+                                      // runAlignment: WrapAlignment.center,
+                                      // runSpacing: 15,
+                                      // spacing: 17,
+                                      children: [
+                                        ...List.generate(
+                                          ctrl.topSellingProducts.length,
+                                          (index) {
+                                            final product =
+                                                ctrl.topSellingProducts[index];
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 25.0),
+                                              child: InkWell(
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  onTap: () {
+                                                    context.go(
+                                                        "${Routes.product}/${product.docId}");
+
+                                                    // Navigator.push(context,
+                                                    //     MaterialPageRoute(
+                                                    //   builder: (context) {
+                                                    //     return const SudarshanProductDetails();
+                                                    //   },
+                                                    // ));
+                                                  },
+                                                  child: ProductBagWid(
+                                                      product: product,
+                                                      forHome: true)),
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 70),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        // TOP SELLING COMPLTED
+
+                        // BRAND HIGHLIGHTS
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 50),
+                              Text(
+                                "BRAND HIGHLIGHTS",
+                                style: GoogleFonts.brawler(
+                                  color: const Color(0xff242424),
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 40),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                // runAlignment: WrapAlignment.center,
+                                runSpacing: 15,
+                                children: [
+                                  // const Spacer(),
+                                  SizedBox(
+                                    width: 250,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 150,
+                                          child: Image.asset(
+                                              'assets/medal_img.png'),
+                                        ),
+                                        const SizedBox(height: 17),
+                                        Text(
+                                          "Impeccable quality",
+                                          style: GoogleFonts.brawler(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Superior Craftsmanship, Unmatched Quality & Unique Designs",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                              /* fontWeight: FontWeight.w700, */ fontSize:
+                                                  13),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 25),
+                                  SizedBox(
+                                    width: 250,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 150,
+                                          child: Image.asset(
+                                              'assets/people_img.png'),
+                                        ),
+                                        const SizedBox(height: 17),
+                                        Text(
+                                          "Customer satisfaction",
+                                          style: GoogleFonts.brawler(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "12000+ Happy & Satisfied Customers Around The Globe",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                              /* fontWeight: FontWeight.w700, */ fontSize:
+                                                  13),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 25),
+                                  SizedBox(
+                                    width: 250,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 150,
+                                          child: Image.asset(
+                                              'assets/stationary_img.png'),
+                                        ),
+                                        const SizedBox(height: 17),
+                                        Text(
+                                          "Customised stationery",
+                                          style: GoogleFonts.brawler(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Name Personalisation Perfection Awaits You",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                              /* fontWeight: FontWeight.w700, */ fontSize:
+                                                  13),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 25),
+                                  SizedBox(
+                                    width: 250,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 150,
+                                          child: Image.asset(
+                                              'assets/hand_crafted_img.png'),
+                                        ),
+                                        const SizedBox(height: 17),
+                                        Text(
+                                          "Hand crafted",
+                                          style: GoogleFonts.brawler(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Handcrafted With Love, Exuding Artisanal Excellence",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                              /* fontWeight: FontWeight.w700, */ fontSize:
+                                                  13),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 25),
+                                  SizedBox(
+                                    width: 250,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 150,
+                                          child: Image.asset(
+                                              'assets/women_empowerment_img.png'),
+                                        ),
+                                        const SizedBox(height: 17),
+                                        Text(
+                                          "Women empowerment",
+                                          style: GoogleFonts.brawler(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          "Empowering Women, Crafting Excellence Together",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.poppins(
+                                              /* fontWeight: FontWeight.w700, */ fontSize:
+                                                  13),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // const Spacer(),
+                                ],
+                              ),
+                              const SizedBox(height: 80),
+                              Center(
+                                child: SizedBox(
+                                  width: 1024,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Image.asset('assets/welcome_bg.png'),
+                                      Align(
+                                        alignment: const Alignment(-.55, 0),
+                                        child: SizedBox(
+                                          width: 650,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "Welcome to Sudarshan!!!",
+                                                style: GoogleFonts.brawler(
+                                                  color:
+                                                      const Color(0xff95170D),
+                                                  fontSize: 35,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              // SizedBox(height: 10),
+                                              Text.rich(TextSpan(children: [
+                                                TextSpan(
+                                                    text:
+                                                        "Discover a world of exquisite stationery and impeccable craftsmanship at ",
+                                                    style: GoogleFonts.poppins(
+                                                        height: 2.2,
+                                                        color: const Color(
+                                                            0xff030303),
+                                                        fontSize: 13.5)),
+                                                TextSpan(
+                                                    text: "Sudarshan Cards.",
+                                                    style: GoogleFonts.poppins(
+                                                        height: 2.2,
+                                                        color: const Color(
+                                                            0xff030303),
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 13.5)),
+                                              ])),
+
+                                              Text.rich(TextSpan(children: [
+                                                TextSpan(
+                                                    text:
+                                                        'We are your one-stop shop for all your stationery needs, offering a wide range of products including ',
+                                                    style: GoogleFonts.poppins(
+                                                        height: 2.2,
+                                                        color: const Color(
+                                                            0xff030303),
+                                                        fontSize: 13.5)),
+                                                TextSpan(
+                                                    text: 'money envelopes',
+                                                    style: GoogleFonts.poppins(
+                                                        height: 2.2,
+                                                        color: const Color(
+                                                            0xff030303),
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        decorationThickness: 2,
+                                                        fontSize: 13.5)),
+                                                TextSpan(
+                                                    text:
+                                                        ', notecards, gift sets, gift bags, wax seals, and ',
+                                                    style: GoogleFonts.poppins(
+                                                        height: 2.2,
+                                                        color: const Color(
+                                                            0xff030303),
+                                                        fontSize: 13.5)),
+                                                TextSpan(
+                                                    text: 'pillow boxes.',
+                                                    style: GoogleFonts.poppins(
+                                                        height: 2.2,
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        decorationThickness: 2,
+                                                        color: const Color(
+                                                            0xff030303),
+                                                        fontSize: 13.5)),
+                                              ])),
+                                              /* 
                                       const Text(
                                           "We are your one-stop shop for all your stationery needs, offering a wide range of products including money envelopes, notecards, gift sets, gift bags, wax seals, and pillow boxes."),
                                     */
+                                            ],
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
-                              )
+                              ),
+                              const SizedBox(height: 80),
+                            ],
+                          ),
+                        ),
+
+                        // BRAND HIGHLIGHTS COMPLETED
+
+                        // FOOTER START
+
+                        const SudarshanFooterSection(),
+                        // FOOTER Completed
+                      ],
+                    ),
+                  ),
+                ),
+                scafkey: _homePageScafKey)
+            : Wrapper(
+                // backgroundColor: const Color(0xffFEF7F3),
+                scafkey: _homePageScafKey,
+                // small: false,
+                body: SingleChildScrollView(
+                  physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      // HERO SECTION
+                      Stack(
+                        children: [
+                          SizedBox(
+                            height: 800,
+                            width: double.maxFinite,
+                            child: Image.asset(
+                              'assets/Hero_section_bg.png',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          // Container(
+                          //   height: 800,
+                          //   width: double.maxFinite,
+                          //   color: Colors.white60,
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 25.0, horizontal: 25),
+                            child: Column(
+                              children: [
+                                const TopAppBar(mobile: false),
+                                const SizedBox(height: 15),
+                                const Divider(
+                                    height: 0, color: Color(0xffB58543)),
+                                true
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            // Left 3 categories
+                                            Row(
+                                              children: List.generate(
+                                                (ctrl.homeCategories.length / 2)
+                                                    .ceil(),
+                                                (index) {
+                                                  final mainCategory = ctrl
+                                                      .homeCategories[index];
+                                                  return Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: InkWell(
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      hoverColor:
+                                                          Colors.transparent,
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      onTap: () {
+                                                        context.go(
+                                                            "${Routes.category}/${mainCategory.docId}");
+                                                      },
+                                                      child: Text(
+                                                        capilatlizeFirstLetter(
+                                                            mainCategory.name),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          color: const Color(
+                                                              0xff303030),
+                                                          fontSize: 15,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+
+                                            // Center logo
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 24.0),
+                                              child: Image.asset(
+                                                'assets/sudarshan_logo.png', // Replace with your actual logo path
+                                                height: 40,
+                                              ),
+                                            ),
+
+                                            // Right 3 categories
+                                            Row(
+                                              children: List.generate(
+                                                (ctrl.homeCategories.length / 2)
+                                                    .ceil(),
+                                                (index) {
+                                                  final mainCategory =
+                                                      ctrl.homeCategories[
+                                                          index + 3];
+                                                  return Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: InkWell(
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      hoverColor:
+                                                          Colors.transparent,
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      onTap: () {
+                                                        context.go(
+                                                            "${Routes.category}/${mainCategory.docId}");
+                                                      },
+                                                      child: Text(
+                                                        capilatlizeFirstLetter(
+                                                            mainCategory.name),
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                          color: const Color(
+                                                              0xff303030),
+                                                          fontSize: 15,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            ...List.generate(
+                                              ctrl.homeCategories.length,
+                                              (index) {
+                                                final mainCategory =
+                                                    ctrl.homeCategories[index];
+                                                return InkWell(
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    splashColor:
+                                                        Colors.transparent,
+                                                    onTap: () {
+                                                      context.go(
+                                                          "${Routes.category}/${mainCategory.docId}");
+                                                    },
+                                                    child: Text(
+                                                      capilatlizeFirstLetter(
+                                                          mainCategory.name),
+                                                      style:
+                                                          GoogleFonts.poppins(
+                                                        color: const Color(
+                                                            0xff303030),
+                                                        fontSize: 15,
+                                                      ),
+                                                    ));
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                const Divider(
+                                    height: 0, color: Color(0xffB58543)),
+                                const SizedBox(height: 15),
+                                SizedBox(
+                                  // color: Colors.black12,
+                                  height: 600,
+                                  child: SizedBox(
+                                    // width: 1024,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 100.0),
+                                          child: SizedBox(
+                                              // height: 400,
+                                              height: MediaQuery.sizeOf(context)
+                                                      .width *
+                                                  .25,
+                                              child: Image.asset(
+                                                  'assets/hero_left_tilt_img.png')),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(height: 50),
+                                            Text("Luxurious Gifting",
+                                                style: GoogleFonts.brawler(
+                                                  color:
+                                                      const Color(0xff95170D),
+                                                  fontSize: 50,
+                                                  fontWeight: FontWeight.w700,
+                                                )),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              "Elevate Gifts with Personalised Envelopes",
+                                              style: GoogleFonts.poppins(
+                                                color: const Color(0xff303030),
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 60),
+                                            ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.all(20),
+                                                  elevation: 0,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8)),
+                                                  backgroundColor:
+                                                      const Color(0xffFBD554),
+                                                ),
+                                                onPressed: () {},
+                                                child: Text(
+                                                  "Shop Now",
+                                                  style: GoogleFonts.brawler(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: Colors.black),
+                                                ))
+                                          ],
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 100.0),
+                                          child: SizedBox(
+                                              // height: 400,
+                                              height: MediaQuery.sizeOf(context)
+                                                      .width *
+                                                  .25,
+                                              child: Image.asset(
+                                                  'assets/hero_right_tilt_image.png')),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // Positioned(
+                                //     child: Row(
+                                //   children: [],
+                                // )),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+
+                      // HERO SECTION COMPLETED
+
+                      // SHOP BY CATEGORIES
+                      Container(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 30),
+                              Text(
+                                "SHOP BY CATEGORIES",
+                                style: GoogleFonts.brawler(
+                                  color: const Color(0xff242424),
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 50),
+                              Center(
+                                child: Container(
+                                  width: 1200,
+                                  // color: Colors.black12,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: StaggeredGrid.extent(
+                                    maxCrossAxisExtent: 400,
+                                    mainAxisSpacing: 20,
+                                    crossAxisSpacing: 20,
+                                    children: [
+                                      ...List.generate(
+                                        ctrl.homeCategories.length,
+                                        (index) {
+                                          final image =
+                                              ctrl.homeCategories[index].image;
+                                          final text =
+                                              ctrl.homeCategories[index].name;
+                                          return InkWell(
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              splashColor: Colors.transparent,
+                                              onTap: () {
+                                                context.go(
+                                                    "${Routes.category}/${ctrl.homeCategories[index].docId}",
+                                                    extra: ctrl
+                                                        .homeCategories[index]);
+                                                // Navigator.push(context, MaterialPageRoute(
+                                                //   builder: (context) {
+                                                //     return const SudarshanDisplayAllSubCategories(
+                                                //         categoryId: "");
+                                                //   },
+                                                // ));
+                                              },
+                                              child: SubCatCardWid(
+                                                  image: image,
+                                                  text: capilatlizeFirstLetter(
+                                                      text)));
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 70),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(height: 80),
+
+                      // SHOP BY CATEGORIES COMPLETED
+
+                      // TOP SELLING
+                      Stack(
+                        children: [
+                          SizedBox(
+                            height: 620,
+                            width: double.maxFinite,
+                            child: true
+                                ? Container(
+                                    color: Colors.white,
+                                  )
+                                : Image.asset(
+                                    'assets/top_seliing_bg.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                          ),
+                          Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 50),
+                                Text(
+                                  "TOP SELLING",
+                                  style: GoogleFonts.brawler(
+                                    color: const Color(0xff242424),
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 60),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: const EdgeInsets.only(left: 25.0),
+                                  child: Row(
+                                    // runAlignment: WrapAlignment.center,
+                                    // runSpacing: 15,
+                                    // spacing: 17,
+                                    children: [
+                                      ...List.generate(
+                                        ctrl.topSellingProducts.length,
+                                        (index) {
+                                          final product =
+                                              ctrl.topSellingProducts[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 25.0),
+                                            child: InkWell(
+                                                highlightColor:
+                                                    Colors.transparent,
+                                                hoverColor: Colors.transparent,
+                                                onTap: () {
+                                                  context.go(
+                                                      "${Routes.product}/${product.docId}");
+
+                                                  // Navigator.push(context,
+                                                  //     MaterialPageRoute(
+                                                  //   builder: (context) {
+                                                  //     return const SudarshanProductDetails();
+                                                  //   },
+                                                  // ));
+                                                },
+                                                child: ProductBagWid(
+                                                    product: product,
+                                                    forHome: true)),
+                                          );
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 70),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      // TOP SELLING COMPLTED
+
+                      // BRAND HIGHLIGHTS
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 50),
+                            Text(
+                              "BRAND HIGHLIGHTS",
+                              style: GoogleFonts.brawler(
+                                color: const Color(0xff242424),
+                                fontSize: 30,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                            Wrap(
+                              alignment: WrapAlignment.center,
+                              // runAlignment: WrapAlignment.center,
+                              runSpacing: 15,
+                              children: [
+                                // const Spacer(),
+                                SizedBox(
+                                  width: 250,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 150,
+                                        child:
+                                            Image.asset('assets/medal_img.png'),
+                                      ),
+                                      const SizedBox(height: 17),
+                                      Text(
+                                        "Impeccable quality",
+                                        style: GoogleFonts.brawler(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 18),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Superior Craftsmanship, Unmatched Quality & Unique Designs",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.poppins(
+                                            /* fontWeight: FontWeight.w700, */ fontSize:
+                                                13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 25),
+                                SizedBox(
+                                  width: 250,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 150,
+                                        child: Image.asset(
+                                            'assets/people_img.png'),
+                                      ),
+                                      const SizedBox(height: 17),
+                                      Text(
+                                        "Customer satisfaction",
+                                        style: GoogleFonts.brawler(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 18),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "12000+ Happy & Satisfied Customers Around The Globe",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.poppins(
+                                            /* fontWeight: FontWeight.w700, */ fontSize:
+                                                13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 25),
+                                SizedBox(
+                                  width: 250,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 150,
+                                        child: Image.asset(
+                                            'assets/stationary_img.png'),
+                                      ),
+                                      const SizedBox(height: 17),
+                                      Text(
+                                        "Customised stationery",
+                                        style: GoogleFonts.brawler(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 18),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Name Personalisation Perfection Awaits You",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.poppins(
+                                            /* fontWeight: FontWeight.w700, */ fontSize:
+                                                13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 25),
+                                SizedBox(
+                                  width: 250,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 150,
+                                        child: Image.asset(
+                                            'assets/hand_crafted_img.png'),
+                                      ),
+                                      const SizedBox(height: 17),
+                                      Text(
+                                        "Hand crafted",
+                                        style: GoogleFonts.brawler(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 18),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Handcrafted With Love, Exuding Artisanal Excellence",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.poppins(
+                                            /* fontWeight: FontWeight.w700, */ fontSize:
+                                                13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 25),
+                                SizedBox(
+                                  width: 250,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 150,
+                                        child: Image.asset(
+                                            'assets/women_empowerment_img.png'),
+                                      ),
+                                      const SizedBox(height: 17),
+                                      Text(
+                                        "Women empowerment",
+                                        style: GoogleFonts.brawler(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 18),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "Empowering Women, Crafting Excellence Together",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.poppins(
+                                            /* fontWeight: FontWeight.w700, */ fontSize:
+                                                13),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // const Spacer(),
+                              ],
+                            ),
+                            const SizedBox(height: 80),
+                            Center(
+                              child: SizedBox(
+                                width: 1024,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Image.asset('assets/welcome_bg.png'),
+                                    Align(
+                                      alignment: const Alignment(-.55, 0),
+                                      child: SizedBox(
+                                        width: 650,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Welcome to Sudarshan!!!",
+                                              style: GoogleFonts.brawler(
+                                                color: const Color(0xff95170D),
+                                                fontSize: 35,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            // SizedBox(height: 10),
+                                            Text.rich(TextSpan(children: [
+                                              TextSpan(
+                                                  text:
+                                                      "Discover a world of exquisite stationery and impeccable craftsmanship at ",
+                                                  style: GoogleFonts.poppins(
+                                                      height: 2.2,
+                                                      color: const Color(
+                                                          0xff030303),
+                                                      fontSize: 13.5)),
+                                              TextSpan(
+                                                  text: "Sudarshan Cards.",
+                                                  style: GoogleFonts.poppins(
+                                                      height: 2.2,
+                                                      color: const Color(
+                                                          0xff030303),
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 13.5)),
+                                            ])),
+
+                                            Text.rich(TextSpan(children: [
+                                              TextSpan(
+                                                  text:
+                                                      'We are your one-stop shop for all your stationery needs, offering a wide range of products including ',
+                                                  style: GoogleFonts.poppins(
+                                                      height: 2.2,
+                                                      color: const Color(
+                                                          0xff030303),
+                                                      fontSize: 13.5)),
+                                              TextSpan(
+                                                  text: 'money envelopes',
+                                                  style: GoogleFonts.poppins(
+                                                      height: 2.2,
+                                                      color: const Color(
+                                                          0xff030303),
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationThickness: 2,
+                                                      fontSize: 13.5)),
+                                              TextSpan(
+                                                  text:
+                                                      ', notecards, gift sets, gift bags, wax seals, and ',
+                                                  style: GoogleFonts.poppins(
+                                                      height: 2.2,
+                                                      color: const Color(
+                                                          0xff030303),
+                                                      fontSize: 13.5)),
+                                              TextSpan(
+                                                  text: 'pillow boxes.',
+                                                  style: GoogleFonts.poppins(
+                                                      height: 2.2,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationThickness: 2,
+                                                      color: const Color(
+                                                          0xff030303),
+                                                      fontSize: 13.5)),
+                                            ])),
+                                            /* 
+                                      const Text(
+                                          "We are your one-stop shop for all your stationery needs, offering a wide range of products including money envelopes, notecards, gift sets, gift bags, wax seals, and pillow boxes."),
+                                    */
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 80),
+                          ],
+                        ),
+                      ),
+
+                      // BRAND HIGHLIGHTS COMPLETED
+
+                      // FOOTER START
+
+                      const SudarshanFooterSection(),
+                      // FOOTER Completed
                     ],
                   ),
                 ),
+              ),
+      );
+    });
+  }
+}
 
-                // BRAND HIGHLIGHTS COMPLETED
+class NavBar extends StatelessWidget implements PreferredSizeWidget {
+  const NavBar({
+    super.key,
+  });
 
-                // FOOTER START
-
-                const SudarshanFooterSection(),
-                // FOOTER Completed
-              ],
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<HomeCtrl>(builder: (
+      ctrl,
+    ) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Left 3 categories
+            Row(
+              spacing: 50,
+              children: List.generate(
+                (ctrl.homeCategories.length / 2).ceil(),
+                (index) {
+                  final mainCategory = ctrl.homeCategories[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: InkWell(
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        context.go("${Routes.category}/${mainCategory.docId}");
+                      },
+                      child: Text(
+                        capilatlizeFirstLetter(mainCategory.name),
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
+            const SizedBox(
+              width: 30,
+            ),
+
+            // Center logo
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Image.asset(
+                'assets/sudarshan_logo.png', // Replace with your actual logo path
+                height: 40,
+              ),
+            ),
+            const SizedBox(
+              width: 30,
+            ),
+
+            // Right 3 categories
+            Row(
+              spacing: 50,
+              children: List.generate(
+                (ctrl.homeCategories.length / 2).ceil(),
+                (index) {
+                  final mainCategory = ctrl.homeCategories[index + 3];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: InkWell(
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        context.go("${Routes.category}/${mainCategory.docId}");
+                      },
+                      child: Text(
+                        capilatlizeFirstLetter(mainCategory.name),
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       );
     });
   }
+
+  Size get preferredSize => const Size.fromHeight(kIsWeb ? 80 : 60);
 }

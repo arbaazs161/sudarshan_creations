@@ -14,6 +14,10 @@ const themeColor = Color(0xffB58543);
 final themeData = ThemeData(
     colorSchemeSeed: themeColor,
     useMaterial3: true,
+    hoverColor: Colors.transparent,
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    // useMaterial3: true,
     // scaffoldBackgroundColor: lightSkinColor,
     bottomSheetTheme:
         const BottomSheetThemeData(surfaceTintColor: Colors.white),

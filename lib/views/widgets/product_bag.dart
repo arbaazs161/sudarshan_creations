@@ -18,14 +18,17 @@ class ProductBagWid extends StatelessWidget {
     final defaultVariant =
         product?.variants.firstWhereOrNull((element) => element.defaultt);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          height: 300,
+          height: 330,
+          width: 256,
           clipBehavior: forHome ? Clip.none : Clip.antiAlias,
-          padding: forHome ? const EdgeInsets.all(8) : null,
-          decoration: BoxDecoration(
-              color: forHome ? Colors.white : null,
-              borderRadius: BorderRadius.circular(10)),
+          // padding: forHome ? const EdgeInsets.all(8) : null,
+          // decoration: BoxDecoration(
+          //   color: forHome ? Colors.white : null,
+          //   // borderRadius: BorderRadius.circular(10)
+          // ),
           child: defaultVariant != null
               ? CachedNetworkImage(
                   imageUrl: defaultVariant.images.first,
@@ -40,6 +43,7 @@ class ProductBagWid extends StatelessWidget {
         SizedBox(
           width: 200,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 product != null

@@ -22,7 +22,9 @@ class SubCatCardWid extends StatelessWidget {
         Container(
           height: 250,
           clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+          decoration: BoxDecoration(
+              // borderRadius: BorderRadius.circular(15)
+              ),
           child: CachedNetworkImage(
             imageUrl: image,
             width: double.maxFinite,
