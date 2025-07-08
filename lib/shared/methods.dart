@@ -18,7 +18,10 @@ capilatlizeFirstLetter(String text) {
   }
   return capilatlizedString.join(" ");
 }
-    
+
+
+
+
 /* import 'dart:math';
 
 import 'package:firebase_storage/firebase_storage.dart';

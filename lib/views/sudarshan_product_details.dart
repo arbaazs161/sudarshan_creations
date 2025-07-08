@@ -245,7 +245,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ImageBox(
-                                    variant: selectedVariant!.images,
+                                    variant: selectedVariant!,
+                                    variantImages: selectedVariant!.images,
                                   ),
                                   const SizedBox(height: 30),
                                   _productDetails(hctrl, context)
@@ -772,7 +773,8 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                 Expanded(
                                   // flex: 2,
                                   child: ImageBox(
-                                    variant: selectedVariant!.images,
+                                    variant: selectedVariant!,
+                                    variantImages: selectedVariant!.images,
                                   ),
                                 ),
                                 const SizedBox(width: 50),
@@ -1335,8 +1337,11 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
 // }
 
 class ImageBox extends StatefulWidget {
-  const ImageBox({super.key, required this.variant});
-  final List<String> variant;
+  const ImageBox(
+      {super.key, required this.variantImages, required this.variant});
+
+  final List<String> variantImages;
+  final VariantModel variant;
   @override
   State<ImageBox> createState() => _ImageBoxState();
 }
@@ -1367,21 +1372,26 @@ class _ImageBoxState extends State<ImageBox> {
                       onPageChanged: (index, reason) =>
                           currentIndex.value = index,
                       aspectRatio: 800 / 1200,
+                      enableInfiniteScroll: widget.variantImages.length > 1,
+                      scrollPhysics: widget.variantImages.length == 1
+                          ? const NeverScrollableScrollPhysics()
+                          : const BouncingScrollPhysics(),
                     ),
-                    items: widget.variant.map((i) {
+                    items: widget.variantImages.map((i) {
                       return InkWell(
                         highlightColor: Colors.transparent,
                         hoverColor: Colors.transparent,
                         splashColor: Colors.transparent,
-                        // onTap: () {
-                        //   showDialog(
-                        //     barrierDismissible: true,
-                        //     context: context,
-                        //     builder: (context) => ZoomPopup(
-                        //         variant: widget.variant,
-                        //         selectedIndex: widget.variant.images.indexOf(i)),
-                        //   );
-                        // },
+                        onTap: () {
+                          showDialog(
+                            barrierDismissible: true,
+                            context: context,
+                            builder: (context) => ZoomPopup(
+                                variant: widget.variant,
+                                selectedIndex:
+                                    widget.variant.images.indexOf(i)),
+                          );
+                        },
                         child: Container(
                           width: size.width,
                           height: size.height,
@@ -1421,7 +1431,7 @@ class _ImageBoxState extends State<ImageBox> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: List.generate(
-                        widget.variant.length,
+                        widget.variantImages.length,
                         (index) => InkWell(
                               onTap: () =>
                                   carouselController.animateToPage(index),
@@ -1447,6 +1457,165 @@ class _ImageBoxState extends State<ImageBox> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ZoomPopup extends StatefulWidget {
+  const ZoomPopup(
+      {super.key, required this.variant, required this.selectedIndex});
+  final VariantModel variant;
+  final int selectedIndex;
+
+  @override
+  State<ZoomPopup> createState() => _ZoomPopupState();
+}
+
+class _ZoomPopupState extends State<ZoomPopup> {
+  PageController? pageCtrl;
+  int currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    pageCtrl = PageController(initialPage: widget.selectedIndex);
+    currentIndex = widget.selectedIndex;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Stack(
+        children: [
+          PageView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageCtrl,
+            scrollDirection: Axis.horizontal,
+            onPageChanged: (value) => setState(() {
+              currentIndex = value;
+            }),
+            itemCount: widget.variant.images.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _Viewer(img: widget.variant.images[index]);
+            },
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                currentIndex != 0
+                    ? IconButton.filled(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                        ),
+                        onPressed: () => pageCtrl?.previousPage(
+                            duration: const Duration(microseconds: 300),
+                            curve: Curves.linear),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          size: 26,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const SizedBox(),
+                currentIndex != widget.variant.images.length - 1
+                    ? IconButton.filled(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                        ),
+                        onPressed: () => pageCtrl?.nextPage(
+                            duration: const Duration(microseconds: 300),
+                            curve: Curves.linear),
+                        icon: const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 26,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const SizedBox(),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton.filled(
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.transparent,
+              ),
+              onPressed: () => context.pop(),
+              icon: const Icon(
+                CupertinoIcons.xmark,
+                size: 28,
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Viewer extends StatefulWidget {
+  const _Viewer({required this.img});
+
+  final String img;
+
+  @override
+  State<_Viewer> createState() => _ViewerState();
+}
+
+class _ViewerState extends State<_Viewer> {
+  TapDownDetails _doubleTapDetails = TapDownDetails();
+  final viewTransformationController = TransformationController();
+
+  @override
+  void initState() {
+    super.initState();
+    // const zoomFactor = 2.0;
+    // const xTranslate = 250.0;
+    // const yTranslate = 300.0;
+    // viewTransformationController.value.setEntry(0, 0, zoomFactor);
+    // viewTransformationController.value.setEntry(1, 1, zoomFactor);
+    // viewTransformationController.value.setEntry(2, 2, zoomFactor);
+    // viewTransformationController.value.setEntry(0, 3, -xTranslate);
+    // viewTransformationController.value.setEntry(1, 3, -yTranslate);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    /* Zoom commented below line */
+    // WidgetsBinding.instance.addPostFrameCallback(
+    //   (timeStamp) {
+    //     final size = MediaQuery.sizeOf(context);
+    //     viewTransformationController.value = Matrix4.identity()
+    //       ..translate(-size.width * .5, -size.height * .5)
+    //       ..scale(2.0);
+    //   },
+    // );
+    return InteractiveViewer(
+      transformationController: viewTransformationController,
+      child: InkWell(
+        onTapDown: (d) => _doubleTapDetails = d,
+        onTap: () {
+          if (viewTransformationController.value != Matrix4.identity()) {
+            viewTransformationController.value = Matrix4.identity();
+          } else {
+            final position = _doubleTapDetails.localPosition;
+            viewTransformationController.value = Matrix4.identity()
+              ..translate(-position.dx, -position.dy)
+              ..scale(2.0);
+          }
+        },
+        child: FadeInImage.memoryNetwork(
+          placeholder: kTransparentImage,
+          image: widget.img,
+          fit: BoxFit.contain,
+          imageErrorBuilder: (context, error, stackTrace) =>
+              Image.memory(kTransparentImage),
+        ),
       ),
     );
   }

@@ -23,16 +23,24 @@ class ProductBagWid extends StatelessWidget {
         Container(
           height: 330,
           width: 256,
-          clipBehavior: forHome ? Clip.none : Clip.antiAlias,
+          // clipBehavior: forHome ? Clip.none : Clip.antiAlias,
           // padding: forHome ? const EdgeInsets.all(8) : null,
           // decoration: BoxDecoration(
           //   color: forHome ? Colors.white : null,
           //   // borderRadius: BorderRadius.circular(10)
           // ),
           child: defaultVariant != null
-              ? CachedNetworkImage(
-                  imageUrl: defaultVariant.images.first,
-                  fit: BoxFit.cover,
+              ? Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Container(
+                      color: Colors.white,
+                    ),
+                    CachedNetworkImage(
+                      imageUrl: defaultVariant.images.first,
+                      fit: BoxFit.cover,
+                    ),
+                  ],
                 )
               : Image.asset(
                   'assets/bag_img.png',
