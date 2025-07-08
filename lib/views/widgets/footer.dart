@@ -13,28 +13,28 @@ class SudarshanFooterSection extends StatelessWidget {
       mobile: Container(
         height: 200,
         // padding: const EdgeInsets.symmetric(vertical: 30),
-        color: const Color(0xffFEF2D0),
+        color: Colors.black,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // SizedBox(width: 30),
-            IntrinsicHeight(
+            const IntrinsicHeight(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "Privacy Policy",
-                    style: GoogleFonts.brawler(
-                      color: const Color(0xff303030),
+                    style: TextStyle(
+                      color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const VerticalDivider(color: Color(0xff303030)),
+                  VerticalDivider(color: Colors.white),
                   Text(
                     "Terms of Use",
-                    style: GoogleFonts.brawler(
-                      color: const Color(0xff303030),
+                    style: TextStyle(
+                      color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -46,18 +46,24 @@ class SudarshanFooterSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.facebook)),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.facebook),
+                  color: Colors.white,
+                ),
                 const SizedBox(width: 10),
                 IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.crop_square_outlined))
+                  onPressed: () {},
+                  icon: const Icon(Icons.crop_square_outlined),
+                  color: Colors.white,
+                )
               ],
             ),
             const SizedBox(height: 10),
             Text(
               "Copyright © Sudarshan Cards.",
               style: GoogleFonts.brawler(
-                color: const Color(0xff303030),
+                color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
@@ -66,7 +72,7 @@ class SudarshanFooterSection extends StatelessWidget {
             Text(
               "All rights reserved.",
               style: GoogleFonts.brawler(
-                color: const Color(0xff303030),
+                color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
@@ -76,55 +82,69 @@ class SudarshanFooterSection extends StatelessWidget {
       ),
       desktop: Container(
         height: 60,
-        color: const Color(0xffFEF2D0),
+        color: Colors.black,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
-          child: Row(
-            children: [
-              Text(
-                "Copyright © Sudarshan Cards. All rights reserved.",
-                style: GoogleFonts.brawler(
-                  color: const Color(0xff303030),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              IntrinsicHeight(
-                child: Row(
-                  children: [
-                    Text(
-                      "Privacy Policy",
-                      style: GoogleFonts.brawler(
-                        color: const Color(0xff303030),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+          child: Center(
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "© Sudarshan Cards. All rights reserved.",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    const VerticalDivider(color: Color(0xff303030)),
-                    Text(
-                      "Terms of Use",
-                      style: GoogleFonts.brawler(
-                        color: const Color(0xff303030),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const Spacer(flex: 2),
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.facebook)),
-                  const SizedBox(width: 10),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.crop_square_outlined))
-                ],
-              )
-            ],
+                const IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Text(
+                        "Privacy Policy",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      VerticalDivider(color: Color(0xff303030)),
+                      Text(
+                        "Terms of Use",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.facebook),
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.crop_square_outlined),
+                          color: Colors.white)
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

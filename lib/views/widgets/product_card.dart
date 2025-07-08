@@ -43,7 +43,7 @@ class SubCatCardWid extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           text,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             color: const Color(0xff303030),
             fontSize: 18,
             fontWeight: FontWeight.w500,

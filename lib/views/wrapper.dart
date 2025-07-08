@@ -20,7 +20,7 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color(0xffFEF7F3),
       key: widget.scafkey ?? wrapperScafKey,
       drawer: Drawer(
         key: wrapperScafKey,

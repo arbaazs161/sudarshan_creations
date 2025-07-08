@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
-import 'package:sudarshan_creations/shared/wrapper.dart';
 import 'package:sudarshan_creations/views/wrapper.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
@@ -685,30 +684,64 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
 
         // ================================================================ DESKTOP START
         desktop: true
-            ? Wrapper(
+            ? Scaffold(
+                backgroundColor: Colors.black,
                 body: NestedScrollView(
                   physics: const NeverScrollableScrollPhysics(),
+
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return <Widget>[
-                      SliverAppBar(
-                          // forceMaterialTransparency: true,
-                          title: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 300),
+                      // Top spacer + TopAppBarDesk + bottom spacer (same as top)
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16), // equal spacing
+                          child: Center(
                             child: TopAppBarDesk(mobile: false),
                           ),
-                          pinned: true,
-                          automaticallyImplyLeading: false,
-                          actions: const [SizedBox()],
-                          snap: true,
-                          toolbarHeight: 60,
-                          floating: true,
-                          titleSpacing: 30,
-                          backgroundColor: Colors.black45,
-                          forceElevated: innerBoxIsScrolled,
-                          expandedHeight: (kIsWeb ? 80 : 60) + 32 + 20,
-                          bottom: const NavBar())
+                        ),
+                      ),
+
+                      // SliverAppBar pinned with NavBar
+                      SliverAppBar(
+                        pinned: true,
+                        floating: false,
+                        snap: false,
+                        toolbarHeight: 0,
+                        backgroundColor: Colors.black45,
+                        forceElevated: innerBoxIsScrolled,
+                        automaticallyImplyLeading: false,
+                        bottom: const PreferredSize(
+                          preferredSize: Size.fromHeight(kIsWeb ? 80 : 60),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16), // same spacing
+                            child: Center(
+                              child: NavBar(),
+                            ),
+                          ),
+                        ),
+                      ),
                     ];
                   },
+                  // headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  //   return <Widget>[
+                  //     SliverAppBar(
+                  //         // forceMaterialTransparency: true,
+                  //         title: const TopAppBarDesk(mobile: false),
+                  //         pinned: true,
+                  //         automaticallyImplyLeading: false,
+                  //         actions: const [SizedBox()],
+                  //         snap: true,
+                  //         toolbarHeight: 60,
+                  //         floating: true,
+                  //         titleSpacing: 30,
+                  //         backgroundColor: Colors.black45,
+                  //         forceElevated: innerBoxIsScrolled,
+                  //         expandedHeight: (kIsWeb ? 80 : 60) + 32,
+                  //         bottom: const NavBar())
+                  //   ];
+                  // },
                   body: SingleChildScrollView(
                     physics: const ClampingScrollPhysics(),
                     child: Column(
@@ -732,40 +765,48 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const SizedBox(height: 50),
-                                    Text("Luxurious Gifting",
-                                        style: GoogleFonts.brawler(
+                                    const Text("Luxurious Gifting",
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 50,
+                                          fontSize: 79,
                                           fontWeight: FontWeight.w700,
                                         )),
                                     const SizedBox(height: 10),
-                                    Text(
+                                    const Text(
                                       "Elevate Gifts with Personalised Envelopes",
-                                      style: GoogleFonts.poppins(
+                                      style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 30,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     const SizedBox(height: 60),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.all(20),
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          backgroundColor: Colors.white,
-                                          side: BorderSide.none,
-                                        ),
-                                        onPressed: () {},
-                                        child: Text(
-                                          "Shop Now",
-                                          style: GoogleFonts.brawler(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.black),
-                                        ))
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Colors.white, width: 2),
+                                      ),
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            padding: const EdgeInsets.all(20),
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            backgroundColor: Colors.transparent,
+                                            // border: Border.all(
+                                            //     color: Colors.white, width: 2),
+                                            side: BorderSide.none,
+                                          ),
+                                          onPressed: () {},
+                                          child: const Text(
+                                            "Shop Now",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white),
+                                          )),
+                                    )
                                   ],
                                 ),
                               ),
@@ -784,10 +825,10 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                             child: Column(
                               children: [
                                 const SizedBox(height: 30),
-                                Text(
+                                const Text(
                                   "SHOP BY CATEGORIES",
-                                  style: GoogleFonts.brawler(
-                                    color: const Color(0xff242424),
+                                  style: TextStyle(
+                                    color: Color(0xffef6644),
                                     fontSize: 30,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -854,12 +895,12 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                             SizedBox(
                               height: 620,
                               width: double.maxFinite,
-                              child: true
+                              child: false
                                   ? Container(
-                                      color: Colors.white,
-                                    )
+                                      // color: const Color(0xffb9b9b9),
+                                      )
                                   : Image.asset(
-                                      'assets/top_seliing_bg.png',
+                                      'assets/top_seliing_bg-light.png',
                                       fit: BoxFit.cover,
                                     ),
                             ),
@@ -867,13 +908,17 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                               child: Column(
                                 children: [
                                   const SizedBox(height: 50),
-                                  Text(
-                                    "TOP SELLING",
-                                    style: GoogleFonts.brawler(
-                                      color: const Color(0xff242424),
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w700,
-                                    ),
+                                  const Column(
+                                    children: [
+                                      Text(
+                                        "TOP SELLING",
+                                        style: TextStyle(
+                                          color: Color(0xffef6644),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(height: 60),
                                   SingleChildScrollView(
@@ -917,7 +962,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 70),
+                                  // const SizedBox(height: 70),
                                 ],
                               ),
                             )
@@ -927,270 +972,279 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
 
                         // BRAND HIGHLIGHTS
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const SizedBox(height: 50),
-                              Text(
-                                "BRAND HIGHLIGHTS",
-                                style: GoogleFonts.brawler(
-                                  color: const Color(0xff242424),
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const SizedBox(height: 40),
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                // runAlignment: WrapAlignment.center,
-                                runSpacing: 15,
-                                children: [
-                                  // const Spacer(),
-                                  SizedBox(
-                                    width: 250,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 150,
-                                          child: Image.asset(
-                                              'assets/medal_img.png'),
-                                        ),
-                                        const SizedBox(height: 17),
-                                        Text(
-                                          "Impeccable quality",
-                                          style: GoogleFonts.brawler(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 18),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "Superior Craftsmanship, Unmatched Quality & Unique Designs",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.poppins(
-                                              /* fontWeight: FontWeight.w700, */ fontSize:
-                                                  13),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 25),
-                                  SizedBox(
-                                    width: 250,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 150,
-                                          child: Image.asset(
-                                              'assets/people_img.png'),
-                                        ),
-                                        const SizedBox(height: 17),
-                                        Text(
-                                          "Customer satisfaction",
-                                          style: GoogleFonts.brawler(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 18),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "12000+ Happy & Satisfied Customers Around The Globe",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.poppins(
-                                              /* fontWeight: FontWeight.w700, */ fontSize:
-                                                  13),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 25),
-                                  SizedBox(
-                                    width: 250,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 150,
-                                          child: Image.asset(
-                                              'assets/stationary_img.png'),
-                                        ),
-                                        const SizedBox(height: 17),
-                                        Text(
-                                          "Customised stationery",
-                                          style: GoogleFonts.brawler(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 18),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "Name Personalisation Perfection Awaits You",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.poppins(
-                                              /* fontWeight: FontWeight.w700, */ fontSize:
-                                                  13),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 25),
-                                  SizedBox(
-                                    width: 250,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 150,
-                                          child: Image.asset(
-                                              'assets/hand_crafted_img.png'),
-                                        ),
-                                        const SizedBox(height: 17),
-                                        Text(
-                                          "Hand crafted",
-                                          style: GoogleFonts.brawler(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 18),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "Handcrafted With Love, Exuding Artisanal Excellence",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.poppins(
-                                              /* fontWeight: FontWeight.w700, */ fontSize:
-                                                  13),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 25),
-                                  SizedBox(
-                                    width: 250,
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 150,
-                                          child: Image.asset(
-                                              'assets/women_empowerment_img.png'),
-                                        ),
-                                        const SizedBox(height: 17),
-                                        Text(
-                                          "Women empowerment",
-                                          style: GoogleFonts.brawler(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 18),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          "Empowering Women, Crafting Excellence Together",
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.poppins(
-                                              /* fontWeight: FontWeight.w700, */ fontSize:
-                                                  13),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  // const Spacer(),
-                                ],
-                              ),
-                              const SizedBox(height: 80),
-                              Center(
-                                child: SizedBox(
-                                  width: 1024,
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Image.asset('assets/welcome_bg.png'),
-                                      Align(
-                                        alignment: const Alignment(-.55, 0),
-                                        child: SizedBox(
-                                          width: 650,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Welcome to Sudarshan!!!",
-                                                style: GoogleFonts.brawler(
-                                                  color:
-                                                      const Color(0xff95170D),
-                                                  fontSize: 35,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 10),
-                                              // SizedBox(height: 10),
-                                              Text.rich(TextSpan(children: [
-                                                TextSpan(
-                                                    text:
-                                                        "Discover a world of exquisite stationery and impeccable craftsmanship at ",
-                                                    style: GoogleFonts.poppins(
-                                                        height: 2.2,
-                                                        color: const Color(
-                                                            0xff030303),
-                                                        fontSize: 13.5)),
-                                                TextSpan(
-                                                    text: "Sudarshan Cards.",
-                                                    style: GoogleFonts.poppins(
-                                                        height: 2.2,
-                                                        color: const Color(
-                                                            0xff030303),
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontSize: 13.5)),
-                                              ])),
+                        Container(
+                          // color: const Color(0xffFEF7F3),
+                          // color: const Color(0xffb9b9b9),
+                          color: Colors.white,
 
-                                              Text.rich(TextSpan(children: [
-                                                TextSpan(
-                                                    text:
-                                                        'We are your one-stop shop for all your stationery needs, offering a wide range of products including ',
-                                                    style: GoogleFonts.poppins(
-                                                        height: 2.2,
-                                                        color: const Color(
-                                                            0xff030303),
-                                                        fontSize: 13.5)),
-                                                TextSpan(
-                                                    text: 'money envelopes',
-                                                    style: GoogleFonts.poppins(
-                                                        height: 2.2,
-                                                        color: const Color(
-                                                            0xff030303),
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                        decorationThickness: 2,
-                                                        fontSize: 13.5)),
-                                                TextSpan(
-                                                    text:
-                                                        ', notecards, gift sets, gift bags, wax seals, and ',
-                                                    style: GoogleFonts.poppins(
-                                                        height: 2.2,
-                                                        color: const Color(
-                                                            0xff030303),
-                                                        fontSize: 13.5)),
-                                                TextSpan(
-                                                    text: 'pillow boxes.',
-                                                    style: GoogleFonts.poppins(
-                                                        height: 2.2,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                        decorationThickness: 2,
-                                                        color: const Color(
-                                                            0xff030303),
-                                                        fontSize: 13.5)),
-                                              ])),
-                                              /* 
-                                      const Text(
-                                          "We are your one-stop shop for all your stationery needs, offering a wide range of products including money envelopes, notecards, gift sets, gift bags, wax seals, and pillow boxes."),
-                                    */
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 50),
+                                const Text(
+                                  "BRAND HIGHLIGHTS",
+                                  style: TextStyle(
+                                    color: Color(0xffef6644),
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 80),
-                            ],
+                                const SizedBox(height: 40),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  // runAlignment: WrapAlignment.center,
+                                  runSpacing: 15,
+                                  children: [
+                                    // const Spacer(),
+                                    SizedBox(
+                                      width: 250,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 150,
+                                            child:
+                                                Image.asset('assets/icon1.png'),
+                                          ),
+                                          const SizedBox(height: 17),
+                                          const Text(
+                                            "Impeccable quality",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const Text(
+                                            "Superior Craftsmanship, Unmatched Quality & Unique Designs",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                /* fontWeight: FontWeight.w700, */ fontSize:
+                                                    13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 25),
+                                    SizedBox(
+                                      width: 250,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 150,
+                                            child:
+                                                Image.asset('assets/icon2.png'),
+                                          ),
+                                          const SizedBox(height: 17),
+                                          const Text(
+                                            "Customer satisfaction",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const Text(
+                                            "12000+ Happy & Satisfied Customers Around The Globe",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                /* fontWeight: FontWeight.w700, */ fontSize:
+                                                    13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 25),
+                                    SizedBox(
+                                      width: 250,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 150,
+                                            child:
+                                                Image.asset('assets/icon3.png'),
+                                          ),
+                                          const SizedBox(height: 17),
+                                          const Text(
+                                            "Customised stationery",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const Text(
+                                            "Name Personalisation Perfection Awaits You",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                /* fontWeight: FontWeight.w700, */ fontSize:
+                                                    13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 25),
+                                    SizedBox(
+                                      width: 250,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 150,
+                                            child:
+                                                Image.asset('assets/icon4.png'),
+                                          ),
+                                          const SizedBox(height: 17),
+                                          const Text(
+                                            "Hand crafted",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const Text(
+                                            "Handcrafted With Love, Exuding Artisanal Excellence",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                /* fontWeight: FontWeight.w700, */ fontSize:
+                                                    13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 25),
+                                    SizedBox(
+                                      width: 250,
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 150,
+                                            child:
+                                                Image.asset('assets/icon5.png'),
+                                          ),
+                                          const SizedBox(height: 17),
+                                          const Text(
+                                            "Women empowerment",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          const Text(
+                                            "Empowering Women, Crafting Excellence Together",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                /* fontWeight: FontWeight.w700, */ fontSize:
+                                                    13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // const Spacer(),
+                                  ],
+                                ),
+                                const SizedBox(height: 80),
+                                Center(
+                                  child: SizedBox(
+                                    width: 1024,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Image.asset(
+                                            'assets/welcome_bg-modified.png'),
+                                        const Align(
+                                          alignment: Alignment(-.55, 0),
+                                          child: SizedBox(
+                                            width: 650,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Welcome to Sudarshan!!!",
+                                                  style: TextStyle(
+                                                    color: Color(0xff95170D),
+                                                    fontSize: 35,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                // SizedBox(height: 10),
+                                                Text.rich(TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "Discover a world of exquisite stationery and impeccable craftsmanship at ",
+                                                      style: TextStyle(
+                                                          height: 2.2,
+                                                          color:
+                                                              Color(0xff030303),
+                                                          fontSize: 13.5)),
+                                                  TextSpan(
+                                                      text: "Sudarshan Cards.",
+                                                      style: TextStyle(
+                                                          height: 2.2,
+                                                          color:
+                                                              Color(0xff030303),
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 13.5)),
+                                                ])),
+
+                                                Text.rich(TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          'We are your one-stop shop for all your stationery needs, offering a wide range of products including ',
+                                                      style: TextStyle(
+                                                          height: 2.2,
+                                                          color:
+                                                              Color(0xff030303),
+                                                          fontSize: 13.5)),
+                                                  TextSpan(
+                                                      text: 'money envelopes',
+                                                      style: TextStyle(
+                                                          height: 2.2,
+                                                          color:
+                                                              Color(0xff030303),
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                          decorationThickness:
+                                                              2,
+                                                          fontSize: 13.5)),
+                                                  TextSpan(
+                                                      text:
+                                                          ', notecards, gift sets, gift bags, wax seals, and ',
+                                                      style: TextStyle(
+                                                          height: 2.2,
+                                                          color:
+                                                              Color(0xff030303),
+                                                          fontSize: 13.5)),
+                                                  TextSpan(
+                                                      text: 'pillow boxes.',
+                                                      style: TextStyle(
+                                                          height: 2.2,
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                          decorationThickness:
+                                                              2,
+                                                          color:
+                                                              Color(0xff030303),
+                                                          fontSize: 13.5)),
+                                                ])),
+                                                /* 
+                                        const Text(
+                                            "We are your one-stop shop for all your stationery needs, offering a wide range of products including money envelopes, notecards, gift sets, gift bags, wax seals, and pillow boxes."),
+                                      */
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 80),
+                              ],
+                            ),
                           ),
                         ),
 
@@ -1204,7 +1258,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                     ),
                   ),
                 ),
-                scafkey: _homePageScafKey)
+              )
             : Wrapper(
                 // backgroundColor: const Color(0xffFEF7F3),
                 scafkey: _homePageScafKey,
@@ -1911,83 +1965,41 @@ class NavBar extends StatelessWidget implements PreferredSizeWidget {
       ctrl,
     ) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+        padding: const EdgeInsets.symmetric(),
+        child: Container(
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+          width: 1200,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(
+              ctrl.homeCategories.length,
+              (index) {
+                final mainCategory = ctrl.homeCategories[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: InkWell(
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      context.go("${Routes.category}/${mainCategory.docId}");
+                    },
+                    child: Container(
+                      // width: 150,
+                      child: Text(
+                        capilatlizeFirstLetter(mainCategory.name),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
             // Left 3 categories
-            Row(
-              spacing: 50,
-              children: List.generate(
-                (ctrl.homeCategories.length / 2).ceil(),
-                (index) {
-                  final mainCategory = ctrl.homeCategories[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: InkWell(
-                      highlightColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        context.go("${Routes.category}/${mainCategory.docId}");
-                      },
-                      child: Text(
-                        capilatlizeFirstLetter(mainCategory.name),
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(
-              width: 30,
-            ),
-
-            // Center logo
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Image.asset(
-                'assets/sudarshan_logo.png', // Replace with your actual logo path
-                height: 40,
-              ),
-            ),
-            const SizedBox(
-              width: 30,
-            ),
-
-            // Right 3 categories
-            Row(
-              spacing: 50,
-              children: List.generate(
-                (ctrl.homeCategories.length / 2).ceil(),
-                (index) {
-                  final mainCategory = ctrl.homeCategories[index + 3];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: InkWell(
-                      highlightColor: Colors.transparent,
-                      hoverColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        context.go("${Routes.category}/${mainCategory.docId}");
-                      },
-                      child: Text(
-                        capilatlizeFirstLetter(mainCategory.name),
-                        style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       );
     });

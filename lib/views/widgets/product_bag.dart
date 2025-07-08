@@ -50,8 +50,7 @@ class ProductBagWid extends StatelessWidget {
                     ? product!.name
                     : "The Rainbow Unicorn - Gift Bags",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.brawler(
-                    fontWeight: FontWeight.w500, fontSize: 15),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
               ),
               const SizedBox(height: 8),
               Text(
@@ -61,8 +60,7 @@ class ProductBagWid extends StatelessWidget {
                         : "From Rs. ${product?.minPrice}"
                     : "From Rs. 1,600",
                 textAlign: TextAlign.center,
-                style: GoogleFonts.brawler(
-                    fontWeight: FontWeight.w600, fontSize: 15.5),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.5),
               ),
             ],
           ),

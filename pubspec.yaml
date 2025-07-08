@@ -73,12 +73,12 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # fonts:
-  #   - family: CenturyGothic
-  #     fonts:
-  #       - asset: assets/fonts/CenturyGothic.ttf
-  #       - asset: assets/fonts/CenturyGothic-Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: CenturyGothic
+      fonts:
+        - asset: assets/fonts/centurygothic.ttf
+        # - asset: assets/fonts/centurygothic_bold.ttf
+        #   weight: 700
   assets:
     - assets/
   #   - images/a_dot_ham.jpeg

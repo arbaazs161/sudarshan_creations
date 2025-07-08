@@ -124,94 +124,101 @@ class TopAppBarDesk extends StatelessWidget {
   final bool mobile;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const Icon(
-          Icons.phone,
-          color: Colors.white,
-          size: 15,
-        ),
-        const Text("+91 1234567890",
-            style: TextStyle(color: Colors.white, fontSize: 13)),
-        const SizedBox(width: 20),
-        const Icon(
-          Icons.phone,
-          color: Colors.white,
-          size: 15,
-        ),
-        const Text("+91 1234567890",
-            style: TextStyle(color: Colors.white, fontSize: 13)),
-        const Spacer(),
-        Row(
-          children: [
-            if (!mobile)
-              InkWell(
-                onTap: () {
-                  context.go(Routes.account);
-
-                  // Navigator.push(context, MaterialPageRoute(
-                  //   builder: (context) {
-                  //     return const SudarshanAccountPage();
-                  //   },
-                  // ));
-                },
-                child: const Icon(
-                  CupertinoIcons.profile_circled,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      width: 1200,
+      child: Row(
+        children: [
+          const Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.phone,
                   color: Colors.white,
-                  size: 25,
+                  size: 15,
                 ),
-              ),
-            if (!mobile) const SizedBox(width: 15),
-            if (!mobile)
-              InkWell(
-                onTap: () {
-                  //context.go(Routes.cart);
-
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const SudarshanDisplayFavourites();
-                    },
-                  ));
-                },
-                child: const Icon(
-                  CupertinoIcons.heart,
+                SizedBox(width: 10),
+                Text("(+880) 1910 000251",
+                    style: TextStyle(color: Colors.white, fontSize: 13)),
+                SizedBox(width: 20),
+                // VerticalDivider(color: Colors.white, width: 1,thickness: 3,),
+                Icon(
+                  CupertinoIcons.clock,
                   color: Colors.white,
-                  size: 25,
+                  size: 15,
                 ),
-              ),
-            if (!mobile) const SizedBox(width: 15),
-            const Icon(
-              CupertinoIcons.search,
-              color: Colors.white,
-              size: 25,
+                SizedBox(width: 10),
+                Text("Mon-fri 10:00 AM - 6:00 PM",
+                    style: TextStyle(color: Colors.white, fontSize: 13)),
+              ],
             ),
-            const SizedBox(width: 15),
-            if (!mobile)
-              InkWell(
-                onTap: () {
-                  //context.go(Routes.cart);
-                  if (isLoggedIn()) {
-                    context.go(Routes.cart);
-                  } else {
-                    context.go(Routes.account);
-                  }
+          ),
 
-                  // Navigator.push(context, MaterialPageRoute(
-                  //   builder: (context) {
-                  //     return const SudarshanDisplayFavourites();
-                  //   },
-                  // ));
-                },
-                child: const Icon(
-                  CupertinoIcons.shopping_cart,
+          // Center logo
+          Image.asset(
+            'assets/sudarshan_logo_white.png', // Replace with your actual logo path
+            height: 40,
+          ),
+
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: () {
+                    context.go(Routes.account);
+                  },
+                  child: const Icon(
+                    CupertinoIcons.profile_circled,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                ),
+                const SizedBox(width: 15),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return const SudarshanDisplayFavourites();
+                      },
+                    ));
+                  },
+                  child: const Icon(
+                    CupertinoIcons.heart,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                ),
+                const SizedBox(width: 15),
+                const Icon(
+                  CupertinoIcons.search,
                   color: Colors.white,
                   size: 25,
                 ),
-              ),
-          ],
-        )
-      ],
+                const SizedBox(width: 15),
+                InkWell(
+                  onTap: () {
+                    if (isLoggedIn()) {
+                      context.go(Routes.cart);
+                    } else {
+                      context.go(Routes.account);
+                    }
+                  },
+                  child: const Icon(
+                    CupertinoIcons.shopping_cart,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
+  
+  
   }
 }
 

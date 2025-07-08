@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // const themeColor = Color(0xfff04f5f);
 
@@ -12,6 +13,7 @@ const themeColor = Color(0xffB58543);
 // const themeColor = Color.fromARGB(255, 115, 164, 55);
 
 final themeData = ThemeData(
+    textTheme: ThemeData(fontFamily: "CenturyGothic").textTheme,
     colorSchemeSeed: themeColor,
     useMaterial3: true,
     hoverColor: Colors.transparent,
