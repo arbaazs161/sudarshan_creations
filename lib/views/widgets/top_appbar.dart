@@ -126,7 +126,8 @@ class TopAppBarDesk extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      width: 1200,
+      constraints: BoxConstraints(maxWidth: 1200),
+  
       child: Row(
         children: [
           const Expanded(
@@ -217,8 +218,6 @@ class TopAppBarDesk extends StatelessWidget {
         ],
       ),
     );
-  
-  
   }
 }
 
