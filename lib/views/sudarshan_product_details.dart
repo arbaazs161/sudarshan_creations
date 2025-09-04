@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -1020,12 +1021,15 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                   child: Container(
                     width: 200,
                     decoration: BoxDecoration(
-                      // color: Colors.white54,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                          width: .2,
-                          color: const Color.fromARGB(255, 161, 161, 161)),
-                    ),
+                        // color: Colors.white54,
+                        borderRadius: BorderRadius.circular(4),
+                        border: selectedVariant!.id == variant.id
+                            ? Border.all(
+                                width: 2, color: const Color(0xff95170D))
+                            : Border.all(
+                                width: .2,
+                                color:
+                                    const Color.fromARGB(255, 161, 161, 161))),
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                       minVerticalPadding: 8,
@@ -1342,122 +1346,171 @@ class ImageBox extends StatefulWidget {
 
   final List<String> variantImages;
   final VariantModel variant;
+
   @override
   State<ImageBox> createState() => _ImageBoxState();
 }
 
 class _ImageBoxState extends State<ImageBox> {
-  RxInt currentIndex = 0.obs;
+  int currentIndex = 0;
   final carouselController = carousel.CarouselSliderController();
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Container(
-      // width: size.width,
-      // height: size.height,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-      child: Stack(
-        children: [
-          ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: size.height * .84),
-            child: Row(
-              children: [
-                Expanded(
-                  child: carousel.CarouselSlider(
-                    carouselController: carouselController,
-                    options: carousel.CarouselOptions(
-                      autoPlay: false,
-                      viewportFraction: 1,
-                      onPageChanged: (index, reason) =>
-                          currentIndex.value = index,
-                      aspectRatio: 800 / 1200,
-                      enableInfiniteScroll: widget.variantImages.length > 1,
-                      scrollPhysics: widget.variantImages.length == 1
-                          ? const NeverScrollableScrollPhysics()
-                          : const BouncingScrollPhysics(),
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          spacing: 10,
+          children: [
+            ...List.generate(
+              widget.variantImages.length,
+              (index) {
+                return InkWell(
+                  onTap: () {
+                    carouselController.animateToPage(index);
+                    setState(() {
+                      currentIndex = index;
+                    });
+                  },
+                  child: Container(
+                    height: 150,
+                    width: 100,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            width: 1.5,
+                            color: currentIndex == index
+                                ? const Color(0xff95170D)
+                                : Colors.transparent)),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.variantImages[index],
+                      fit: BoxFit.cover,
                     ),
-                    items: widget.variantImages.map((i) {
-                      return InkWell(
-                        highlightColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap: () {
-                          showDialog(
-                            barrierDismissible: true,
-                            context: context,
-                            builder: (context) => ZoomPopup(
-                                variant: widget.variant,
-                                selectedIndex:
-                                    widget.variant.images.indexOf(i)),
-                          );
-                        },
-                        child: Container(
-                          width: size.width,
-                          height: size.height,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: CachedNetworkImage(
-                            imageUrl: i,
-                            fit: BoxFit.cover,
-                            // fit: BoxFit.fill,
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+        const SizedBox(width: 15),
+        Expanded(
+          child: Container(
+            // width: size.width,
+            // height: size.height,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.grey.shade300)),
+            child: Stack(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: size.height * .84),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: carousel.CarouselSlider(
+                          carouselController: carouselController,
+                          options: carousel.CarouselOptions(
+                            autoPlay: false,
+                            viewportFraction: 1,
+                            onPageChanged: (index, reason) =>
+                                currentIndex = index,
+                            aspectRatio: 800 / 1200,
+                            enableInfiniteScroll:
+                                widget.variantImages.length > 1,
+                            scrollPhysics: widget.variantImages.length == 1
+                                ? const NeverScrollableScrollPhysics()
+                                : const NeverScrollableScrollPhysics(),
                           ),
+                          items: widget.variantImages.map((i) {
+                            return InkWell(
+                              highlightColor: Colors.transparent,
+                              hoverColor: Colors.transparent,
+                              splashColor: Colors.transparent,
+                              onTap: () {
+                                showDialog(
+                                  barrierDismissible: true,
+                                  context: context,
+                                  builder: (context) => ZoomPopup(
+                                      variant: widget.variant,
+                                      selectedIndex:
+                                          widget.variant.images.indexOf(i)),
+                                );
+                              },
+                              child: Container(
+                                width: size.width,
+                                height: size.height,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: CachedNetworkImage(
+                                  imageUrl: i,
+                                  fit: BoxFit.contain,
+                                  // fit: BoxFit.fill,
+                                ),
+                              ),
+                              // child: FadeInImage.memoryNetwork(
+                              //   width: size.width,
+                              //   height: size.height,
+                              //   fit: BoxFit.cover,
+                              //   placeholder: kTransparentImage,
+                              //   image: i,
+                              //   imageErrorBuilder: (context, error, stackTrace) =>
+                              //       Image.memory(kTransparentImage),
+                              // ),
+                            );
+                          }).toList(),
                         ),
-                        // child: FadeInImage.memoryNetwork(
-                        //   width: size.width,
-                        //   height: size.height,
-                        //   fit: BoxFit.cover,
-                        //   placeholder: kTransparentImage,
-                        //   image: i,
-                        //   imageErrorBuilder: (context, error, stackTrace) =>
-                        //       Image.memory(kTransparentImage),
-                        // ),
-                      );
-                    }).toList(),
+                      ),
+                    ],
                   ),
                 ),
+                /*  Positioned(
+                  bottom: 1,
+                  left: 1,
+                  right: 1,
+                  // alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 20),
+                    child: Obx(() => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: List.generate(
+                              widget.variantImages.length,
+                              (index) => InkWell(
+                                    onTap: () =>
+                                        carouselController.animateToPage(index),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: currentIndex.value == index
+                                                ? Border.all(
+                                                    color:
+                                                        const Color(0xff95170D),
+                                                    width: 2.5)
+                                                : null),
+                                        child: const Icon(
+                                          Icons.circle,
+                                          color: Color(0xffEEEEEE),
+                                          size: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                        )),
+                  ),
+                ),
+               */
               ],
             ),
           ),
-          Positioned(
-            bottom: 1,
-            left: 1,
-            right: 1,
-            // alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 20),
-              child: Obx(() => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: List.generate(
-                        widget.variantImages.length,
-                        (index) => InkWell(
-                              onTap: () =>
-                                  carouselController.animateToPage(index),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: currentIndex.value == index
-                                          ? Border.all(
-                                              color: const Color(0xff95170D),
-                                              width: 2.5)
-                                          : null),
-                                  child: const Icon(
-                                    Icons.circle,
-                                    color: Color(0xffEEEEEE),
-                                    size: 12,
-                                  ),
-                                ),
-                              ),
-                            )),
-                  )),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

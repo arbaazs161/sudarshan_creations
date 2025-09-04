@@ -48,6 +48,7 @@ class _SudarshanDisplayAllProductsState
     allproducts.addAll(productSnap.docs.map((e) => ProductModel.fromSnap(e)));
     filteredProducts.clear();
     filteredProducts.addAll(allproducts);
+
     loaded = true;
     setState(() {});
   }
@@ -69,6 +70,12 @@ class _SudarshanDisplayAllProductsState
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.sizeOf(context).width;
     final screenHeight = MediaQuery.sizeOf(context).height;
+
+    filteredProducts.sort((a, b) =>
+        int.tryParse(a.name.split(' ').last)
+            ?.compareTo(int.tryParse(b.name.split(' ').last) ?? 0) ??
+        0);
+
     return ResponsiveWid(
       mobile: Wrapper(
         scafkey: _allProductsScafKey,

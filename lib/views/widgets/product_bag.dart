@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sudarshan_creations/models/product_model.dart';
 import 'package:sudarshan_creations/shared/const.dart';
 
@@ -20,9 +21,9 @@ class ProductBagWid extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
           height: 330,
-          width: 256,
+          // width: 256,
           // clipBehavior: forHome ? Clip.none : Clip.antiAlias,
           // padding: forHome ? const EdgeInsets.all(8) : null,
           // decoration: BoxDecoration(
@@ -31,44 +32,54 @@ class ProductBagWid extends StatelessWidget {
           // ),
           child: defaultVariant != null
               ? Stack(
-                  fit: StackFit.expand,
+                  // fit: StackFit.expand,
                   children: [
                     Container(
                       color: Colors.white,
                     ),
-                    CachedNetworkImage(
-                      imageUrl: defaultVariant.images.first,
-                      fit: BoxFit.cover,
+                    Center(
+                      child: CachedNetworkImage(
+                        imageUrl: defaultVariant.images.first,
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) {
+                          return const Icon(CupertinoIcons.camera);
+                        },
+                        placeholder: (context, url) {
+                          return Center(
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                                color: Colors.black54, size: 20),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 )
-              : Image.asset(
-                  'assets/bag_img.png',
-                  fit: BoxFit.cover,
-                ),
+              : const Center(child: Icon(CupertinoIcons.camera)),
         ),
         const SizedBox(height: 20),
         SizedBox(
           width: 200,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 product != null
                     ? product!.name
                     : "The Rainbow Unicorn - Gift Bags",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
               ),
               const SizedBox(height: 8),
               Text(
                 product != null && defaultVariant != null
                     ? defaultVariant.priceType == PriceTypeModel.inquiry
                         ? "Inquiry"
-                        : "From Rs. ${product?.minPrice}"
+                        : "Rs. ${product?.minPrice}"
                     : "From Rs. 1,600",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15.5),
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600, fontSize: 15.5),
               ),
             ],
           ),
