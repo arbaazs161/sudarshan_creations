@@ -35,7 +35,7 @@ class ProductBagWid extends StatelessWidget {
                   // fit: StackFit.expand,
                   children: [
                     Container(
-                      color: Colors.white,
+                      color: const Color.fromARGB(255, 251, 251, 251),
                     ),
                     Center(
                       child: CachedNetworkImage(
@@ -56,31 +56,31 @@ class ProductBagWid extends StatelessWidget {
                 )
               : const Center(child: Icon(CupertinoIcons.camera)),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         SizedBox(
           width: 200,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 product != null
                     ? product!.name
                     : "The Rainbow Unicorn - Gift Bags",
-                textAlign: TextAlign.center,
+                // textAlign: TextAlign.center,
                 style:
                     const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
               ),
-              const SizedBox(height: 8),
-              Text(
-                product != null && defaultVariant != null
-                    ? defaultVariant.priceType == PriceTypeModel.inquiry
-                        ? "Inquiry"
-                        : "Rs. ${product?.minPrice}"
-                    : "From Rs. 1,600",
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 15.5),
-              ),
+              // const SizedBox(height: 8),
+              // Text(
+              //   product != null && defaultVariant != null
+              //       ? defaultVariant.priceType == PriceTypeModel.inquiry
+              //           ? "Inquiry"
+              //           : "Rs. ${product?.minPrice}"
+              //       : "From Rs. 1,600",
+              //   textAlign: TextAlign.center,
+              //   style: const TextStyle(
+              //       fontWeight: FontWeight.w600, fontSize: 15.5),
+              // ),
             ],
           ),
         ),

@@ -15,6 +15,7 @@ import 'widgets/product_card.dart';
 import 'widgets/top_appbar.dart';
 
 final _homePageScafKey = GlobalKey<ScaffoldState>();
+final _mainCategoriesKey = GlobalKey();
 
 class SudarshanHomePage extends StatefulWidget {
   const SudarshanHomePage({super.key});
@@ -32,9 +33,35 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
   //   'NOTECARDS KIDS',
   //   'GIFT SETS',
   // ];
+  ScrollController scrollController = ScrollController();
+  bool shopNowClicked = false;
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(onScroll);
+    // if (widget.widname != null && widget.widname == 'wishlist') {
+    //   scrollController.animateTo(550,
+    //       duration: Duration(milliseconds: 100), curve: Curves.linear);
+    // }
+  }
+
+  bool isScrolled = false;
+  void onScroll() {
+    if (scrollController.position.pixels > 0) {
+      setState(() {
+        isScrolled = true;
+      });
+    } else {
+      setState(() {
+        isScrolled = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    scroller();
+
     return GetBuilder<HomeCtrl>(builder: (ctrl) {
       return ResponsiveWid(
           mobile: Wrapper(
@@ -513,34 +540,34 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 25),
-                            SizedBox(
-                              width: 250,
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 150,
-                                    child: Image.asset(
-                                        'assets/hand_crafted_img.png'),
-                                  ),
-                                  const SizedBox(height: 17),
-                                  Text(
-                                    "Hand crafted",
-                                    style: GoogleFonts.brawler(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 18),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    "Handcrafted With Love, Exuding Artisanal Excellence",
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
-                                        /* fontWeight: FontWeight.w700, */ fontSize:
-                                            13),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // const SizedBox(width: 25),
+                            // SizedBox(
+                            //   width: 250,
+                            //   child: Column(
+                            //     children: [
+                            //       SizedBox(
+                            //         height: 150,
+                            //         child: Image.asset(
+                            //             'assets/hand_crafted_img.png'),
+                            //       ),
+                            //       const SizedBox(height: 17),
+                            //       Text(
+                            //         "Hand crafted",
+                            //         style: GoogleFonts.brawler(
+                            //             fontWeight: FontWeight.w700,
+                            //             fontSize: 18),
+                            //       ),
+                            //       const SizedBox(height: 8),
+                            //       Text(
+                            //         "Handcrafted With Love, Exuding Artisanal Excellence",
+                            //         textAlign: TextAlign.center,
+                            //         style: GoogleFonts.poppins(
+                            //             /* fontWeight: FontWeight.w700, */ fontSize:
+                            //                 13),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                             const SizedBox(width: 25),
                             SizedBox(
                               width: 250,
@@ -747,7 +774,10 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                             //     color: Colors.white, width: 2),
                                             side: BorderSide.none,
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            shopNowClicked = true;
+                                            setState(() {});
+                                          },
                                           child: const Text(
                                             "Shop Now",
                                             style: TextStyle(
@@ -783,6 +813,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
 
                         // SHOP BY CATEGORIES
                         Container(
+                          key: _mainCategoriesKey,
                           color: Colors.white,
                           child: Padding(
                             padding:
@@ -809,6 +840,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                       maxCrossAxisExtent: 400,
                                       mainAxisSpacing: 20,
                                       crossAxisSpacing: 20,
+                                      // axisDirection: AxisDirection.left,
                                       children: [
                                         ...List.generate(
                                           ctrl.homeCategories.length,
@@ -1047,34 +1079,34 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(width: 25),
-                                    SizedBox(
-                                      width: 250,
-                                      child: Column(
-                                        children: [
-                                          SizedBox(
-                                            height: 150,
-                                            child:
-                                                Image.asset('assets/icon4.png'),
-                                          ),
-                                          const SizedBox(height: 17),
-                                          const Text(
-                                            "Hand crafted",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 18),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          const Text(
-                                            "Handcrafted With Love, Exuding Artisanal Excellence",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                /* fontWeight: FontWeight.w700, */ fontSize:
-                                                    13),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    // const SizedBox(width: 25),
+                                    // SizedBox(
+                                    //   width: 250,
+                                    //   child: Column(
+                                    //     children: [
+                                    //       SizedBox(
+                                    //         height: 150,
+                                    //         child:
+                                    //             Image.asset('assets/icon4.png'),
+                                    //       ),
+                                    //       const SizedBox(height: 17),
+                                    //       const Text(
+                                    //         "Hand crafted",
+                                    //         style: TextStyle(
+                                    //             fontWeight: FontWeight.w700,
+                                    //             fontSize: 18),
+                                    //       ),
+                                    //       const SizedBox(height: 8),
+                                    //       const Text(
+                                    //         "Handcrafted With Love, Exuding Artisanal Excellence",
+                                    //         textAlign: TextAlign.center,
+                                    //         style: TextStyle(
+                                    //             /* fontWeight: FontWeight.w700, */ fontSize:
+                                    //                 13),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                     const SizedBox(width: 25),
                                     SizedBox(
                                       width: 250,
@@ -1803,6 +1835,40 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                   ),
           ));
     });
+  }
+
+  void scroller() {
+    return WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      homeScroll(shopNowClicked);
+    });
+  }
+}
+
+homeScroll(bool? widName) {
+  try {
+    if (widName == null) return;
+    switch (widName) {
+      case true:
+        if (_mainCategoriesKey.currentContext == null ||
+            !(_mainCategoriesKey.currentState?.mounted ?? true)) {
+          return;
+        }
+        Scrollable.ensureVisible(_mainCategoriesKey.currentContext!,
+            duration: const Duration(milliseconds: 1000));
+        break;
+      // case "gallery":
+      //   if (_gallery.currentContext == null ||
+      //       !(_gallery.currentState?.mounted ?? true)) {
+      //     return;
+      //   }
+      //   Scrollable.ensureVisible(_gallery.currentContext!,
+      //       duration: const Duration(milliseconds: 1000));
+      //   break;
+
+      default:
+    }
+  } catch (e) {
+    debugPrint(e.toString());
   }
 }
 

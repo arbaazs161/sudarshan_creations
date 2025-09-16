@@ -117,7 +117,7 @@ class SudarshanFooterSection extends StatelessWidget {
                       VerticalDivider(color: Color(0xff303030)),
                       Text(
                         "Terms of Use",
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -136,13 +136,23 @@ class SudarshanFooterSection extends StatelessWidget {
                         color: Colors.white,
                       ),
                       const SizedBox(width: 10),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.crop_square_outlined),
-                          color: Colors.white)
+                      InkWell(
+                        onTap: () {},
+                        child: SizedBox(
+                          height: 22,
+                          child: Image.asset(
+                            'assets/insta_logo.png',
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                      // IconButton(
+                      //     onPressed: () {},
+                      //     icon: const Icon(Icons.crop_square_outlined),
+                      //     color: Colors.white)
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

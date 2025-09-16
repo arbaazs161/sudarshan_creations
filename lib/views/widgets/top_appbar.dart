@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/views/sudarshan_favourites.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../shared/router.dart';
 
@@ -48,7 +49,7 @@ class TopAppBar extends StatelessWidget {
         const Spacer(),
         Row(
           children: [
-            if (!mobile)
+            /* if (!mobile)
               InkWell(
                 onTap: () {
                   context.go(Routes.account);
@@ -64,18 +65,18 @@ class TopAppBar extends StatelessWidget {
                   color: Color(0xff95170D),
                   size: 25,
                 ),
-              ),
-            if (!mobile) const SizedBox(width: 15),
+              ), */
+            // if (!mobile) const SizedBox(width: 15),
             if (!mobile)
               InkWell(
                 onTap: () {
-                  //context.go(Routes.cart);
+                  context.go(Routes.favourites);
 
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return const SudarshanDisplayFavourites();
-                    },
-                  ));
+                  // Navigator.push(context, MaterialPageRoute(
+                  //   builder: (context) {
+                  //     return const SudarshanDisplayFavourites();
+                  //   },
+                  // ));
                 },
                 child: const Icon(
                   CupertinoIcons.heart,
@@ -90,7 +91,7 @@ class TopAppBar extends StatelessWidget {
               size: 25,
             ),
             const SizedBox(width: 15),
-            if (!mobile)
+            /* if (!mobile)
               InkWell(
                 onTap: () {
                   //context.go(Routes.cart);
@@ -111,7 +112,7 @@ class TopAppBar extends StatelessWidget {
                   color: Color(0xff95170D),
                   size: 25,
                 ),
-              ),
+              ), */
           ],
         )
       ],
@@ -126,47 +127,65 @@ class TopAppBarDesk extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      constraints: BoxConstraints(maxWidth: 1200),
-  
+      constraints: const BoxConstraints(maxWidth: 1200),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.phone,
-                  color: Colors.white,
-                  size: 15,
+                InkWell(
+                  onTap: () {
+                    launchUrlString("tel://911234567890");
+                  },
+                  child: const Row(children: [
+                    Icon(
+                      Icons.phone,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                    SizedBox(width: 10),
+                    Text("(+880) 1910 000251",
+                        style: TextStyle(color: Colors.white, fontSize: 13)),
+                  ]),
                 ),
-                SizedBox(width: 10),
-                Text("(+880) 1910 000251",
-                    style: TextStyle(color: Colors.white, fontSize: 13)),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 // VerticalDivider(color: Colors.white, width: 1,thickness: 3,),
-                Icon(
-                  CupertinoIcons.clock,
-                  color: Colors.white,
-                  size: 15,
-                ),
-                SizedBox(width: 10),
-                Text("Mon-fri 10:00 AM - 6:00 PM",
-                    style: TextStyle(color: Colors.white, fontSize: 13)),
+                InkWell(
+                  onTap: () {
+                    launchUrlString('mailto:sudarshan@gmail.com');
+                  },
+                  child: const Row(children: [
+                    Icon(
+                      CupertinoIcons.mail,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                    SizedBox(width: 10),
+                    Text("sudarshan@gmail.com",
+                        style: TextStyle(color: Colors.white, fontSize: 13)),
+                  ]),
+                )
               ],
             ),
           ),
 
           // Center logo
-          Image.asset(
-            'assets/sudarshan_logo_white.png', // Replace with your actual logo path
-            height: 40,
+          InkWell(
+            onTap: () {
+              context.go(Routes.home);
+            },
+            child: Image.asset(
+              'assets/sudarshan_logo_white.png', // Replace with your actual logo path
+              height: 50,
+            ),
           ),
 
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                InkWell(
+                /* InkWell(
                   onTap: () {
                     context.go(Routes.account);
                   },
@@ -176,14 +195,15 @@ class TopAppBarDesk extends StatelessWidget {
                     size: 25,
                   ),
                 ),
-                const SizedBox(width: 15),
+                const SizedBox(width: 15), */
                 InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return const SudarshanDisplayFavourites();
-                      },
-                    ));
+                    context.go(Routes.favourites);
+                    // Navigator.push(context, MaterialPageRoute(
+                    //   builder: (context) {
+                    //     return const SudarshanDisplayFavourites();
+                    //   },
+                    // ));
                   },
                   child: const Icon(
                     CupertinoIcons.heart,
@@ -197,7 +217,7 @@ class TopAppBarDesk extends StatelessWidget {
                   color: Colors.white,
                   size: 25,
                 ),
-                const SizedBox(width: 15),
+                /*  const SizedBox(width: 15),
                 InkWell(
                   onTap: () {
                     if (isLoggedIn()) {
@@ -211,7 +231,7 @@ class TopAppBarDesk extends StatelessWidget {
                     color: Colors.white,
                     size: 25,
                   ),
-                )
+                ) */
               ],
             ),
           ),

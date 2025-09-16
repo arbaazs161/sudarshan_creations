@@ -34,7 +34,10 @@ class _SudarshanAccountPageState extends State<SudarshanAccountPage> {
         physics: const ClampingScrollPhysics(),
         child: Column(
           children: [
-            const PageHeaderTopBar(title: "Account"),
+            PageHeaderTopBar(
+              title: "Account",
+              subtitle: isLoggedIn() ? "" : "Login now",
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25),
               child: Container(

@@ -17,6 +17,7 @@ import 'package:sudarshan_creations/shared/const.dart';
 import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
+import 'package:sudarshan_creations/views/sudarshan_homepage.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
@@ -753,8 +754,25 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                   physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: [
-                      const TopAppBarWithBgImg(mobile: false),
-                      const Divider(color: Color(0xff95170D), height: 0),
+                      // const TopAppBarWithBgImg(mobile: false),
+                      // const Divider(color: Color(0xff95170D), height: 0),
+                      Container(
+                          // color: Colors.black.withAlpha(100),
+                          color: const Color.fromARGB(172, 0, 0, 0),
+                          child: const Column(
+                            children: [
+                              SizedBox(height: 10),
+                              TopAppBarDesk(mobile: false),
+                              SizedBox(height: 20),
+                              Divider(
+                                color: Colors.grey,
+                                thickness: 0.5,
+                                height: 0,
+                              ),
+                              SizedBox(height: 20),
+                              NavBar(),
+                            ],
+                          )),
                       const SizedBox(height: 10),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -865,7 +883,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                 '${widget.productId}/${selectedVariant!.id}'
                               ]),
                             })
-                          : context.go(Routes.account);
+                          : context.go(Routes.favourites);
                       // checkFavourites();
                       // setState(() {});
                     },
@@ -884,7 +902,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                 '${widget.productId}/${selectedVariant!.id}'
                               ]),
                             })
-                          : context.go(Routes.account,
+                          : context.go(Routes.favourites,
                               extra: appRouter
                                   .routeInformationProvider.value.uri.path);
                       // checkFavourites();
@@ -897,7 +915,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                     ))
           ],
         ),
-        if (selectedVariant!.priceType != PriceTypeModel.inquiry)
+        /* if (selectedVariant!.priceType != PriceTypeModel.inquiry)
           const SizedBox(height: 20),
         if (selectedVariant!.priceType == PriceTypeModel.fixedPrice)
           Text.rich(TextSpan(children: [
@@ -982,7 +1000,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
               fontSize: 14,
               // fontWeight: FontWeight.w600,
             ),
-          ),
+          ), */
         const SizedBox(height: 30),
         Text(
           "Options:",
@@ -1070,7 +1088,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
           ],
         ),
         const SizedBox(height: 20),
-        if (selectedVariant!.priceType != PriceTypeModel.inquiry)
+        /*  if (selectedVariant!.priceType != PriceTypeModel.inquiry)
           if (hctrl.isInCart(widget.productId!, selectedVariant!.id))
             Text(
               "Quantity:",
@@ -1192,7 +1210,7 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                           setState(() {});
                         }
                         if (!isLoggedIn()) {
-                          context.go(Routes.account,
+                          context.go(Routes.favourites,
                               extra: appRouter
                                   .routeInformationProvider.value.uri.path);
                         }
@@ -1224,30 +1242,31 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                       ))),
             ],
           ),
-        if (selectedVariant!.priceType == PriceTypeModel.inquiry)
-          Row(
-            children: [
-              Expanded(
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        backgroundColor: const Color(0xff95170D),
-                        surfaceTintColor: const Color(0xff95170D),
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6)),
-                      ),
-                      onPressed: () {
-                        showContactDialog(context, selectedVariant!, product!);
-                      },
-                      child: Text(
-                        "Send Inquiry",
-                        style: GoogleFonts.leagueSpartan(
-                            color: Colors.white, fontSize: 15),
-                      ))),
-            ],
-          ),
+        */
+        // if (selectedVariant!.priceType == PriceTypeModel.inquiry)
+        Row(
+          children: [
+            Expanded(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      backgroundColor: const Color(0xff95170D),
+                      surfaceTintColor: const Color(0xff95170D),
+                      shadowColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                    ),
+                    onPressed: () {
+                      showContactDialog(context, selectedVariant!, product!);
+                    },
+                    child: Text(
+                      "Send Inquiry",
+                      style: GoogleFonts.leagueSpartan(
+                          color: Colors.white, fontSize: 15),
+                    ))),
+          ],
+        ),
         const SizedBox(height: 15),
         ExpansionTile(
           // backgroundColor: Colors.transparent,

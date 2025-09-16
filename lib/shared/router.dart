@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sudarshan_creations/views/sudarshan_account.dart';
 import 'package:sudarshan_creations/views/sudarshan_allproducts.dart';
 import 'package:sudarshan_creations/views/sudarshan_homepage.dart';
 import 'package:sudarshan_creations/views/sudarshan_product_details.dart';
-import 'package:sudarshan_creations/views/sudarshan_subcategories.dart';
 import '../views/sudarshan_cart_page.dart';
 import '../views/sudarshan_favourites.dart';
 import 'error_page.dart';
@@ -15,18 +16,23 @@ final GoRouter appRouter = GoRouter(
   debugLogDiagnostics: true,
   initialLocation: Routes.home,
   routes: _routes,
-  // redirect: redirector,
+  redirect: redirector,
   errorBuilder: (context, state) => const ErrorPage(),
 );
 
-// FutureOr<String?> redirector(BuildContext context, GoRouterState state) {
-//   // routeHistory.add(state.uri.path);
-//   // if (isLoggedIn() && state.fullPath == Routes.auth) {
-//   //   return routeHistory.reversed.elementAt(1);
-//   //   // return Routes.home;
-//   // }
-//   // return null;
-// }
+FutureOr<String?> redirector(BuildContext context, GoRouterState state) {
+  if (state.uri.path ==
+      appRouter.routerDelegate.currentConfiguration.uri.path) {
+    throw Exception('Router declined redirect');
+  }
+  return null;
+  // routeHistory.add(state.uri.path);
+  // if (isLoggedIn() && state.fullPath == Routes.auth) {
+  //   return routeHistory.reversed.elementAt(1);
+  //   // return Routes.home;
+  // }
+  // return null;
+}
 
 List<RouteBase> get _routes {
   return <RouteBase>[
@@ -62,19 +68,20 @@ List<RouteBase> get _routes {
         productId: state.pathParameters['id'] ?? "",
       )),
     ),
-    GoRoute(
-      path: '${Routes.subcategory}/:id',
-      pageBuilder: (BuildContext context, GoRouterState state) =>
-          NoTransitionPage(
-              child: SudarshanDisplayAllProducts(
-                  subCatId: state.pathParameters['id'] ?? "")),
-    ),
+    // GoRoute(
+    //   path: '${Routes.subcategory}/:id',
+    //   pageBuilder: (BuildContext context, GoRouterState state) =>
+    //       NoTransitionPage(
+    //           child: SudarshanDisplayAllProducts(
+    //               subCatId: state.pathParameters['id'] ?? "")),
+    // ),
     GoRoute(
       path: '${Routes.category}/:id',
       pageBuilder: (BuildContext context, GoRouterState state) =>
           NoTransitionPage(
-              child: SudarshanDisplayAllSubCategories(
-                  categoryId: state.pathParameters['id'] ?? "")),
+        child: SudarshanDisplayAllProducts(
+            maincategoryId: state.pathParameters['id'] ?? ""),
+      ),
     ),
     GoRoute(
       path: Routes.addressbook,
