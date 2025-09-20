@@ -3,6 +3,7 @@ library transparent_image;
 import 'dart:typed_data';
 
 const int perPageUsers = 20;
+const chatLink = "https://wa.me/919586112126";
 
 final Uint8List kTransparentImage = new Uint8List.fromList(<int>[
   0x89,
@@ -73,6 +74,7 @@ final Uint8List kTransparentImage = new Uint8List.fromList(<int>[
   0x60,
   0x82,
 ]);
+const imageAspectRatio = 800 / 1200;
 
 const double mobileMinSize = 768;
 const double desktopMinSize = 1024;

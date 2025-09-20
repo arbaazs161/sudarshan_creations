@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sudarshan_creations/controller/home_controller.dart';
+import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
-import 'package:sudarshan_creations/views/sudarshan_favourites.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../shared/router.dart';
@@ -14,14 +16,15 @@ class TopAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        InkWell(
-          onTap: () => Scaffold.of(context).openDrawer(),
-          child: const Icon(
-            Icons.menu,
-            color: Color(0xff95170D),
-            size: 28,
+        if (mobile)
+          InkWell(
+            onTap: () => Scaffold.of(context).openDrawer(),
+            child: const Icon(
+              Icons.menu,
+              color: Color(0xff95170D),
+              size: 28,
+            ),
           ),
-        ),
         const Spacer(),
         InkWell(
           hoverColor: Colors.transparent,
@@ -91,6 +94,24 @@ class TopAppBar extends StatelessWidget {
               size: 25,
             ),
             const SizedBox(width: 15),
+            if (isLoggedIn())
+              InkWell(
+                onTap: () async {
+                  await FBAuth.auth.signOut();
+                  context.go(Routes.home);
+
+                  // Navigator.push(context, MaterialPageRoute(
+                  //   builder: (context) {
+                  //     return const SudarshanDisplayFavourites();
+                  //   },
+                  // ));
+                },
+                child: Icon(
+                  Icons.logout,
+                  color: Color(0xff95170D),
+                  size: 25,
+                ),
+              ),
             /* if (!mobile)
               InkWell(
                 onTap: () {
@@ -120,124 +141,280 @@ class TopAppBar extends StatelessWidget {
   }
 }
 
+class TopAppBarMobile extends StatelessWidget {
+  const TopAppBarMobile({super.key});
+  // final bool mobile;
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<HomeCtrl>(builder: (hCtrl) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: Row(
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Center logo
+            // if (mobile)
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: InkWell(
+                  onTap: () => Scaffold.of(context).openDrawer(),
+                  child: const Icon(
+                    Icons.menu,
+                    color: true ? Colors.white : Color(0xff95170D),
+                    size: 28,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  context.go(Routes.home);
+                },
+                child: Image.asset(
+                  'assets/sudarshan_logo_white.png', // Replace with your actual logo path
+                  height: 50,
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  /* InkWell(
+                      onTap: () {
+                        context.go(Routes.account);
+                      },
+                      child: const Icon(
+                        CupertinoIcons.profile_circled,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                    const SizedBox(width: 15), */
+                  InkWell(
+                    onTap: () {
+                      context.go(Routes.favourites);
+                      // Navigator.push(context, MaterialPageRoute(
+                      //   builder: (context) {
+                      //     return const SudarshanDisplayFavourites();
+                      //   },
+                      // ));
+                    },
+                    child: const Icon(
+                      CupertinoIcons.heart,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  InkWell(
+                    onTap: () {
+                      context.go(
+                          '${Routes.category}/${Get.find<HomeCtrl>().homeCategories.first.docId}',
+                          extra: true);
+                    },
+                    child: const Icon(
+                      CupertinoIcons.search,
+                      color: Colors.white,
+                      size: 25,
+                    ),
+                  ),
+                  if (isLoggedIn()) ...[
+                    SizedBox(width: 15),
+                    InkWell(
+                      onTap: () async {
+                        await FBAuth.auth.signOut();
+                        context.go(Routes.home);
+
+                        // Navigator.push(context, MaterialPageRoute(
+                        //   builder: (context) {
+                        //     return const SudarshanDisplayFavourites();
+                        //   },
+                        // ));
+                      },
+                      child: Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                  ],
+                  /*  const SizedBox(width: 15),
+                    InkWell(
+                      onTap: () {
+                        if (isLoggedIn()) {
+                          context.go(Routes.cart);
+                        } else {
+                          context.go(Routes.account);
+                        }
+                      },
+                      child: const Icon(
+                        CupertinoIcons.shopping_cart,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ) */
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
 class TopAppBarDesk extends StatelessWidget {
   const TopAppBarDesk({super.key, required this.mobile});
   final bool mobile;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      constraints: const BoxConstraints(maxWidth: 1200),
-      child: Row(
-        children: [
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                InkWell(
-                  onTap: () {
-                    launchUrlString("tel://911234567890");
-                  },
-                  child: const Row(children: [
-                    Icon(
-                      Icons.phone,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                    SizedBox(width: 10),
-                    Text("(+880) 1910 000251",
-                        style: TextStyle(color: Colors.white, fontSize: 13)),
-                  ]),
-                ),
-                const SizedBox(width: 20),
-                // VerticalDivider(color: Colors.white, width: 1,thickness: 3,),
-                InkWell(
-                  onTap: () {
-                    launchUrlString('mailto:sudarshan@gmail.com');
-                  },
-                  child: const Row(children: [
-                    Icon(
-                      CupertinoIcons.mail,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                    SizedBox(width: 10),
-                    Text("sudarshan@gmail.com",
-                        style: TextStyle(color: Colors.white, fontSize: 13)),
-                  ]),
-                )
-              ],
+    return GetBuilder<HomeCtrl>(builder: (hCtrl) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        constraints: const BoxConstraints(maxWidth: 1200),
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      launchUrlString("tel://919586112126");
+                    },
+                    child: const Row(children: [
+                      Icon(
+                        Icons.phone,
+                        color: Colors.white,
+                        size: 15,
+                      ),
+                      SizedBox(width: 10),
+                      Text("(+91) 95861 12126",
+                          style: TextStyle(color: Colors.white, fontSize: 13)),
+                    ]),
+                  ),
+                  const SizedBox(width: 20),
+                  // VerticalDivider(color: Colors.white, width: 1,thickness: 3,),
+                  InkWell(
+                    onTap: () {
+                      launchUrlString('mailto:sudarshan@gmail.com');
+                    },
+                    child: const Row(children: [
+                      Icon(
+                        CupertinoIcons.mail,
+                        color: Colors.white,
+                        size: 15,
+                      ),
+                      SizedBox(width: 10),
+                      Text("sudarshan@gmail.com",
+                          style: TextStyle(color: Colors.white, fontSize: 13)),
+                    ]),
+                  )
+                ],
+              ),
             ),
-          ),
 
-          // Center logo
-          InkWell(
-            onTap: () {
-              context.go(Routes.home);
-            },
-            child: Image.asset(
-              'assets/sudarshan_logo_white.png', // Replace with your actual logo path
-              height: 50,
+            // Center logo
+            InkWell(
+              onTap: () {
+                context.go(Routes.home);
+              },
+              child: Image.asset(
+                'assets/sudarshan_logo_white.png', // Replace with your actual logo path
+                height: 50,
+              ),
             ),
-          ),
 
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                /* InkWell(
-                  onTap: () {
-                    context.go(Routes.account);
-                  },
-                  child: const Icon(
-                    CupertinoIcons.profile_circled,
-                    color: Colors.white,
-                    size: 25,
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  /* InkWell(
+                      onTap: () {
+                        context.go(Routes.account);
+                      },
+                      child: const Icon(
+                        CupertinoIcons.profile_circled,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                    const SizedBox(width: 15), */
+                  InkWell(
+                    onTap: () {
+                      context.go(Routes.favourites);
+                      // Navigator.push(context, MaterialPageRoute(
+                      //   builder: (context) {
+                      //     return const SudarshanDisplayFavourites();
+                      //   },
+                      // ));
+                    },
+                    child: const Icon(
+                      CupertinoIcons.heart,
+                      color: Colors.white,
+                      size: 25,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 15), */
-                InkWell(
-                  onTap: () {
-                    context.go(Routes.favourites);
-                    // Navigator.push(context, MaterialPageRoute(
-                    //   builder: (context) {
-                    //     return const SudarshanDisplayFavourites();
-                    //   },
-                    // ));
-                  },
-                  child: const Icon(
-                    CupertinoIcons.heart,
-                    color: Colors.white,
-                    size: 25,
+                  const SizedBox(width: 15),
+                  InkWell(
+                    onTap: () {
+                      context.go(
+                          '${Routes.category}/${Get.find<HomeCtrl>().homeCategories.first.docId}',
+                          extra: true);
+                    },
+                    child: const Icon(
+                      CupertinoIcons.search,
+                      color: Colors.white,
+                      size: 25,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 15),
-                const Icon(
-                  CupertinoIcons.search,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                /*  const SizedBox(width: 15),
-                InkWell(
-                  onTap: () {
-                    if (isLoggedIn()) {
-                      context.go(Routes.cart);
-                    } else {
-                      context.go(Routes.account);
-                    }
-                  },
-                  child: const Icon(
-                    CupertinoIcons.shopping_cart,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                ) */
-              ],
+                  if (isLoggedIn()) ...[
+                    SizedBox(width: 15),
+                    InkWell(
+                      onTap: () async {
+                        await FBAuth.auth.signOut();
+                        context.go(Routes.home);
+
+                        // Navigator.push(context, MaterialPageRoute(
+                        //   builder: (context) {
+                        //     return const SudarshanDisplayFavourites();
+                        //   },
+                        // ));
+                      },
+                      child: Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                  ],
+                  /*  const SizedBox(width: 15),
+                    InkWell(
+                      onTap: () {
+                        if (isLoggedIn()) {
+                          context.go(Routes.cart);
+                        } else {
+                          context.go(Routes.account);
+                        }
+                      },
+                      child: const Icon(
+                        CupertinoIcons.shopping_cart,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ) */
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 

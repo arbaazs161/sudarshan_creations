@@ -75,236 +75,240 @@ class _SudarshanDisplayFavouritesState
     //         ?.compareTo(int.tryParse(b.name.split(' ').last) ?? 0) ??
     //     0);
     return true
-        ? Wrapper(
-            scafkey: _favouriteScafKey,
-            body: SingleChildScrollView(
-              physics: const ClampingScrollPhysics(),
-              child: !dataloaded
-                  ? SizedBox(
-                      height: screenHeight,
-                      child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(child: CircularProgressIndicator())
-                          ]),
-                    )
-                  : Column(
-                      children: [
-                        // SubCatProductTopBar(
-                        //     mainCategoryModel: selmainCategoryModel),
-                        const FavouriteTopBar(),
-
-                        const SizedBox(height: 30),
-                        /*    SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            spacing: 10,
+        ? GetBuilder<HomeCtrl>(builder: (hCtrl) {
+            return Wrapper(
+              scafkey: _favouriteScafKey,
+              body: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: !dataloaded
+                    ? SizedBox(
+                        height: screenHeight,
+                        child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ...List.generate(
-                                widget.allActiveMainCat.length,
-                                (index) {
-                                  bool selected = selmainCategoryModel!.docId ==
-                                      widget.allActiveMainCat[index].docId;
-                                  return InkWell(
-                                    borderRadius: BorderRadius.circular(20),
-                                    onTap: () {
-                                      searchController.clear();
-                                      context.go(
-                                          "${Routes.category}/${widget.allActiveMainCat[index].docId}");
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 13),
-                                      decoration: BoxDecoration(
-                                        color: true
-                                            ? selected
-                                                ? Colors.black
-                                                : Colors.white
-                                            : selected
-                                                ? const Color(0xffFFE6DF)
-                                                : Colors.white,
-                                        border: Border.all(
-                                            color: selected
-                                                ? Colors.black
-                                                : const Color(0xffBDBDBD)),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            capilatlizeFirstLetter(widget
-                                                .allActiveMainCat[index].name),
-                                            style: GoogleFonts.mulish(
-                                                color: selected
-                                                    ? Colors.white
-                                                    : const Color(0xff828282),
-                                                fontSize: 12,
-                                                height: 0,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          // if (selected) ...[
-                                          //   const SizedBox(width: 5),
-                                          //   const Center(
-                                          //     child: Icon(
-                                          //       CupertinoIcons.xmark,
-                                          //       size: 14,
-                                          //       color: Color(0xff747474),
-                                          //     ),
-                                          //   ),
-                                          // ]
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        const Divider(
-                          color: Color.fromARGB(255, 227, 227, 227),
-                          thickness: 0.5,
-                          height: 0,
-                        ),
-                        const SizedBox(height: 20),
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            spacing: 10,
-                            children: [
-                              ...List.generate(
-                                allMainSubCats.length,
-                                (index) {
-                                  bool selected = selectedSubCat?.docId ==
-                                      allMainSubCats[index].docId;
-                                  return InkWell(
-                                    borderRadius: BorderRadius.circular(20),
-                                    onTap: () async {
-                                      searchController.clear();
-                                      selectedSubCat = selected
-                                          ? null
-                                          : allMainSubCats[index];
-                                      // getProductsData();
-                                      await initializePagination();
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10, horizontal: 13),
-                                      decoration: BoxDecoration(
-                                        color: true
-                                            ? selected
-                                                ? Colors.black
-                                                : Colors.white
-                                            : selected
-                                                ? const Color(0xffFFE6DF)
-                                                : Colors.white,
-                                        border: Border.all(
-                                            color: selected
-                                                ? Colors.black
-                                                : const Color(0xffBDBDBD)),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            capilatlizeFirstLetter(
-                                                allMainSubCats[index].name),
-                                            style: GoogleFonts.mulish(
-                                                color: selected
-                                                    ? Colors.white
-                                                    : const Color(0xff828282),
-                                                fontSize: 12,
-                                                height: 0,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          // if (selected) ...[
-                                          //   const SizedBox(width: 5),
-                                          //   const Center(
-                                          //     child: Icon(
-                                          //       CupertinoIcons.xmark,
-                                          //       size: 14,
-                                          //       color: Color(0xff747474),
-                                          //     ),
-                                          //   ),
-                                          // ]
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 30), */
+                              Center(child: CircularProgressIndicator())
+                            ]),
+                      )
+                    : Column(
+                        children: [
+                          // SubCatProductTopBar(
+                          //     mainCategoryModel: selmainCategoryModel),
+                          const FavouriteTopBar(),
 
-                        //          padding: const EdgeInsets.symmetric(horizontal: 25),
-                        // child: Container(
-                        //     padding: const EdgeInsets.symmetric(vertical: 30),
-                        //     // color: Colors.black12,
-                        //     constraints: BoxConstraints(
-                        //       maxWidth: 1200,
-                        //       // min height = screen height  - footer height - appbar height
-                        //       minHeight: MediaQuery.sizeOf(context).height - 60 - 350,
-                        //     ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxWidth: 1200,
-                                // imp: Min height calculation (deviceHeight- footerheight - top section height - extra height of sizedbox between widgets)
-                                minHeight: MediaQuery.sizeOf(context).height -
-                                    120 -
-                                    300 -
-                                    70,
+                          const SizedBox(height: 30),
+                          /*    SingleChildScrollView(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                spacing: 10,
+                                children: [
+                                  ...List.generate(
+                                    widget.allActiveMainCat.length,
+                                    (index) {
+                                      bool selected = selmainCategoryModel!.docId ==
+                                          widget.allActiveMainCat[index].docId;
+                                      return InkWell(
+                                        borderRadius: BorderRadius.circular(20),
+                                        onTap: () {
+                                          searchController.clear();
+                                          context.go(
+                                              "${Routes.category}/${widget.allActiveMainCat[index].docId}");
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 13),
+                                          decoration: BoxDecoration(
+                                            color: true
+                                                ? selected
+                                                    ? Colors.black
+                                                    : Colors.white
+                                                : selected
+                                                    ? const Color(0xffFFE6DF)
+                                                    : Colors.white,
+                                            border: Border.all(
+                                                color: selected
+                                                    ? Colors.black
+                                                    : const Color(0xffBDBDBD)),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                capilatlizeFirstLetter(widget
+                                                    .allActiveMainCat[index].name),
+                                                style: GoogleFonts.mulish(
+                                                    color: selected
+                                                        ? Colors.white
+                                                        : const Color(0xff828282),
+                                                    fontSize: 12,
+                                                    height: 0,
+                                                    fontWeight: FontWeight.w400),
+                                              ),
+                                              // if (selected) ...[
+                                              //   const SizedBox(width: 5),
+                                              //   const Center(
+                                              //     child: Icon(
+                                              //       CupertinoIcons.xmark,
+                                              //       size: 14,
+                                              //       color: Color(0xff747474),
+                                              //     ),
+                                              //   ),
+                                              // ]
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
-                              child: isLoggedIn()
-                                  ? FavoriteProductDisplay(
-                                      // favouriteProducts: favouriteProducts,
-                                      screenWidth: screenWidth,
-                                    )
+                            ),
+                            const SizedBox(height: 20),
+                            const Divider(
+                              color: Color.fromARGB(255, 227, 227, 227),
+                              thickness: 0.5,
+                              height: 0,
+                            ),
+                            const SizedBox(height: 20),
+                            SingleChildScrollView(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                spacing: 10,
+                                children: [
+                                  ...List.generate(
+                                    allMainSubCats.length,
+                                    (index) {
+                                      bool selected = selectedSubCat?.docId ==
+                                          allMainSubCats[index].docId;
+                                      return InkWell(
+                                        borderRadius: BorderRadius.circular(20),
+                                        onTap: () async {
+                                          searchController.clear();
+                                          selectedSubCat = selected
+                                              ? null
+                                              : allMainSubCats[index];
+                                          // getProductsData();
+                                          await initializePagination();
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10, horizontal: 13),
+                                          decoration: BoxDecoration(
+                                            color: true
+                                                ? selected
+                                                    ? Colors.black
+                                                    : Colors.white
+                                                : selected
+                                                    ? const Color(0xffFFE6DF)
+                                                    : Colors.white,
+                                            border: Border.all(
+                                                color: selected
+                                                    ? Colors.black
+                                                    : const Color(0xffBDBDBD)),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                capilatlizeFirstLetter(
+                                                    allMainSubCats[index].name),
+                                                style: GoogleFonts.mulish(
+                                                    color: selected
+                                                        ? Colors.white
+                                                        : const Color(0xff828282),
+                                                    fontSize: 12,
+                                                    height: 0,
+                                                    fontWeight: FontWeight.w400),
+                                              ),
+                                              // if (selected) ...[
+                                              //   const SizedBox(width: 5),
+                                              //   const Center(
+                                              //     child: Icon(
+                                              //       CupertinoIcons.xmark,
+                                              //       size: 14,
+                                              //       color: Color(0xff747474),
+                                              //     ),
+                                              //   ),
+                                              // ]
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 30), */
 
-                                  //   LOGIN SECTION
-                                  : ConstrainedBox(
-                                      constraints:
-                                          const BoxConstraints(maxWidth: 500),
-                                      child: LoginPage(
-                                          // goTo: widget.routeTo,
-                                          refresh: () {
-                                        setState(() {});
-                                      }),
-                                    )),
-                        ),
-                        // if (totalPages > 1) ...[
-                        //   const SizedBox(height: 30),
-                        //   Padding(
-                        //     padding: const EdgeInsets.all(12.0),
-                        //     child: DynamicPagination(
-                        //       currentPage: currentPage,
-                        //       totalPages: totalPages,
-                        //       onPageChanged: handlePageChange,
-                        //     ),
-                        //   ),
-                        // ],
-                        const SizedBox(height: 50),
-                        const SudarshanFooterSection(),
-                      ],
-                    ),
-            ),
-          )
+                          //          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          // child: Container(
+                          //     padding: const EdgeInsets.symmetric(vertical: 30),
+                          //     // color: Colors.black12,
+                          //     constraints: BoxConstraints(
+                          //       maxWidth: 1200,
+                          //       // min height = screen height  - footer height - appbar height
+                          //       minHeight: MediaQuery.sizeOf(context).height - 60 - 350,
+                          //     ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 1200,
+                                  // imp: Min height calculation (deviceHeight- footerheight - top section height - extra height of sizedbox between widgets)
+                                  minHeight: MediaQuery.sizeOf(context).height -
+                                      120 -
+                                      300 -
+                                      70,
+                                ),
+                                child: isLoggedIn()
+                                    ? FavoriteProductDisplay(
+                                        key: ValueKey(DateTime.now()),
+                                        // favouriteProducts: favouriteProducts,
+                                        screenWidth: screenWidth,
+                                      )
+
+                                    //   LOGIN SECTION
+                                    : ConstrainedBox(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 500),
+                                        child: LoginPage(
+                                            // goTo: widget.routeTo,
+                                            refresh: () {
+                                          setState(() {});
+                                        }),
+                                      )),
+                          ),
+                          // if (totalPages > 1) ...[
+                          //   const SizedBox(height: 30),
+                          //   Padding(
+                          //     padding: const EdgeInsets.all(12.0),
+                          //     child: DynamicPagination(
+                          //       currentPage: currentPage,
+                          //       totalPages: totalPages,
+                          //       onPageChanged: handlePageChange,
+                          //     ),
+                          //   ),
+                          // ],
+                          const SizedBox(height: 50),
+                          const SudarshanFooterSection(),
+                        ],
+                      ),
+              ),
+            );
+          })
         : ResponsiveWid(
             mobile: Wrapper(
               scafkey: _favouriteScafKey,
@@ -1498,7 +1502,7 @@ class _FavoriteProductDisplayState extends State<FavoriteProductDisplay> {
 
         favouriteProducts.isEmpty
             ? const Center(
-                child: Text("No Product to Display"),
+                child: Text("No Favourite to Display"),
               )
             : StaggeredGrid.extent(
                 maxCrossAxisExtent: widget.screenWidth < 500 ? 400 : 300,

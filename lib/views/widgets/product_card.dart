@@ -17,12 +17,12 @@ class SubCatCardWid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           height: 250,
           clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               // borderRadius: BorderRadius.circular(15)
               ),
           child: CachedNetworkImage(
@@ -43,8 +43,8 @@ class SubCatCardWid extends StatelessWidget {
         const SizedBox(height: 10),
         Text(
           text,
-          style: TextStyle(
-            color: const Color(0xff303030),
+          style: const TextStyle(
+            color: Color(0xff303030),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),

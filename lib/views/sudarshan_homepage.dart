@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/controller/home_controller.dart';
@@ -74,137 +75,271 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                 children: [
                   // HERO SECTION
                   SizedBox(
-                    height: 800,
+                    height: 700,
                     child: Stack(
                       children: [
+                        //  SizedBox(
+                        //       height: 800,
+                        //       width: double.maxFinite,
+                        //       child: Image.asset(
+                        //         'assets/banner1.png',
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //     ),
                         SizedBox(
+                          height: 800,
                           width: double.maxFinite,
                           child: Image.asset(
-                            'assets/hero_section_mobile.png',
+                            'assets/banner1.png',
                             fit: BoxFit.cover,
                           ),
                         ),
                         Column(
                           // mainAxisSize: MainAxisSize.min,
                           children: [
-                            const SizedBox(height: 20),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: TopAppBar(mobile: true),
-                            ),
-                            const SizedBox(height: 15),
-                            const Divider(height: 0, color: Color(0xffB58543)),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              physics: const ClampingScrollPhysics(),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 22),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                            Container(
+                              color: Colors.black.withAlpha(50),
+                              child: const Column(
                                 children: [
-                                  ...List.generate(
-                                    ctrl.homeCategories.length,
-                                    (index) {
-                                      final idx =
-                                          ctrl.homeCategories[index].docId;
-                                      return InkWell(
-                                          onHover: (idx) {},
-                                          highlightColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          splashColor: Colors.transparent,
-                                          onTap: () {
-                                            context
-                                                .go("${Routes.category}/$idx");
+                                  SizedBox(height: 10),
+                                  TopAppBarMobile(),
+                                  SizedBox(height: 20),
+                                  Divider(
+                                    height: 0,
+                                    thickness: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                  Divider(
+                                    color: Colors.grey,
+                                    thickness: 0.5,
+                                    height: 0,
+                                  ),
+                                  /*  SizedBox(height: 20),
+                                  NavBar(mobile: true),
+                                  /*    SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const ClampingScrollPhysics(),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 22),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ...List.generate(
+                                          ctrl.homeCategories.length,
+                                          (index) {
+                                            final idx =
+                                                ctrl.homeCategories[index].docId;
+                                            return InkWell(
+                                                onHover: (idx) {},
+                                                highlightColor: Colors.transparent,
+                                                hoverColor: Colors.transparent,
+                                                splashColor: Colors.transparent,
+                                                onTap: () {
+                                                  context
+                                                      .go("${Routes.category}/$idx");
+                                                },
+                                                child: Padding(
+                                                  padding: index != 0
+                                                      ? const EdgeInsets.only(
+                                                          left: 20.0)
+                                                      : const EdgeInsets.only(
+                                                          left: 0.0),
+                                                  child: Text(
+                                                    capilatlizeFirstLetter(ctrl
+                                                        .homeCategories[index].name),
+                                                    style: GoogleFonts.poppins(
+                                                      color: const Color(0xff303030),
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ));
                                           },
-                                          child: Padding(
-                                            padding: index != 0
-                                                ? const EdgeInsets.only(
-                                                    left: 20.0)
-                                                : const EdgeInsets.only(
-                                                    left: 0.0),
-                                            child: Text(
-                                              capilatlizeFirstLetter(ctrl
-                                                  .homeCategories[index].name),
-                                              style: GoogleFonts.poppins(
-                                                color: const Color(0xff303030),
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ));
-                                    },
+                                        ),
+                                      ],
+                                  */
+                                    ),
                                   ),
+                                  const Divider(height: 0, color: Color(0xffB58543)), */
+                                  // const SizedBox(height: 15),
                                 ],
                               ),
                             ),
-                            const Divider(height: 0, color: Color(0xffB58543)),
-                            const SizedBox(height: 15),
-                            SizedBox(
-                              height: 280,
-                              child: Row(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Image.asset(
-                                        height: 220,
-                                        width: 180,
-                                        'assets/hero_left_tilt_img.png'),
-                                  ),
-                                  const Spacer(),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Image.asset(
-                                        height: 220,
-                                        width: 180,
-                                        'assets/hero_right_tilt_image.png'),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // SizedBox(
+                            //   height: 280,
+                            //   child: Row(
+                            //     children: [
+                            //       Align(
+                            //         alignment: Alignment.topLeft,
+                            //         child: Image.asset(
+                            //             height: 220,
+                            //             width: 180,
+                            //             'assets/hero_left_tilt_img.png'),
+                            //       ),
+                            //       const Spacer(),
+                            //       Align(
+                            //         alignment: Alignment.bottomRight,
+                            //         child: Image.asset(
+                            //             height: 220,
+                            //             width: 180,
+                            //             'assets/hero_right_tilt_image.png'),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            // Center(
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.only(top: 250),
+                            //     child: Column(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       crossAxisAlignment: CrossAxisAlignment.center,
+                            //       children: [
+                            //         const SizedBox(height: 50),
+                            //         const Text("Luxurious Gifting",
+                            //             style: TextStyle(
+                            //               color: Colors.white,
+                            //               fontSize: 79,
+                            //               fontWeight: FontWeight.w700,
+                            //             )),
+                            //         const SizedBox(height: 10),
+                            //         const Text(
+                            //           "Elevate Gifts with Personalised Envelopes",
+                            //           style: TextStyle(
+                            //             color: Colors.white,
+                            //             fontSize: 30,
+                            //             fontWeight: FontWeight.w600,
+                            //           ),
+                            //         ),
+                            //         const SizedBox(height: 60),
+                            //         Container(
+                            //           decoration: BoxDecoration(
+                            //             border: Border.all(
+                            //                 color: Colors.white, width: 2),
+                            //           ),
+                            //           child: ElevatedButton(
+                            //               style: ElevatedButton.styleFrom(
+                            //                 padding: const EdgeInsets.all(20),
+                            //                 elevation: 0,
+                            //                 shape: RoundedRectangleBorder(
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(8)),
+                            //                 backgroundColor: Colors.transparent,
+                            //                 // border: Border.all(
+                            //                 //     color: Colors.white, width: 2),
+                            //                 side: BorderSide.none,
+                            //               ),
+                            //               onPressed: () {
+                            //                 shopNowClicked = true;
+                            //                 setState(() {});
+                            //               },
+                            //               child: const Text(
+                            //                 "Shop Now",
+                            //                 style: TextStyle(
+                            //                     fontSize: 18,
+                            //                     fontWeight: FontWeight.w700,
+                            //                     color: Colors.white),
+                            //               )),
+                            //         )
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
                             Container(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20),
-                              height: 300,
+                              height: 500,
                               child: Column(
                                 // mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const SizedBox(height: 70),
-                                  Text("Luxurious Gifting",
-                                      style: GoogleFonts.brawler(
-                                        color: const Color(0xff95170D),
-                                        fontSize: 35,
-                                        fontWeight: FontWeight.w700,
-                                      )),
+                                  true
+                                      ? const Text("Effortless Celebrations!",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 50,
+                                            fontWeight: FontWeight.w700,
+                                          ))
+                                      : Text("Luxurious Gifting",
+                                          style: GoogleFonts.brawler(
+                                            color: const Color(0xff95170D),
+                                            fontSize: 35,
+                                            fontWeight: FontWeight.w700,
+                                          )),
                                   const SizedBox(height: 10),
-                                  Text(
-                                    "Elevate Gifts with Personalised Envelopes",
-                                    style: GoogleFonts.poppins(
-                                      color: const Color(0xff303030),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
+                                  true
+                                      ? const Text(
+                                          "Gifts & Wedding Essentials with Worldwide Delivery.",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        )
+                                      : Text(
+                                          "Elevate Gifts with Personalised Envelopes",
+                                          style: GoogleFonts.poppins(
+                                            color: const Color(0xff303030),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                   const Spacer(),
                                   const SizedBox(height: 15),
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 0,
-                                          fixedSize:
-                                              const Size(double.maxFinite, 50),
-                                          backgroundColor:
-                                              const Color(0xffFBD554),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8))),
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Shop Now",
-                                        style: GoogleFonts.brawler(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      )),
+                                  true
+                                      ? Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.white, width: 2),
+                                          ),
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                elevation: 0,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                // border: Border.all(
+                                                //     color: Colors.white, width: 2),
+                                                side: BorderSide.none,
+                                              ),
+                                              onPressed: () {
+                                                shopNowClicked = true;
+                                                setState(() {});
+                                              },
+                                              child: const Text(
+                                                "Shop Now",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: Colors.white),
+                                              )),
+                                        )
+                                      : ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              elevation: 0,
+                                              fixedSize: const Size(
+                                                  double.maxFinite, 50),
+                                              backgroundColor:
+                                                  const Color(0xffFBD554),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8))),
+                                          onPressed: () {},
+                                          child: Text(
+                                            "Shop Now",
+                                            style: GoogleFonts.brawler(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          )),
                                 ],
                               ),
                             ),
@@ -300,6 +435,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
 
                   // SHOP BY CATEGORIES
                   Padding(
+                    key: _mainCategoriesKey,
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       children: [
@@ -308,7 +444,8 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                           "SHOP BY CATEGORIES",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.brawler(
-                            color: const Color(0xff242424),
+                            // color: const Color(0xff242424),
+                            color: const Color(0xffef6644),
                             fontSize: 30,
                             fontWeight: FontWeight.w700,
                           ),
@@ -319,10 +456,14 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                             width: 1200,
                             // color: Colors.black12,
                             padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: StaggeredGrid.extent(
-                              maxCrossAxisExtent: 400,
-                              mainAxisSpacing: 20,
-                              crossAxisSpacing: 20,
+                            child: Wrap(
+                              // maxCrossAxisExtent: 400,
+                              // mainAxisSpacing: 20,
+                              // crossAxisSpacing: 20,
+                              spacing: 20,
+                              runSpacing: 20,
+                              alignment: WrapAlignment.center,
+                              runAlignment: WrapAlignment.center,
                               children: [
                                 ...List.generate(
                                   ctrl.homeCategories.length,
@@ -331,25 +472,29 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                         ctrl.homeCategories[index].image;
                                     final text =
                                         ctrl.homeCategories[index].name;
-                                    return InkWell(
-                                        highlightColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        splashColor: Colors.transparent,
-                                        onTap: () {
-                                          context.go(
-                                              "${Routes.category}/${ctrl.homeCategories[index].docId}");
-                                          // Navigator.push(context, MaterialPageRoute(
-                                          //   builder: (context) {
-                                          //     return const SudarshanDisplayAllSubCategories(
-                                          //       categoryId: "",
-                                          //     );
-                                          //   },
-                                          // ));
-                                        },
-                                        child: SubCatCardWid(
-                                            image: image,
-                                            text:
-                                                capilatlizeFirstLetter(text)));
+                                    return Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 350),
+                                      child: InkWell(
+                                          highlightColor: Colors.transparent,
+                                          hoverColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          onTap: () {
+                                            context.go(
+                                                "${Routes.category}/${ctrl.homeCategories[index].docId}");
+                                            // Navigator.push(context, MaterialPageRoute(
+                                            //   builder: (context) {
+                                            //     return const SudarshanDisplayAllSubCategories(
+                                            //       categoryId: "",
+                                            //     );
+                                            //   },
+                                            // ));
+                                          },
+                                          child: SubCatCardWid(
+                                              image: image,
+                                              text: capilatlizeFirstLetter(
+                                                  text))),
+                                    );
                                   },
                                 )
                               ],
@@ -370,8 +515,8 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                         height: 620,
                         width: double.maxFinite,
                         child: Image.asset(
-                          'assets/top_seliing_bg.png',
-                          fit: BoxFit.cover,
+                          // 'assets/top_seliing_bg.png',
+                          'assets/top_seliing_bg-light.png', fit: BoxFit.cover,
                         ),
                       ),
                       Center(
@@ -382,7 +527,8 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                               "TOP SELLING",
                               textAlign: TextAlign.center,
                               style: GoogleFonts.brawler(
-                                color: const Color(0xff242424),
+                                // color: const Color(0xff242424),
+                                color: const Color(0xffef6644),
                                 fontSize: 30,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -404,23 +550,28 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                       return Padding(
                                         padding:
                                             const EdgeInsets.only(right: 25.0),
-                                        child: InkWell(
-                                            highlightColor: Colors.transparent,
-                                            hoverColor: Colors.transparent,
-                                            onTap: () {
-                                              context.go(
-                                                  "${Routes.product}/${product.docId}");
+                                        child: Container(
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 264),
+                                          child: InkWell(
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              hoverColor: Colors.transparent,
+                                              onTap: () {
+                                                context.go(
+                                                    "${Routes.product}/${product.docId}");
 
-                                              // Navigator.push(context,
-                                              //     MaterialPageRoute(
-                                              //   builder: (context) {
-                                              //     return const SudarshanProductDetails();
-                                              //   },
-                                              // ));
-                                            },
-                                            child: ProductBagWid(
-                                                product: product,
-                                                forHome: true)),
+                                                // Navigator.push(context,
+                                                //     MaterialPageRoute(
+                                                //   builder: (context) {
+                                                //     return const SudarshanProductDetails();
+                                                //   },
+                                                // ));
+                                              },
+                                              child: ProductBagWid(
+                                                  product: product,
+                                                  forHome: true)),
+                                        ),
                                       );
                                     },
                                   )
@@ -443,13 +594,17 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 50),
-                        Text(
-                          "BRAND HIGHLIGHTS",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.brawler(
-                            color: const Color(0xff242424),
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700,
+                        Center(
+                          child: Text(
+                            "BRAND HIGHLIGHTS",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.brawler(
+                              // color: const Color(0xff242424),
+                              color: const Color(0xffef6644),
+
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 40),
@@ -457,83 +612,107 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                           alignment: WrapAlignment.center,
                           // runAlignment: WrapAlignment.center,
                           runSpacing: 15,
+                          spacing: 15,
                           children: [
                             // const Spacer(),
+                            /*  Column(
+                              children: [
+                                SizedBox(
+                                  height: 150,
+                                  child: Image.asset('assets/icon1.png'),
+                                ),
+                                const SizedBox(height: 17),
+                                const Text(
+                                  "Impeccable quality",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18),
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  "Superior Craftsmanship, Unmatched Quality & Unique Designs",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      /* fontWeight: FontWeight.w700, */ fontSize:
+                                          13),
+                                ),
+                              ],
+                            ), */
                             SizedBox(
                               width: 250,
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
                                     height: 150,
-                                    child: Image.asset('assets/medal_img.png'),
+                                    child: Image.asset('assets/icon1.png'),
                                   ),
                                   const SizedBox(height: 17),
-                                  Text(
+                                  const Text(
                                     "Impeccable quality",
-                                    style: GoogleFonts.brawler(
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 18),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
+                                  const Text(
                                     "Superior Craftsmanship, Unmatched Quality & Unique Designs",
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
+                                    style: TextStyle(
                                         /* fontWeight: FontWeight.w700, */ fontSize:
                                             13),
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 25),
+                            // const SizedBox(width: 25),
                             SizedBox(
                               width: 250,
                               child: Column(
                                 children: [
                                   SizedBox(
                                     height: 150,
-                                    child: Image.asset('assets/people_img.png'),
+                                    child: Image.asset('assets/icon2.png'),
                                   ),
                                   const SizedBox(height: 17),
-                                  Text(
+                                  const Text(
                                     "Customer satisfaction",
-                                    style: GoogleFonts.brawler(
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 18),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
+                                  const Text(
                                     "12000+ Happy & Satisfied Customers Around The Globe",
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
+                                    style: TextStyle(
                                         /* fontWeight: FontWeight.w700, */ fontSize:
                                             13),
                                   ),
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 25),
+                            // const SizedBox(width: 25),
                             SizedBox(
                               width: 250,
                               child: Column(
                                 children: [
                                   SizedBox(
                                     height: 150,
-                                    child: Image.asset(
-                                        'assets/stationary_img.png'),
+                                    child: Image.asset('assets/icon3.png'),
                                   ),
                                   const SizedBox(height: 17),
-                                  Text(
+                                  const Text(
                                     "Customised stationery",
-                                    style: GoogleFonts.brawler(
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 18),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
+                                  const Text(
                                     "Name Personalisation Perfection Awaits You",
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
+                                    style: TextStyle(
                                         /* fontWeight: FontWeight.w700, */ fontSize:
                                             13),
                                   ),
@@ -568,28 +747,27 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                             //     ],
                             //   ),
                             // ),
-                            const SizedBox(width: 25),
+                            // const SizedBox(width: 25),
                             SizedBox(
                               width: 250,
                               child: Column(
                                 children: [
                                   SizedBox(
                                     height: 150,
-                                    child: Image.asset(
-                                        'assets/women_empowerment_img.png'),
+                                    child: Image.asset('assets/icon5.png'),
                                   ),
                                   const SizedBox(height: 17),
-                                  Text(
+                                  const Text(
                                     "Women empowerment",
-                                    style: GoogleFonts.brawler(
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 18),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
+                                  const Text(
                                     "Empowering Women, Crafting Excellence Together",
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
+                                    style: TextStyle(
                                         /* fontWeight: FontWeight.w700, */ fontSize:
                                             13),
                                   ),
@@ -605,21 +783,26 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                             alignment: Alignment.center,
                             children: [
                               Container(
-                                  height: 600,
-                                  width: double.maxFinite,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      border: Border.all(
-                                          color: const Color(0xffFFF0C5),
-                                          width: 8)),
-                                  child: Image.asset(
-                                      'assets/welcome_bg_mobile_withoutbackground.png',
-                                      // fit: BoxFit.cover,
-                                      fit: BoxFit.cover
-                                      // height: double.maxFinite,
-                                      // width: double.maxFinite,
-                                      )),
+                                height: 600,
+                                width: double.maxFinite,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: true
+                                        ? const Color(0xfff2f2f2)
+                                        : const Color(0xffFFF0C5),
+                                    width: 8,
+                                  ),
+                                ),
+                                child: Image.asset(
+                                    'assets/welcome_bg_mobile_withoutbackground-modified.png',
+                                    // fit: BoxFit.cover,
+                                    fit: BoxFit.cover
+                                    // height: double.maxFinite,
+                                    // width: double.maxFinite,
+                                    ),
+                              ),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 28.0, vertical: 20),
@@ -741,7 +924,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     const SizedBox(height: 50),
-                                    const Text("Luxurious Gifting",
+                                    const Text("Effortless Celebrations!",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 79,
@@ -749,7 +932,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                         )),
                                     const SizedBox(height: 10),
                                     const Text(
-                                      "Elevate Gifts with Personalised Envelopes",
+                                      "Gifts & Wedding Essentials with Worldwide Delivery.",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 30,
@@ -791,21 +974,22 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                               ),
                             ),
                             Container(
-                                color: Colors.black.withAlpha(50),
-                                child: const Column(
-                                  children: [
-                                    SizedBox(height: 10),
-                                    TopAppBarDesk(mobile: false),
-                                    SizedBox(height: 20),
-                                    Divider(
-                                      color: Colors.grey,
-                                      thickness: 0.5,
-                                      height: 0,
-                                    ),
-                                    SizedBox(height: 20),
-                                    NavBar(),
-                                  ],
-                                )),
+                              color: Colors.black.withAlpha(50),
+                              child: const Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  TopAppBarDesk(mobile: false),
+                                  SizedBox(height: 20),
+                                  Divider(
+                                    color: Colors.grey,
+                                    thickness: 0.5,
+                                    height: 0,
+                                  ),
+                                  SizedBox(height: 20),
+                                  NavBar(),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
 
@@ -836,10 +1020,14 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                     // color: Colors.black12,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 20),
-                                    child: StaggeredGrid.extent(
-                                      maxCrossAxisExtent: 400,
-                                      mainAxisSpacing: 20,
-                                      crossAxisSpacing: 20,
+                                    child: Wrap(
+                                      spacing: 20,
+                                      runSpacing: 20,
+                                      runAlignment: WrapAlignment.center,
+                                      alignment: WrapAlignment.center,
+                                      // maxCrossAxisExtent: 400,
+                                      // mainAxisSpacing: 20,
+                                      // crossAxisSpacing: 20,
                                       // axisDirection: AxisDirection.left,
                                       children: [
                                         ...List.generate(
@@ -849,29 +1037,35 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                                 .homeCategories[index].image;
                                             final text =
                                                 ctrl.homeCategories[index].name;
-                                            return InkWell(
-                                                highlightColor:
-                                                    Colors.transparent,
-                                                hoverColor: Colors.transparent,
-                                                splashColor: Colors.transparent,
-                                                onTap: () {
-                                                  context.go(
+                                            return Container(
+                                              constraints: const BoxConstraints(
+                                                  maxWidth: 350),
+                                              child: InkWell(
+                                                  highlightColor:
+                                                      Colors.transparent,
+                                                  hoverColor:
+                                                      Colors.transparent,
+                                                  splashColor:
+                                                      Colors.transparent,
+                                                  onTap: () {
+                                                    context.go(
                                                       "${Routes.category}/${ctrl.homeCategories[index].docId}",
-                                                      extra:
-                                                          ctrl.homeCategories[
-                                                              index]);
-                                                  // Navigator.push(context, MaterialPageRoute(
-                                                  //   builder: (context) {
-                                                  //     return const SudarshanDisplayAllSubCategories(
-                                                  //         categoryId: "");
-                                                  //   },
-                                                  // ));
-                                                },
-                                                child: SubCatCardWid(
-                                                    image: image,
-                                                    text:
-                                                        capilatlizeFirstLetter(
-                                                            text)));
+                                                      // extra: ctrl
+                                                      //     .homeCategories[index],
+                                                    );
+                                                    // Navigator.push(context, MaterialPageRoute(
+                                                    //   builder: (context) {
+                                                    //     return const SudarshanDisplayAllSubCategories(
+                                                    //         categoryId: "");
+                                                    //   },
+                                                    // ));
+                                                  },
+                                                  child: SubCatCardWid(
+                                                      image: image,
+                                                      text:
+                                                          capilatlizeFirstLetter(
+                                                              text))),
+                                            );
                                           },
                                         )
                                       ],
@@ -934,25 +1128,30 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                             return Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 25.0),
-                                              child: InkWell(
-                                                  highlightColor:
-                                                      Colors.transparent,
-                                                  hoverColor:
-                                                      Colors.transparent,
-                                                  onTap: () {
-                                                    context.go(
-                                                        "${Routes.product}/${product.docId}");
+                                              child: Container(
+                                                constraints:
+                                                    const BoxConstraints(
+                                                        maxWidth: 264),
+                                                child: InkWell(
+                                                    highlightColor:
+                                                        Colors.transparent,
+                                                    hoverColor:
+                                                        Colors.transparent,
+                                                    onTap: () {
+                                                      context.go(
+                                                          "${Routes.product}/${product.docId}");
 
-                                                    // Navigator.push(context,
-                                                    //     MaterialPageRoute(
-                                                    //   builder: (context) {
-                                                    //     return const SudarshanProductDetails();
-                                                    //   },
-                                                    // ));
-                                                  },
-                                                  child: ProductBagWid(
-                                                      product: product,
-                                                      forHome: true)),
+                                                      // Navigator.push(context,
+                                                      //     MaterialPageRoute(
+                                                      //   builder: (context) {
+                                                      //     return const SudarshanProductDetails();
+                                                      //   },
+                                                      // ));
+                                                    },
+                                                    child: ProductBagWid(
+                                                        product: product,
+                                                        forHome: true)),
+                                              ),
                                             );
                                           },
                                         )
@@ -1875,48 +2074,54 @@ homeScroll(bool? widName) {
 class NavBar extends StatelessWidget implements PreferredSizeWidget {
   const NavBar({
     super.key,
+    this.mobile = false,
   });
-
+  final bool mobile;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeCtrl>(builder: (
       ctrl,
     ) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(),
-        child: Container(
-          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
-          width: 1200,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(
-              ctrl.homeCategories.length,
-              (index) {
-                final mainCategory = ctrl.homeCategories[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: InkWell(
-                    highlightColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    onTap: () {
-                      context.go("${Routes.category}/${mainCategory.docId}");
-                    },
+      return Container(
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+        width: 1200,
+        child: Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                ctrl.homeCategories.length,
+                (index) {
+                  final mainCategory = ctrl.homeCategories[index];
+                  return Padding(
+                    padding: EdgeInsets.only(left: index == 0 ? 0 : 50.0),
                     child: Container(
-                      // width: 150,
-                      child: Text(
-                        capilatlizeFirstLetter(mainCategory.name),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
+                      // constraints: const BoxConstraints(maxWidth: 180),
+                      child: InkWell(
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onTap: () {
+                          context
+                              .go("${Routes.category}/${mainCategory.docId}");
+                        },
+                        child: Center(
+                          child: Text(
+                            capilatlizeFirstLetter(mainCategory.name),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
+              // Left 3 categories
             ),
-            // Left 3 categories
           ),
         ),
       );

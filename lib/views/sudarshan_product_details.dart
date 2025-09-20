@@ -1,6 +1,9 @@
 import 'dart:async';
+// import 'dart:ui' as html;
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -18,11 +21,13 @@ import 'package:sudarshan_creations/shared/firebase.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 import 'package:sudarshan_creations/views/sudarshan_homepage.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
 import 'widgets/top_appbar.dart';
 import 'wrapper.dart';
+import 'dart:js' as js;
 
 final _productScafKey = GlobalKey<ScaffoldState>();
 
@@ -222,12 +227,36 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                   physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: [
-                      const TopAppBarWithBgImg(mobile: true),
-                      const Divider(
-                        color: Color(0xff95170D),
-                        height: 0,
-                        thickness: .5,
-                      ),
+                      // const TopAppBarWithBgImg(mobile: true),
+                      // const Divider(
+                      //   color: Color(0xff95170D),
+                      //   height: 0,
+                      //   thickness: .5,
+                      // ),
+                      Container(
+                          // color: Colors.black.withAlpha(100),
+                          // color: const Color(0xff151b27),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withAlpha(50),
+                            image: const DecorationImage(
+                                image: AssetImage('assets/banner1.png'),
+                                fit: BoxFit.cover),
+                          ),
+                          child: const Column(
+                            children: [
+                              SizedBox(height: 10),
+                              TopAppBarMobile(),
+                              SizedBox(height: 20),
+                              Divider(
+                                color: Colors.grey,
+                                thickness: 0.5,
+                                height: 0,
+                              ),
+                              // SizedBox(height: 20),
+                              // NavBar(),
+                            ],
+                          )),
+                      // const SizedBox(height: 10),
                       const SizedBox(height: 10),
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 25),
@@ -246,9 +275,10 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ImageBox(
+                                  ImageBoxMobile(
                                     variant: selectedVariant!,
-                                    variantImages: selectedVariant!.images,
+
+                                    // variantImages: selectedVariant!.images,
                                   ),
                                   const SizedBox(height: 30),
                                   _productDetails(hctrl, context)
@@ -722,17 +752,26 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                                     (index) {
                                       final suggestionProduct =
                                           similarProducts[index];
-                                      return InkWell(
-                                          highlightColor: Colors.transparent,
-                                          hoverColor: Colors.transparent,
-                                          splashColor: Colors.transparent,
-                                          onTap: () {
-                                            context.go(
-                                                "${Routes.product}/${suggestionProduct.docId}");
-                                          },
-                                          child: ProductBagWid(
-                                              product: suggestionProduct,
-                                              forHome: false));
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 25.0),
+                                        child: Container(
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 264),
+                                          child: InkWell(
+                                            highlightColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            splashColor: Colors.transparent,
+                                            onTap: () {
+                                              context.go(
+                                                  "${Routes.product}/${suggestionProduct.docId}");
+                                            },
+                                            child: ProductBagWid(
+                                                product: suggestionProduct,
+                                                forHome: false),
+                                          ),
+                                        ),
+                                      );
                                     },
                                   )
                                 ],
@@ -757,22 +796,28 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
                       // const TopAppBarWithBgImg(mobile: false),
                       // const Divider(color: Color(0xff95170D), height: 0),
                       Container(
-                          // color: Colors.black.withAlpha(100),
-                          color: const Color.fromARGB(172, 0, 0, 0),
-                          child: const Column(
-                            children: [
-                              SizedBox(height: 10),
-                              TopAppBarDesk(mobile: false),
-                              SizedBox(height: 20),
-                              Divider(
-                                color: Colors.grey,
-                                thickness: 0.5,
-                                height: 0,
-                              ),
-                              SizedBox(height: 20),
-                              NavBar(),
-                            ],
-                          )),
+                        // color: Colors.black.withAlpha(100),
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/banner1.png'),
+                              fit: BoxFit.cover),
+                          color: Color(0xff151b27),
+                        ),
+                        child: const Column(
+                          children: [
+                            SizedBox(height: 10),
+                            TopAppBarDesk(mobile: false),
+                            SizedBox(height: 20),
+                            Divider(
+                              color: Colors.grey,
+                              thickness: 0.5,
+                              height: 0,
+                            ),
+                            // SizedBox(height: 20),
+                            // NavBar(),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 10),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -1247,24 +1292,45 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
         Row(
           children: [
             Expanded(
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: const Color(0xff95170D),
-                      surfaceTintColor: const Color(0xff95170D),
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6)),
-                    ),
-                    onPressed: () {
-                      showContactDialog(context, selectedVariant!, product!);
-                    },
-                    child: Text(
-                      "Send Inquiry",
-                      style: GoogleFonts.leagueSpartan(
-                          color: Colors.white, fontSize: 15),
-                    ))),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: const Color(0xff95170D),
+                  surfaceTintColor: const Color(0xff95170D),
+                  shadowColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                ),
+                onPressed: () {
+                  // showContactDialog(context, selectedVariant!, product!);
+
+                  try {
+                    final url =
+                        "$chatLink?text=${Uri.encodeComponent(Uri.base.toString())}";
+
+                    js.context.callMethod("open", [url, "_blank"]);
+                    // html.window.open(url, "_self");
+                    // launchUrl(Uri.parse('$chatLink?text=${Uri.base}\n'));
+                    // launchUrl(
+                    //   Uri.parse(
+                    //       '$chatLink?text=${Uri.encodeComponent(Uri.base.toString())}\n'),
+                    //   webOnlyWindowName: '_blank', // optional
+                    // );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                      "${e.toString()}: Failed to open chat. Please try again later.",
+                    )));
+                  }
+                },
+                child: Text(
+                  "Send Inquiry",
+                  style: GoogleFonts.leagueSpartan(
+                      color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 15),
@@ -1358,6 +1424,269 @@ class _SudarshanProductDetailsState extends State<SudarshanProductDetails> {
 //     );
 //   }
 // }
+
+class ImageBoxMobile extends StatefulWidget {
+  const ImageBoxMobile({
+    super.key,
+    required this.variant,
+    this.vertical = true,
+  });
+
+  final VariantModel variant;
+  final bool vertical;
+
+  @override
+  State<ImageBoxMobile> createState() => _ImageBoxMobileState();
+}
+
+class _ImageBoxMobileState extends State<ImageBoxMobile> {
+  // late String? selectedImg;
+  @override
+  void initState() {
+    super.initState();
+    // selectedImg =
+    //     widget.variant.images.isEmpty ? null : widget.variant.images.first;
+  }
+
+  // resetImageIf() {
+  //   if (widget.variant.images.contains(selectedImg)) return;
+  //   selectedImg =
+  //       widget.variant.images.isEmpty ? null : widget.variant.images.first;
+  // }
+  RxInt currentIndex = 0.obs;
+  CarouselSliderController carouselController = CarouselSliderController();
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    return Stack(
+      children: [
+        ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: size.height * .84),
+          child: Row(
+            children: [
+              Expanded(
+                child: CarouselSlider(
+                  carouselController: carouselController,
+                  options: CarouselOptions(
+                    autoPlay: false,
+                    viewportFraction: 1,
+                    onPageChanged: (index, reason) =>
+                        currentIndex.value = index,
+                    aspectRatio: imageAspectRatio,
+                    scrollPhysics: widget.variant.images.length == 1
+                        ? const NeverScrollableScrollPhysics()
+                        : const BouncingScrollPhysics(),
+                  ),
+                  items: widget.variant.images.map((i) {
+                    return InkWell(
+                      onTap: () {
+                        showDialog(
+                          barrierDismissible: true,
+                          context: context,
+                          builder: (context) => ZoomPopup(
+                              variant: widget.variant,
+                              selectedIndex: widget.variant.images.indexOf(i)),
+                        );
+                      },
+                      child: FadeInImage.memoryNetwork(
+                        width: size.width,
+                        height: size.height,
+                        fit: BoxFit.cover,
+                        placeholder: kTransparentImage,
+                        image: i,
+                        imageErrorBuilder: (context, error, stackTrace) =>
+                            Image.memory(kTransparentImage),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: 1,
+          left: 1,
+          right: 1,
+          // alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 20),
+            child: Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: List.generate(
+                      widget.variant.images.length,
+                      (index) => InkWell(
+                            onTap: () =>
+                                carouselController.animateToPage(index),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.circle,
+                                color: currentIndex.value == index
+                                    ? Colors.red
+                                    : Colors.grey,
+                                size: currentIndex.value == index ? 14 : 12,
+                              ),
+                            ),
+                          )),
+                )),
+          ),
+        ),
+        /*   Align(
+          alignment: Alignment.topRight,
+          child: InkWell(
+            onTap: () {
+              showDialog(
+                barrierDismissible: true,
+                context: context,
+                builder: (context) => ZoomPopup(
+                    variant: widget.variant, selectedIndex: currentIndex.value),
+              );
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    CupertinoIcons.add,
+                    size: 30,
+                    color: Colors.red,
+                  ),
+                  Text(
+                    "CLICK\nTO ZOOM",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      */
+      ],
+    );
+    /*  return PageView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: widget.variant.images.length,
+      itemBuilder: (context, index) {
+        return AspectRatio(
+          aspectRatio: imageAspectRatio,
+          child: FadeInImage.memoryNetwork(
+            width: size.width,
+            height: size.height,
+            placeholder: kTransparentImage,
+            image: widget.variant.images[index],
+            imageErrorBuilder: (context, error, stackTrace) =>
+                Image.memory(kTransparentImage),
+          ),
+        );
+      },
+    ); */
+    // resetImageIf();
+    /*   return widget.vertical
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: _thumbnails(),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: _imageBox(context),
+              ),
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _imageBox(context),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _thumbnails(),
+                ),
+              ),
+            ],
+          ); */
+  }
+
+  /*  Widget _imageBox(BuildContext context) {
+    return selectedImg == null
+        ? Image.memory(kTransparentImage)
+        : Stack(
+            children: [
+              MouseRegion(
+                cursor: SystemMouseCursors.zoomIn,
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                      barrierDismissible: true,
+                      context: context,
+                      builder: (context) => ZoomPopup(
+                          variant: widget.variant, selected: selectedImg!),
+                    );
+                  },
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: selectedImg!,
+                    imageErrorBuilder: (context, error, stackTrace) =>
+                        Image.memory(kTransparentImage),
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        CupertinoIcons.add,
+                        size: 32,
+                      ),
+                      Text(
+                        "CLICK\nTO ZOOM",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+  }
+
+  List<Widget> _thumbnails() {
+    return [
+      ...List.generate(
+          widget.variant.images.length,
+          (index) => Container(
+                decoration: BoxDecoration(
+                    border: selectedImg == widget.variant.images[index]
+                        ? Border.all(width: 2)
+                        : null),
+                child: InkWell(
+                  onTap: () => setState(
+                      () => selectedImg = widget.variant.images[index]),
+                  child: FadeInImage.memoryNetwork(
+                    placeholder: kTransparentImage,
+                    image: widget.variant.images[index],
+                    height: 160,
+                    imageErrorBuilder: (context, error, stackTrace) =>
+                        Image.memory(kTransparentImage),
+                  ),
+                ),
+              ))
+    ];
+  }
+ */
+}
 
 class ImageBox extends StatefulWidget {
   const ImageBox(
@@ -1558,6 +1887,8 @@ class _ZoomPopupState extends State<ZoomPopup> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.white,
+      surfaceTintColor: Colors.white,
       child: Stack(
         children: [
           PageView.builder(

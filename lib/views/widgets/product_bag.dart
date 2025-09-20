@@ -11,9 +11,11 @@ class ProductBagWid extends StatelessWidget {
     super.key,
     this.forHome = false,
     this.product,
+    this.height = 330,
   });
   final bool forHome;
   final ProductModel? product;
+  final double height;
   @override
   Widget build(BuildContext context) {
     final defaultVariant =
@@ -21,8 +23,12 @@ class ProductBagWid extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 330,
+        Container(
+          height: height,
+
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade300)),
           // width: 256,
           // clipBehavior: forHome ? Clip.none : Clip.antiAlias,
           // padding: forHome ? const EdgeInsets.all(8) : null,
@@ -35,7 +41,10 @@ class ProductBagWid extends StatelessWidget {
                   // fit: StackFit.expand,
                   children: [
                     Container(
-                      color: const Color.fromARGB(255, 251, 251, 251),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 251, 251, 251),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     Center(
                       child: CachedNetworkImage(

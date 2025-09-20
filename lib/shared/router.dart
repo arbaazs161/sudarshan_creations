@@ -21,6 +21,8 @@ final GoRouter appRouter = GoRouter(
 );
 
 FutureOr<String?> redirector(BuildContext context, GoRouterState state) {
+  // if (Get.isRegistered<HomeCtrl>()) Get.find<HomeCtrl>().update();
+
   if (state.uri.path ==
       appRouter.routerDelegate.currentConfiguration.uri.path) {
     throw Exception('Router declined redirect');
@@ -80,6 +82,7 @@ List<RouteBase> get _routes {
       pageBuilder: (BuildContext context, GoRouterState state) =>
           NoTransitionPage(
         child: SudarshanDisplayAllProducts(
+            autofocus: state.extra as bool? ?? false,
             maincategoryId: state.pathParameters['id'] ?? ""),
       ),
     ),

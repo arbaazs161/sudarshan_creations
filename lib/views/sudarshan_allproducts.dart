@@ -25,9 +25,10 @@ import 'widgets/sub_cat_product_topbar.dart';
 final _allProductsScafKey = GlobalKey<ScaffoldState>();
 
 class SudarshanDisplayAllProducts extends StatefulWidget {
-  const SudarshanDisplayAllProducts({super.key, required this.maincategoryId});
+  const SudarshanDisplayAllProducts(
+      {super.key, required this.maincategoryId, this.autofocus = false});
   final String maincategoryId;
-
+  final bool autofocus;
   @override
   State<SudarshanDisplayAllProducts> createState() =>
       _SudarshanDisplayAllProductsState();
@@ -41,6 +42,7 @@ class _SudarshanDisplayAllProductsState
       builder: (hCtrl) {
         return SudarshanDisplayAllProducts2(
           key: ValueKey(DateTime.now()),
+          autofocus: widget.autofocus,
           maincategoryId: widget.maincategoryId,
           allActiveMainCat: hCtrl.homeCategories,
         );
@@ -53,9 +55,12 @@ class SudarshanDisplayAllProducts2 extends StatefulWidget {
   const SudarshanDisplayAllProducts2(
       {super.key,
       required this.maincategoryId,
-      required this.allActiveMainCat});
+      required this.allActiveMainCat,
+      required this.autofocus});
   final String maincategoryId;
   final List<MainCategory> allActiveMainCat;
+  final bool autofocus;
+
   @override
   State<SudarshanDisplayAllProducts2> createState() =>
       _SudarshanDisplayAllProducts2State();
@@ -94,6 +99,7 @@ class _SudarshanDisplayAllProducts2State
   getAllSubCategories() async {
     final subCatsnap = await FBFireStore.subCategories
         .where('mainCatId', isEqualTo: widget.maincategoryId)
+        .where('isActive', isEqualTo: true)
         .get();
 
     allMainSubCats.clear();
@@ -129,9 +135,11 @@ class _SudarshanDisplayAllProducts2State
       final basesnap = selectedSubCat == null
           ? FBFireStore.products
               .where('mainCatDocId', isEqualTo: selmainCategoryModel!.docId)
+              .where('available', isEqualTo: true)
           : FBFireStore.products
               .where('mainCatDocId', isEqualTo: selmainCategoryModel!.docId)
-              .where('subCatDocId', isEqualTo: selectedSubCat!.docId);
+              .where('subCatDocId', isEqualTo: selectedSubCat!.docId)
+              .where('available', isEqualTo: true);
       final productCountSnap = await basesnap.count().get();
       totalItems = productCountSnap.count ?? 0;
       totalPages = (totalItems / perPageUsers).ceil();
@@ -152,8 +160,10 @@ class _SudarshanDisplayAllProducts2State
 
     final basesnap = selectedSubCat == null
         ? FBFireStore.products
+            .where('available', isEqualTo: true)
             .where('mainCatDocId', isEqualTo: selmainCategoryModel!.docId)
         : FBFireStore.products
+            .where('available', isEqualTo: true)
             .where('mainCatDocId', isEqualTo: selmainCategoryModel!.docId)
             .where('subCatDocId', isEqualTo: selectedSubCat!.docId);
     final userCountSnap = await basesnap
@@ -184,8 +194,10 @@ class _SudarshanDisplayAllProducts2State
       }
       final basesnap = selectedSubCat == null
           ? FBFireStore.products
+              .where('available', isEqualTo: true)
               .where('mainCatDocId', isEqualTo: selmainCategoryModel!.docId)
           : FBFireStore.products
+              .where('available', isEqualTo: true)
               .where('mainCatDocId', isEqualTo: selmainCategoryModel!.docId)
               .where('subCatDocId', isEqualTo: selectedSubCat!.docId);
       Query query = forSearch
@@ -283,7 +295,7 @@ class _SudarshanDisplayAllProducts2State
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               constraints: const BoxConstraints(
-                                maxWidth: 1200,
+                                maxWidth: 800,
                                 // maxHeight: 45,
                               ),
                               child: Row(
@@ -308,10 +320,31 @@ class _SudarshanDisplayAllProducts2State
                                           }
                                         });
                                       },
+                                      autofocus: widget.autofocus,
                                       controller: searchController,
                                       cursorColor: Colors.black,
                                       decoration: InputDecoration(
-                                        hintText: ' Search product',
+                                        suffixIcon: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 6, 6, 6),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 10, horizontal: 15),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: const Text(
+                                              "Search",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14.5,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        hintText: ' Search products...',
                                         hintStyle: const TextStyle(
                                           color: Colors.grey,
                                           fontSize: 14.5,
@@ -320,24 +353,30 @@ class _SudarshanDisplayAllProducts2State
                                         fillColor: Colors.white,
                                         border: OutlineInputBorder(
                                           borderSide: const BorderSide(
-                                            color: Colors.grey,
-                                            width: .8,
+                                            // color: Colors.grey,
+                                            // width: .8,
+                                            color: Color.fromARGB(
+                                                255, 226, 224, 224),
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(6),
                                         ),
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(
-                                            color: Colors.grey,
-                                            width: .8,
+                                            // color: Colors.grey,
+                                            // width: .8,
+                                            color: Color.fromARGB(
+                                                255, 226, 224, 224),
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(6),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: const BorderSide(
-                                            color: Colors.black,
-                                            width: .8,
+                                            // color: Colors.black,
+                                            // width: .8,
+                                            color: Color.fromARGB(
+                                                255, 226, 224, 224),
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(6),
@@ -371,8 +410,19 @@ class _SudarshanDisplayAllProducts2State
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 13),
+                                              vertical: 11, horizontal: 13.5),
                                           decoration: BoxDecoration(
+                                            boxShadow: selected
+                                                ? [
+                                                    const BoxShadow(
+                                                      color: Color.fromARGB(
+                                                          255, 235, 235, 235),
+                                                      blurRadius: 5,
+                                                      spreadRadius: 0,
+                                                      offset: Offset(0, 0),
+                                                    ),
+                                                  ]
+                                                : null,
                                             color: true
                                                 ? selected
                                                     ? Colors.black
@@ -381,9 +431,13 @@ class _SudarshanDisplayAllProducts2State
                                                     ? const Color(0xffFFE6DF)
                                                     : Colors.white,
                                             border: Border.all(
+                                                width: 1.2,
                                                 color: selected
                                                     ? Colors.black
-                                                    : const Color(0xffBDBDBD)),
+                                                    : const Color.fromARGB(
+                                                        255, 226, 224, 224)
+                                                //  const Color(0xffBDBDBD)
+                                                ),
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                           ),
@@ -401,12 +455,11 @@ class _SudarshanDisplayAllProducts2State
                                                 style: GoogleFonts.mulish(
                                                     color: selected
                                                         ? Colors.white
-                                                        : const Color(
-                                                            0xff828282),
-                                                    fontSize: 12,
+                                                        : Colors.black,
+                                                    fontSize: 13.5,
                                                     height: 0,
                                                     fontWeight:
-                                                        FontWeight.w400),
+                                                        FontWeight.w600),
                                               ),
                                               // if (selected) ...[
                                               //   const SizedBox(width: 5),
@@ -458,19 +511,31 @@ class _SudarshanDisplayAllProducts2State
                                         },
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 10, horizontal: 13),
+                                              vertical: 7, horizontal: 15),
                                           decoration: BoxDecoration(
                                             color: true
-                                                ? selected
-                                                    ? Colors.black
-                                                    : Colors.white
+                                                ? const Color.fromARGB(
+                                                    255, 245, 245, 245)
                                                 : selected
                                                     ? const Color(0xffFFE6DF)
                                                     : Colors.white,
-                                            border: Border.all(
-                                                color: selected
-                                                    ? Colors.black
-                                                    : const Color(0xffBDBDBD)),
+                                            boxShadow: selected
+                                                ? [
+                                                    const BoxShadow(
+                                                      color: Color.fromARGB(
+                                                          255, 221, 221, 221),
+                                                      blurRadius: 3,
+                                                      spreadRadius: 0,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ]
+                                                : null,
+                                            border: selected
+                                                ? Border.all(
+                                                    width: .3,
+                                                    color:
+                                                        const Color(0xffBDBDBD))
+                                                : null,
                                             borderRadius:
                                                 BorderRadius.circular(20),
                                           ),
@@ -484,15 +549,18 @@ class _SudarshanDisplayAllProducts2State
                                               Text(
                                                 capilatlizeFirstLetter(
                                                     allMainSubCats[index].name),
-                                                style: GoogleFonts.mulish(
+                                                style: TextStyle(
                                                     color: selected
-                                                        ? Colors.white
+                                                        ? const Color(
+                                                            0xff0a0a0a)
                                                         : const Color(
-                                                            0xff828282),
-                                                    fontSize: 12,
+                                                            0xff737373),
+                                                    fontSize: 12.5,
+                                                    letterSpacing: .4,
+                                                    wordSpacing: 1,
                                                     height: 0,
                                                     fontWeight:
-                                                        FontWeight.w400),
+                                                        FontWeight.w600),
                                               ),
                                               // if (selected) ...[
                                               //   const SizedBox(width: 5),
@@ -518,18 +586,15 @@ class _SudarshanDisplayAllProducts2State
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 20.0),
                               child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 1200,
-                                    // imp: Min height calculation (deviceHeight- footerheight - top section height - extra height of sizedbox between widgets)
-                                    minHeight:
-                                        MediaQuery.sizeOf(context).height -
-                                            200 -
-                                            300 -
-                                            70,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      /*  Column(
+                                constraints: BoxConstraints(
+                                  maxWidth: 1200,
+                                  // imp: Min height calculation (deviceHeight- footerheight - top section height - extra height of sizedbox between widgets)
+                                  minHeight:
+                                      MediaQuery.sizeOf(context).height - 440,
+                                ),
+                                child: Column(
+                                  children: [
+                                    /*  Column(
                                       children: [
                                         DropdownButtonHideUnderline(
                                           child: DropdownButtonFormField(
@@ -895,64 +960,80 @@ class _SudarshanDisplayAllProducts2State
                                       ],
                                     ),
                                     const SizedBox(height: 30), */
-                                      !dataloaded
-                                          ? const Center(
-                                              child:
-                                                  CircularProgressIndicator())
-                                          : filteredProducts.isEmpty
-                                              ? const Center(
-                                                  child: Text(
-                                                      "No Product to Display"),
-                                                )
-                                              : StaggeredGrid.extent(
-                                                  maxCrossAxisExtent:
-                                                      screenWidth < 500
-                                                          ? 400
-                                                          : 300,
-                                                  mainAxisSpacing: 25,
-                                                  crossAxisSpacing: 25,
-                                                  // spacing: 25,
-                                                  // runSpacing: 25,
-                                                  children: [
-                                                    ...List.generate(
-                                                      filteredProducts.length,
-                                                      (index) {
-                                                        // final image = index % 2 == 0
-                                                        //     ? 'assets/money_envol_image.png'
-                                                        //     : 'assets/gift_sets_image.png';
-                                                        // final text =
-                                                        //     index % 2 == 0 ? "GFT SETS" : "MONEY ENVELOPES";
-                                                        final product =
-                                                            filteredProducts[
-                                                                index];
-                                                        return InkWell(
-                                                            highlightColor: Colors
-                                                                .transparent,
-                                                            hoverColor: Colors
-                                                                .transparent,
-                                                            splashColor: Colors
-                                                                .transparent,
-                                                            onTap: () {
-                                                              context.go(
-                                                                  "${Routes.product}/${product.docId}");
-                                                              // Navigator.push(context, MaterialPageRoute(
-                                                              //   builder: (context) {
-                                                              //     return const SudarshanProductDetails();
-                                                              //   },
-                                                              // ));
-                                                            },
-                                                            child:
-                                                                ProductBagWid(
-                                                                    product:
-                                                                        product,
-                                                                    forHome:
-                                                                        false));
-                                                      },
-                                                    )
-                                                  ],
-                                                ),
-                                    ],
-                                  )),
+                                    !dataloaded
+                                        ? const Center(
+                                            child: CircularProgressIndicator())
+                                        : filteredProducts.isEmpty
+                                            ? const Center(
+                                                child: Text(
+                                                    "No Product to Display"),
+                                              )
+                                            : StaggeredGrid.extent(
+                                                maxCrossAxisExtent:
+                                                    screenWidth < 500
+                                                        ? 264
+                                                        : 300,
+                                                mainAxisSpacing: 25,
+                                                crossAxisSpacing: 25,
+
+                                                // alignment:
+                                                //     WrapAlignment.start,
+                                                // runAlignment:
+                                                //     WrapAlignment.start,
+                                                // spacing: 25,
+                                                // runSpacing: 25,
+                                                // spacing: 25,
+                                                // runSpacing: 25,
+                                                children: [
+                                                  ...List.generate(
+                                                    filteredProducts.length,
+                                                    (index) {
+                                                      // final image = index % 2 == 0
+                                                      //     ? 'assets/money_envol_image.png'
+                                                      //     : 'assets/gift_sets_image.png';
+                                                      // final text =
+                                                      //     index % 2 == 0 ? "GFT SETS" : "MONEY ENVELOPES";
+                                                      final product =
+                                                          filteredProducts[
+                                                              index];
+                                                      return Container(
+                                                        // constraints:
+                                                        //     const BoxConstraints(
+                                                        //   maxWidth: 264,
+                                                        // ),
+                                                        child: InkWell(
+                                                          highlightColor: Colors
+                                                              .transparent,
+                                                          hoverColor: Colors
+                                                              .transparent,
+                                                          splashColor: Colors
+                                                              .transparent,
+                                                          onTap: () {
+                                                            context.go(
+                                                                "${Routes.product}/${product.docId}");
+                                                            // Navigator.push(context, MaterialPageRoute(
+                                                            //   builder: (context) {
+                                                            //     return const SudarshanProductDetails();
+                                                            //   },
+                                                            // ));
+                                                          },
+                                                          child: ProductBagWid(
+                                                              height:
+                                                                  screenWidth <
+                                                                          500
+                                                                      ? 250
+                                                                      : 330,
+                                                              product: product,
+                                                              forHome: false),
+                                                        ),
+                                                      );
+                                                    },
+                                                  )
+                                                ],
+                                              ),
+                                  ],
+                                ),
+                              ),
                             ),
                             if (totalPages > 1) ...[
                               const SizedBox(height: 30),

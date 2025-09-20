@@ -162,8 +162,11 @@ class _LoginPageState extends State<LoginPage>
       if (tabCtrl.index == 0) {
         if (mobileFormKey.currentState!.validate()) {
           setState(() => loading = true);
+          print("object====1");
           confirmationResult =
               await FBAuth.auth.signInWithPhoneNumber('+91${mobileCtrl.text}');
+          print("object====2");
+
           showAppSnack("OTP Sent!");
         }
         setState(() => loading = false);
@@ -172,6 +175,8 @@ class _LoginPageState extends State<LoginPage>
       }
     } catch (e) {
       setState(() => loading = false);
+      showAppSnack(e.toString());
+      // showAppSnack("Something went wrong!");
       debugPrint(e.toString());
     }
   }
@@ -189,7 +194,7 @@ class _LoginPageState extends State<LoginPage>
           debugPrint("Old User");
           // Save Otp
           newUserEmailOtp = otp;
-          // newUserEmailOtpSentOn = DateTime.now();
+          newUserEmailOtpSentOn = DateTime.now();
           await FBFireStore.users.doc(res.docs.first.id).update({
             'otp': otp,
             'otpTime': FieldValue.serverTimestamp(),
@@ -206,7 +211,7 @@ class _LoginPageState extends State<LoginPage>
           // // New User
           debugPrint("New User");
           newUserEmailOtp = otp;
-          // newUserEmailOtpSentOn = DateTime.now();
+          newUserEmailOtpSentOn = DateTime.now();
           await FBFunctions.ff.httpsCallable('sendOtpEmail').call(
             {
               'email': emailCtrl.text,
@@ -258,6 +263,7 @@ class _LoginPageState extends State<LoginPage>
       } else {
         // // New User
         debugPrint("New User");
+
         if (otp == newUserEmailOtp.toString() &&
             (newUserEmailOtpSentOn
                     ?.add(const Duration(minutes: 5))
@@ -290,6 +296,7 @@ class _LoginPageState extends State<LoginPage>
           showAppSnack("OTP Invalid or Expired!");
         }
       }
+      Get.find<HomeCtrl>().update();
       setState(() => loading = false);
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
@@ -337,6 +344,8 @@ class _LoginPageState extends State<LoginPage>
       mobileCtrl.clear();
       emailCtrl.clear();
       otpCtrl.clear();
+      Get.find<HomeCtrl>().update();
+
       widget.goTo != null ? context.go(widget.goTo!) : widget.refresh();
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());

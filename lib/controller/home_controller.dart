@@ -164,7 +164,7 @@ class HomeCtrl extends GetxController {
           .where('topSelling', isEqualTo: true)
           .where('available', isEqualTo: true)
           .where('isActive', isEqualTo: true)
-          .limit(4)
+          // .limit(4)
           .snapshots()
           .listen((event) {
         topSellingProducts =
@@ -179,7 +179,9 @@ class HomeCtrl extends GetxController {
   addToCart(CartModel item) {
     if (cartItems.firstWhereOrNull((element) =>
             element.productId == item.productId && element.vId == item.vId) !=
-        null) return;
+        null) {
+      return;
+    }
     cartItems.add(item);
     if (isLoggedIn()) updateDBCart();
     update();

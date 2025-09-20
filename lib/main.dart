@@ -6,11 +6,13 @@ import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sudarshan_creations/shared/router.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'shared/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  setPathUrlStrategy();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
@@ -39,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     // );
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Sudardshan Creations',
+      title: 'Sudardshan Cards India',
       theme: themeData,
       // theme: ThemeData(
       //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
