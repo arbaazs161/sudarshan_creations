@@ -14,7 +14,7 @@ class HeroNavbarPage extends StatelessWidget {
             backgroundColor: Colors.transparent,
             elevation: 0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
+              title: const Text(
                 'Your Brand',
                 style: TextStyle(
                     shadows: [Shadow(color: Colors.black45, blurRadius: 3)]),
@@ -39,10 +39,10 @@ class HeroNavbarPage extends StatelessWidget {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) => Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Text(
                   'Content block #${index + 1}',
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
               childCount: 20,

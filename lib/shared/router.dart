@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sudarshan_creations/views/sudarshan_account.dart';
 import 'package:sudarshan_creations/views/sudarshan_allproducts.dart';
@@ -22,6 +23,17 @@ final GoRouter appRouter = GoRouter(
 
 FutureOr<String?> redirector(BuildContext context, GoRouterState state) {
   // if (Get.isRegistered<HomeCtrl>()) Get.find<HomeCtrl>().update();
+  // Get the current location path (full path)
+  // final currentLocation =
+  //     GoRouter.of(context).routerDelegate.currentConfiguration.uri.path;
+  // print(currentLocation);
+  // Get the new path
+  // final newLocation = state.location;
+
+  // If the user is trying to navigate to the exact same location, ignore
+  // if (currentLocation == newLocation) {
+  //   return null; // no redirect needed
+  // }
 
   if (state.uri.path ==
       appRouter.routerDelegate.currentConfiguration.uri.path) {
@@ -67,6 +79,7 @@ List<RouteBase> get _routes {
       pageBuilder: (BuildContext context, GoRouterState state) =>
           NoTransitionPage(
               child: SudarshanProductDetails(
+        key: ValueKey(DateTime.now()),
         productId: state.pathParameters['id'] ?? "",
       )),
     ),
@@ -178,7 +191,7 @@ List<RouteBase> get _routes {
 }
 
 class Routes {
-  static const home = "/home";
+  static const home = "/";
   static const products = "/products";
   static const category = "/category";
   static const account = "/account";

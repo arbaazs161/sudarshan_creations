@@ -106,7 +106,7 @@ class SudarshanFooterSection extends StatelessWidget {
               children: [
                 const Text(
                   "Developed by ",
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -116,13 +116,26 @@ class SudarshanFooterSection extends StatelessWidget {
                   onTap: () {
                     launchUrlString('https://www.diwizon.com');
                   },
-                  child: const Text(
-                    "Diwizon",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Colors.white,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      "Diwizon",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        decorationStyle: TextDecorationStyle.solid,
+                        decorationThickness: 2,
+                        decorationColor: Colors.white,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
                 ),
@@ -282,6 +295,9 @@ class SudarshanFooterSection extends StatelessWidget {
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decorationThickness: 2,
+                              decorationColor: Colors.white,
                               decoration: TextDecoration.underline,
                             ),
                           ),
