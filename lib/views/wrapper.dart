@@ -78,12 +78,11 @@ class _WrapperState extends State<Wrapper> {
                     const SizedBox(height: 10),
                     const Divider(color: Colors.white, height: 0),
                     const SizedBox(height: 5),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: InkWell(
                         onTap: () {
-                          launchUrlString("tel://919586112126");
+                          launchUrlString("tel://919624755991");
                           widget.scafkey?.currentState?.closeDrawer();
                         },
                         child: const Row(children: [
@@ -93,12 +92,33 @@ class _WrapperState extends State<Wrapper> {
                             size: 15,
                           ),
                           SizedBox(height: 15),
-                          Text("(+91) 95861 12126",
+                          Text("(+91) 96247 55991",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 13)),
                         ]),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: InkWell(
+                        onTap: () {
+                          launchUrlString("tel://919824334084");
+                          widget.scafkey?.currentState?.closeDrawer();
+                        },
+                        child: const Row(children: [
+                          Icon(
+                            Icons.phone,
+                            color: Colors.white,
+                            size: 15,
+                          ),
+                          SizedBox(height: 15),
+                          Text("(+91) 98243 34084",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 13)),
+                        ]),
+                      ),
+                    ),
+
                     // const SizedBox(height: 20),
                     // VerticalDivider(color: Colors.white, width: 1,thickness: 3,),
                     Padding(

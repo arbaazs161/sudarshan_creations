@@ -106,7 +106,7 @@ class TopAppBar extends StatelessWidget {
                   //   },
                   // ));
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.logout,
                   color: Color(0xff95170D),
                   size: 25,
@@ -224,7 +224,7 @@ class TopAppBarMobile extends StatelessWidget {
                     ),
                   ),
                   if (isLoggedIn()) ...[
-                    SizedBox(width: 15),
+                    const SizedBox(width: 15),
                     InkWell(
                       onTap: () async {
                         await FBAuth.auth.signOut();
@@ -236,7 +236,7 @@ class TopAppBarMobile extends StatelessWidget {
                         //   },
                         // ));
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.logout,
                         color: Colors.white,
                         size: 25,
@@ -273,68 +273,92 @@ class TopAppBarDesk extends StatelessWidget {
   final bool mobile;
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeCtrl>(builder: (hCtrl) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Row(
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      launchUrlString("tel://919586112126");
-                    },
-                    child: const Row(children: [
-                      Icon(
-                        Icons.phone,
-                        color: Colors.white,
-                        size: 15,
+    return GetBuilder<HomeCtrl>(
+      builder: (hCtrl) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: Row(
+            children: [
+              Expanded(
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          launchUrlString("tel://919624755991");
+                        },
+                        child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Opacity(
+                              //   opacity: 0,
+                              //   child: Icon(
+                              //     Icons.phone,
+                              //     color: Colors.white,
+                              //     size: 15.5,
+                              //   ),
+                              // ),
+                              // SizedBox(width: 7),
+                              Text("(+91) 9624755991",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14)),
+                            ]),
                       ),
-                      SizedBox(width: 10),
-                      Text("(+91) 95861 12126",
-                          style: TextStyle(color: Colors.white, fontSize: 13)),
-                    ]),
+                      // const SizedBox(width: 10),
+                      const VerticalDivider(
+                        color: Colors.white,
+                        // width: 1,
+                        width: 25,
+                        indent: 2,
+                        // endIndent: 2,
+                        thickness: 1.5,
+                      ),
+                      // const SizedBox(width: 10),
+                      InkWell(
+                        onTap: () {
+                          launchUrlString("tel://919824334084");
+                        },
+                        child: const Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Opacity(
+                              //   opacity: 0,
+                              //   child: Icon(
+                              //     Icons.phone,
+                              //     color: Colors.white,
+                              //     size: 15.5,
+                              //   ),
+                              // ),
+                              // SizedBox(width: 7),
+                              Text("(+91) 9824334084",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 14)),
+                            ]),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 20),
-                  // VerticalDivider(color: Colors.white, width: 1,thickness: 3,),
-                  InkWell(
-                    onTap: () {
-                      launchUrlString('mailto:sudarshan@gmail.com');
-                    },
-                    child: const Row(children: [
-                      Icon(
-                        CupertinoIcons.mail,
-                        color: Colors.white,
-                        size: 15,
-                      ),
-                      SizedBox(width: 10),
-                      Text("sudarshan@gmail.com",
-                          style: TextStyle(color: Colors.white, fontSize: 13)),
-                    ]),
-                  )
-                ],
+                ),
               ),
-            ),
 
-            // Center logo
-            InkWell(
-              onTap: () {
-                context.go(Routes.home);
-              },
-              child: Image.asset(
-                'assets/sudarshan_logo_white.png', // Replace with your actual logo path
-                height: 50,
+              // Center logo
+              InkWell(
+                onTap: () {
+                  context.go(Routes.home);
+                },
+                child: Image.asset(
+                  'assets/sudarshan_logo_white.png', // Replace with your actual logo path
+                  height: 50,
+                ),
               ),
-            ),
 
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  /* InkWell(
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    /* InkWell(
                       onTap: () {
                         context.go(Routes.account);
                       },
@@ -345,55 +369,55 @@ class TopAppBarDesk extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 15), */
-                  InkWell(
-                    onTap: () {
-                      context.go(Routes.favourites);
-                      // Navigator.push(context, MaterialPageRoute(
-                      //   builder: (context) {
-                      //     return const SudarshanDisplayFavourites();
-                      //   },
-                      // ));
-                    },
-                    child: const Icon(
-                      CupertinoIcons.heart,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  InkWell(
-                    onTap: () {
-                      context.go(
-                          '${Routes.category}/${Get.find<HomeCtrl>().homeCategories.first.docId}',
-                          extra: true);
-                    },
-                    child: const Icon(
-                      CupertinoIcons.search,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                  ),
-                  if (isLoggedIn()) ...[
-                    SizedBox(width: 15),
                     InkWell(
-                      onTap: () async {
-                        await FBAuth.auth.signOut();
-                        context.go(Routes.home);
-
+                      onTap: () {
+                        context.go(Routes.favourites);
                         // Navigator.push(context, MaterialPageRoute(
                         //   builder: (context) {
                         //     return const SudarshanDisplayFavourites();
                         //   },
                         // ));
                       },
-                      child: Icon(
-                        Icons.logout,
+                      child: const Icon(
+                        CupertinoIcons.heart,
                         color: Colors.white,
                         size: 25,
                       ),
                     ),
-                  ],
-                  /*  const SizedBox(width: 15),
+                    const SizedBox(width: 15),
+                    InkWell(
+                      onTap: () {
+                        context.go(
+                            '${Routes.category}/${Get.find<HomeCtrl>().homeCategories.first.docId}',
+                            extra: true);
+                      },
+                      child: const Icon(
+                        CupertinoIcons.search,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                    ),
+                    if (isLoggedIn()) ...[
+                      const SizedBox(width: 15),
+                      InkWell(
+                        onTap: () async {
+                          await FBAuth.auth.signOut();
+                          context.go(Routes.home);
+
+                          // Navigator.push(context, MaterialPageRoute(
+                          //   builder: (context) {
+                          //     return const SudarshanDisplayFavourites();
+                          //   },
+                          // ));
+                        },
+                        child: const Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                      ),
+                    ],
+                    /*  const SizedBox(width: 15),
                     InkWell(
                       onTap: () {
                         if (isLoggedIn()) {
@@ -408,13 +432,14 @@ class TopAppBarDesk extends StatelessWidget {
                         size: 25,
                       ),
                     ) */
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

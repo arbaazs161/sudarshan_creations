@@ -2,13 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudarshan_creations/controller/home_controller.dart';
 import 'package:sudarshan_creations/shared/methods.dart';
 import 'package:sudarshan_creations/shared/responsive.dart';
 import 'package:sudarshan_creations/views/wrapper.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import '../shared/router.dart';
 import 'widgets/footer.dart';
 import 'widgets/product_bag.dart';
@@ -871,6 +871,7 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                               color: const Color(0xff030303),
                                               fontSize: 13.5)),
                                     ])),
+
                                     const SizedBox(height: 150),
                                     /* 
                                   const Text(
@@ -1346,15 +1347,15 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                       children: [
                                         Image.asset(
                                             'assets/welcome_bg-modified.png'),
-                                        const Align(
-                                          alignment: Alignment(-.55, 0),
+                                        Align(
+                                          alignment: const Alignment(-.55, 0),
                                           child: SizedBox(
                                             width: 650,
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(
+                                                const Text(
                                                   "Welcome to Sudarshan!!!",
                                                   style: TextStyle(
                                                     color: Color(0xff95170D),
@@ -1362,70 +1363,126 @@ class _SudarshanHomePageState extends State<SudarshanHomePage> {
                                                     fontWeight: FontWeight.w700,
                                                   ),
                                                 ),
-                                                SizedBox(height: 10),
+                                                const SizedBox(height: 10),
                                                 // SizedBox(height: 10),
-                                                Text.rich(TextSpan(children: [
+                                                const Text.rich(
                                                   TextSpan(
-                                                      text:
-                                                          "Discover a world of exquisite stationery and impeccable craftsmanship at ",
-                                                      style: TextStyle(
-                                                          height: 2.2,
-                                                          color:
-                                                              Color(0xff030303),
-                                                          fontSize: 13.5)),
-                                                  TextSpan(
-                                                      text: "Sudarshan Cards.",
-                                                      style: TextStyle(
-                                                          height: 2.2,
-                                                          color:
-                                                              Color(0xff030303),
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 13.5)),
-                                                ])),
+                                                    children: [
+                                                      TextSpan(
+                                                          text:
+                                                              "Discover a world of exquisite stationery and impeccable craftsmanship at ",
+                                                          style: TextStyle(
+                                                              height: 2.2,
+                                                              color: Color(
+                                                                  0xff030303),
+                                                              fontSize: 13.5)),
+                                                      TextSpan(
+                                                          text:
+                                                              "Sudarshan Cards.",
+                                                          style: TextStyle(
+                                                              height: 2.2,
+                                                              color: Color(
+                                                                  0xff030303),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 13.5)),
+                                                    ],
+                                                  ),
+                                                ),
 
-                                                Text.rich(TextSpan(children: [
+                                                const Text.rich(
                                                   TextSpan(
-                                                      text:
-                                                          'We are your one-stop shop for all your stationery needs, offering a wide range of products including ',
-                                                      style: TextStyle(
-                                                          height: 2.2,
-                                                          color:
-                                                              Color(0xff030303),
-                                                          fontSize: 13.5)),
-                                                  TextSpan(
-                                                      text: 'money envelopes',
-                                                      style: TextStyle(
-                                                          height: 2.2,
-                                                          color:
-                                                              Color(0xff030303),
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                          decorationThickness:
-                                                              2,
-                                                          fontSize: 13.5)),
-                                                  TextSpan(
-                                                      text:
-                                                          ', notecards, gift sets, gift bags, wax seals, and ',
-                                                      style: TextStyle(
-                                                          height: 2.2,
-                                                          color:
-                                                              Color(0xff030303),
-                                                          fontSize: 13.5)),
-                                                  TextSpan(
-                                                      text: 'pillow boxes.',
-                                                      style: TextStyle(
-                                                          height: 2.2,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                          decorationThickness:
-                                                              2,
-                                                          color:
-                                                              Color(0xff030303),
-                                                          fontSize: 13.5)),
-                                                ])),
+                                                    children: [
+                                                      TextSpan(
+                                                          text:
+                                                              'We are your one-stop shop for all your stationery needs, offering a wide range of products including ',
+                                                          style: TextStyle(
+                                                              height: 2.2,
+                                                              color: Color(
+                                                                  0xff030303),
+                                                              fontSize: 13.5)),
+                                                      TextSpan(
+                                                          text:
+                                                              'money envelopes',
+                                                          style: TextStyle(
+                                                              height: 2.2,
+                                                              color: Color(
+                                                                  0xff030303),
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline,
+                                                              decorationThickness:
+                                                                  2,
+                                                              fontSize: 13.5)),
+                                                      TextSpan(
+                                                          text:
+                                                              ', notecards, gift sets, gift bags, wax seals, and ',
+                                                          style: TextStyle(
+                                                              height: 2.2,
+                                                              color: Color(
+                                                                  0xff030303),
+                                                              fontSize: 13.5)),
+                                                      TextSpan(
+                                                          text: 'pillow boxes.',
+                                                          style: TextStyle(
+                                                              height: 2.2,
+                                                              decoration:
+                                                                  TextDecoration
+                                                                      .underline,
+                                                              decorationThickness:
+                                                                  2,
+                                                              color: Color(
+                                                                  0xff030303),
+                                                              fontSize: 13.5)),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 10),
+
+                                                InkWell(
+                                                  onTap: () {
+                                                    launchUrlString(
+                                                        'mailto:sudarshancardsindia@gmail.com');
+                                                  },
+                                                  child: const Text.rich(
+                                                    TextSpan(
+                                                      children: [
+                                                        TextSpan(
+                                                            text: 'Email',
+                                                            style: TextStyle(
+                                                                height: 2.2,
+                                                                decoration:
+                                                                    TextDecoration
+                                                                        .underline,
+                                                                decorationThickness:
+                                                                    2,
+                                                                color: Color(
+                                                                    0xff030303),
+                                                                fontSize:
+                                                                    13.5)),
+                                                        TextSpan(
+                                                            text: ': ',
+                                                            style: TextStyle(
+                                                                height: 2.2,
+                                                                color: Color(
+                                                                    0xff030303),
+                                                                fontSize:
+                                                                    13.5)),
+                                                        TextSpan(
+                                                            text:
+                                                                'sudarshancardsindia@gmail.com',
+                                                            style: TextStyle(
+                                                                height: 2.2,
+                                                                color: Color(
+                                                                    0xff030303),
+                                                                fontSize:
+                                                                    13.5)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+
                                                 /* 
                                         const Text(
                                             "We are your one-stop shop for all your stationery needs, offering a wide range of products including money envelopes, notecards, gift sets, gift bags, wax seals, and pillow boxes."),

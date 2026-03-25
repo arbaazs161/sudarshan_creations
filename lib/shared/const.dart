@@ -3,7 +3,7 @@ library transparent_image;
 import 'dart:typed_data';
 
 const int perPageUsers = 20;
-const chatLink = "https://wa.me/919586112126";
+const chatLink = "https://wa.me/919824334084";
 
 final Uint8List kTransparentImage = new Uint8List.fromList(<int>[
   0x89,
